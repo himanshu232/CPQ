@@ -1,7 +1,7 @@
 public class com_whichPageController {
 	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	// TestClass: com_whichPageController_Test.cls
-    // - Written by Hj 🌵 2017.11.29 - TEST
+    // - Written by Hj 🌵 2017.11.29
     // Used to query SF metadata to determine a pages header
 	// configuration. Used in a community using custom Oegen Theme
 	// and dynamic, per-page header.
