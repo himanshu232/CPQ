@@ -1,0 +1,21 @@
+<apex:page >
+    Unexpected Time and Expenses validation errors in core iTrent
+MKB000001
+
+Symptoms
+When entering a Time and Expenses claim in the core iTrent system a set of error messages reporting “Invalid cash value” against entries in comments fields can occur.
+This can appear to be intermittent or even random against designs that have been in use for a long time.
+
+Cause 
+This is caused when Time and Expenses designs have different numbers of comments across different sections or pages combined with the navigation option ‘New – Time  Expense claim’ being selected and the User having the profile setting ‘Automatically select default action’ set to off (unticked).
+
+Resolution 
+The claim can be saved a second time once the fields have been re-entered and the problem will not re-occur until the user has logged out and logged back in. 
+
+Applies to
+Time and Expenses in Core iTrent.
+All releases of iTrent up to and including Release 10.11.0
+
+  
+
+</apex:page>

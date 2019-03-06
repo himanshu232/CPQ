@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>27.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <label>CustomSalesInvoicePage</label>
+    <packageVersions>
+        <majorNumber>16</majorNumber>
+        <minorNumber>0</minorNumber>
+        <namespace>c2g</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>8</minorNumber>
+        <namespace>ffbext</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>19</minorNumber>
+        <namespace>ffps_BillTrav</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>192</minorNumber>
+        <namespace>pse</namespace>
+    </packageVersions>
+</ApexPage>

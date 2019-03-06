@@ -1,0 +1,199 @@
+<apex:page sidebar="false" standardController="Scheduler__c" extensions="HRO_Scheduler">
+
+    <!-- Load SLDS -->
+	<apex:slds />
+
+    <style>
+        .slds-notify_container {
+            text-align: left !important;
+            width: auto !important;
+        }
+        .slds-scope a {
+            border: none !important;
+            border-radius: 0px !important;
+            background-color: transparent !important;
+            width: 23px !important;
+            padding: 0px !important;
+            min-height: 0px !important;
+            padding-left: 2px !important;
+        }
+    </style>
+
+    <!-- Scoped SLDS CSS -->
+	<div class="slds-scope">
+        
+        <apex:sectionHeader Title="Replicate a Schedule" subtitle="Replicate the Schedule '{!oldSchedule.Schedule_Name__c}' " >
+            <apex:outputPanel layout="block" id="allMsgs" styleClass="slds-size--1-of-1 slds-p-horizontal--small" >
+                
+                <apex:messages style="display: inline-block !important;" styleClass="slds-notify_container slds-is-relative slds-notify slds-notify_toast slds-theme_error slds-notify__content slds-text-heading_small" />
+
+                <apex:outputPanel rendered="{!(feedbackNegCount > 0 || feedbackPosCount > 0) && !hasApexMessages}" layout="block">     
+                    <div id="sfMessages">
+                        <apex:dataList value="{!feedbackNeg}" var="e">
+                                        
+                                <div class="slds-notify_container slds-is-relative">
+                                    <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                                        <span class="slds-assistive-text">error</span>
+                                        <div class="slds-notify__content">
+                                            <h2 class="slds-text-heading_small "> <apex:outputText value="{!e}" /> </h2>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </apex:dataList>
+
+                        <apex:dataList value="{!feedbackPos}" var="s">
+
+                            <div class="slds-notify_container slds-is-relative">
+                                <div class="slds-notify slds-notify_toast slds-theme_success" role="alert">
+                                    <span class="slds-assistive-text">Success</span>
+                                    <div class="slds-notify__content">
+                                        <h2 class="slds-text-heading_small "> <apex:outputText value="{!s}" /> </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </apex:dataList>
+                    </div>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:sectionHeader>
+
+        <apex:form >
+
+            <apex:outputPanel layout="block" styleClass="slds-grid slds-wrap slds-p-top_medium slds-p-left_large slds-p-right_large slds-grid_pull-padded  
+															section-header-wrap slds-grid_align-left" >
+
+                <apex:outputPanel id="fields" layout="block" styleClass="slds-size--1-of-4 slds-p-horizontal--small slds-p-bottom--large">
+
+                    <div class="slds-form-element slds-p-bottom_medium">
+                        <label class="slds-form-element__label" for="input-01"><apex:outputPanel rendered="{!!showContinue}"><abbr class="slds-required" title="Which Account should the Schedules be created under?">*</abbr></apex:outputPanel> Account</label>
+                        <apex:outputPanel layout="block" styleClass="slds-form-element__control">
+                            <apex:inputField id="input-01" value="{!oldSchedule.Replicate_to_Account__c}" styleClass="slds-input" required="true" rendered="{!!showContinue}"/>
+                            <apex:outputField id="input-011" value="{!oldSchedule.Replicate_to_Account__c}" styleClass="slds-form-element__control slds-border_bottom slds-form-element__static" rendered="{!showContinue}"/>
+                        </apex:outputPanel>
+                    </div>
+
+                    <div class="slds-form-element slds-p-bottom_medium">
+                        <label class="slds-form-element__label" for="input-02">Frequency</label>
+                        <apex:outputPanel layout="block" styleClass="slds-form-element__control">
+                            <apex:outputField id="input-02" value="{!oldSchedule.Frequency__c}" styleClass="slds-form-element__static"/>
+                        </apex:outputPanel>
+                    </div>
+
+                    <div class="slds-form-element slds-p-bottom_medium">
+                        <label class="slds-form-element__label" for="input-03"><apex:outputPanel rendered="{!!showContinue}"><abbr class="slds-required" title="How many new Schedules should be created (EXCLUDING the existing Schedule)?">*</abbr></apex:outputPanel> How Many Times?</label>
+                        <apex:outputPanel id="howManyTimes" layout="block" styleClass="slds-form-element__control">
+                            <apex:inputField id="input-03" styleClass="slds-input" value="{!oldSchedule.How_many_times__c}" required="true" rendered="{!!showContinue}"/>
+                            <apex:outputField id="input-033" styleClass="slds-form-element__control slds-border_bottom slds-form-element__static" value="{!oldSchedule.How_many_times__c}" rendered="{!showContinue}"/>
+                        </apex:outputPanel>
+                    </div>
+
+                    <div class="slds-form-element slds-p-bottom_medium">
+                        <label class="slds-form-element__label" for="input-04"><apex:outputPanel rendered="{!!showContinue}"><abbr class="slds-required" title="What should the Target Completion Date of the first newly created Schedule be?">*</abbr></apex:outputPanel> Target Completion Date of First Replicated Schedule</label>
+                        <div class="slds-form-element__control">
+                            <apex:outputPanel rendered="{!!showContinue}" layout="block" styleClass="slds-select_container">
+                                <apex:selectList id="input-04" styleClass="slds-select" value="{!adjustFirstReplication}" required="true" size="1">
+                                    <apex:selectOptions value="{!ScheduleCompletionDateOpts}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!showContinue}" layout="block">
+                                <apex:selectList id="input-044" styleClass="slds-select" value="{!adjustFirstReplication}" required="true" size="1" disabled="true">
+                                    <apex:selectOptions value="{!ScheduleCompletionDateOpts}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+
+                    <div class="slds-form-element slds-p-bottom_medium">
+                        <label class="slds-form-element__label" for="input-05"><apex:outputPanel rendered="{!!showContinue}"><abbr class="slds-required" title="When should the replication take place?">*</abbr></apex:outputPanel> When?</label>
+                        <div class="slds-form-element__control">
+                            <apex:outputPanel rendered="{!!showContinue}" layout="block" styleClass="slds-select_container">
+                                <apex:inputField id="input-05" styleClass="slds-select" value="{!oldSchedule.When__c}" required="true"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!showContinue}" layout="block">
+                                <apex:outputField id="input-055" styleClass="slds-form-element__static" value="{!oldSchedule.When__c}"/>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+
+                </apex:outputPanel>
+
+                <!-- ----------------------------------<BUTTONS>---------------------------------- -->
+                <apex:outputPanel layout="block" id="btns" styleclass="slds-size--1-of-1 slds-p-horizontal--small">
+                    <apex:actionStatus id="btnStatus">
+                        <apex:facet name="stop">
+                            <apex:outputPanel styleClass="">
+                                <apex:commandButton rendered="{!!showContinue}" styleClass="slds-button slds-button--brand" status="btnStatus" reRender="btns,allMsgs,navScript,fields" action="{!replicateSchedule}" value="Replicate" />
+                                <apex:commandButton rendered="{!showContinue}" styleClass="slds-button slds-button--brand" status="btnStatus" value="Continue" onclick="return doRedirect('{!destination}')" />
+                                <apex:commandButton rendered="{!!showContinue}" styleClass="slds-button slds-button--neutral" status="btnStatus" reRender="btns" immediate="true" value="Cancel" onclick="doRedirect('back')" />
+                            </apex:outputPanel>
+                        </apex:facet>
+
+                        <apex:facet name="start">
+                            <apex:outputPanel styleClass="">
+                                <apex:commandButton rendered="{!!showContinue}" styleClass="slds-button slds-button--brand" status="btnStatus" reRender="btns,allMsgs,fields" value="Replicate" disabled="true" />
+                                <apex:commandButton rendered="{!showContinue}" styleClass="slds-button slds-button--brand" status="btnStatus" value="Continue" disabled="true" />
+                                <apex:commandButton rendered="{!!showContinue}" styleClass="slds-button slds-button--neutral" status="btnStatus" reRender="btns,allMsgs" value="Cancel" disabled="true" />
+                                <div class="slds-spinner_container">
+                                    <div class="slds-spinner slds-spinner_medium" role="alert">
+                                        <span class="slds-assistive-text">Working</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:outputPanel>
+                <!-- ----------------------------------</BUTTONS>---------------------------------- -->
+
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" id="navScript">
+                <script>
+
+                    var oldScheduleId = '{!oldSchedule.Id}';
+                    var accountId = '{!oldSchedule.Replicate_to_Account__c}';
+
+                    function doRedirect(whereTo) {
+                        //LEX/SF1 navigation
+                        if( (typeof sforce != 'undefined') && sforce && (!!sforce.one) ) {
+                            switch(whereTo) {
+                                case "back":
+                                    sforce.one.navigateToSObject(oldScheduleId);
+                                    break;
+
+                                case "account":
+                                    sforce.one.navigateToSObject(accountId);
+
+                                default:
+                                    sforce.one.navigateToSObject(oldScheduleId);
+                            }
+                        }
+                        // Classic
+                        else {
+                            switch(whereTo) {
+                                case "back":
+                                    window.location.href = '/' + oldScheduleId;
+                                    break;
+
+                                case "account":
+                                    window.location.href = '/' + accountId;
+                                    break;
+
+                                default:
+                                    window.location.href = '/' + oldScheduleId;
+                            }
+                        }
+                        // Make sure page redirects rather than the form submission causing a page refresh
+                        return false;
+                    };
+                </script>
+            </apex:outputPanel>
+
+        </apex:form>
+
+    </div>
+
+</apex:page>

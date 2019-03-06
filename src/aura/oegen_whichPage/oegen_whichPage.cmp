@@ -1,0 +1,42 @@
+<aura:component >
+	<!--
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by Hj 🌵 2017.11.27 -
+	//
+	// Works around a limitation in Salesforce at time of writing.
+    // Reads url and determines if the community page has changed
+    // by comparing the old url to the new one. If it changes an 
+    // event is fired that can be listened for "pageChange".
+    //  The siteforce:viewChanged and siteforce:changeView events 
+    //  cant be listened for.
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	/* >>- Changelog -<<
+	 * _REPLACE_WITH_DATE_
+	 */
+-->
+	<!-- DATA VARS -->
+	<aura:attribute name="accountId"	type="String"	description=""/>
+    
+	<!-- COMPONENT STATE VARS -->
+    <aura:attribute name="pagename"	type="String"	description="Kept updated with current window path."/>
+
+    <!-- HANDLERS -->
+    <aura:registerEvent name="pageChange"	type="c:pageChange"/>            
+    <aura:handler event="forceCommunity:routeChange"	action="{!c.doneRendering}"/><!-- "scope" : "Case" -->
+    <aura:handler event="force:navigateHome"			action="{!c.doneRendering}"/>
+    
+	<!-- NOTES FOR FUTURE SF RELEASES
+ 	On navigate fires this:
+        siteforce:changeView	
+		params {
+			"routeType" : "home"
+			"routeType" : "article"
+		}
+
+	Once navigated fires this:
+		siteforce:viewChanged
+		params {
+			"objectName" : "Case"
+        }
+    -->
+</aura:component>

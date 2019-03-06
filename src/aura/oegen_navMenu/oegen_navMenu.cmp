@@ -1,0 +1,50 @@
+<aura:component extends="forceCommunity:navigationMenuBase" implements="forceCommunity:availableForAllPageTypes">
+<!--
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by MRA 🐀+ Hj 🌵 2017.11.22 -
+	//
+	// Description
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	/* >>- Changelog -<<
+	 * _REPLACE_WITH_DATE_
+	
+	 */
+-->
+	<!-- DATA VARS -->    
+	<!-- COMPONENT STATE VARS -->
+    <!-- CONFIG VARS -->
+    <aura:attribute name="showSubheadingLabels" type="Boolean" default="true" description="Show sub menu heading labels or hide them." />
+                    
+	<!-- LABELS -->
+    <!-- HANDLERS -->
+    
+    <!-- MARKUP -->
+    
+    <div>
+        <a class="hbm" onclick="{!c.toggleMenu}" onblur="{! c.hideMenu }"></a>
+        <div aura:id="menu" class="mnuPnl">
+            <a class="x" onclick="{!c.hideMenu}">
+                <span></span>
+                <span></span>
+            </a>
+            <ul onmousedown="{!c.clickMenu}">
+                <aura:iteration items="{!v.menuItems}" var="item" >
+                    <aura:if isTrue="{!item.subMenu}">
+                        <aura:if isTrue="{!v.showSubheadingLabels}">
+                            <li class="sub-nav-head"><span>{!item.label}</span></li>
+                        </aura:if>
+                        <ul>
+                            <aura:iteration items="{!item.subMenu}" var="subItem">
+                                <li><a class="{!subItem.active ? 'selected' : ''}" data-menu-item-id="{!subItem.id}" href="">{!subItem.label}</a></li>
+                            </aura:iteration>
+                        </ul>
+                        <aura:set attribute="else">
+                            <li><a class="{!item.active ? 'selected' : ''}" data-menu-item-id="{!item.id}" href="">{!item.label}</a></li>
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+            </ul>
+		</div>
+    </div>
+    
+</aura:component>

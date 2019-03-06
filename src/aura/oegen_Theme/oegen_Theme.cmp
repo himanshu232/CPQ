@@ -1,0 +1,52 @@
+<aura:component implements="forceCommunity:themeLayout" access="global" description="oe:gen Theme Layout">
+<!--
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by Hj 🌵 and MRA 🐀 2017.11.24 -
+	//
+	// Description: The oe:gen themed community layout.
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	/* >>- Changelog -<<
+	 * _REPLACE_WITH_DATE_
+	
+	 */
+-->
+    <!-- COMPONENT STATE VARS -->
+    <aura:attribute name="search" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="profileMenu" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="navBar" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="footer" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="showSubheadingLabels" type="Boolean" default="true" />
+    
+    <aura:attribute name="header_background_image"	type="String"	default="this-changes-everything.jpg" />
+    
+	<!-- CONFIG VARS -->
+    
+	
+	<!-- HANDLERS -->
+	
+	<!-- MARKUP -->
+    <div class="cViewPanel siteforceServiceBody" style="{! 'background-image: url(' + $Resource.PFResources + '/img/' + v.header_background_image + ')' }">
+        <div class="headerPnl">
+            <c:oegen_whichPage />
+            <div>
+                <div class="branding">
+                    <a class="logo" onclick="{!c.goHome}"/>
+                </div>
+                <div class="searchPnl">{!v.search}</div>
+                <div class="profilePnl">{!v.profileMenu}</div>
+                <div class="navPnl"><c:oegen_navMenu showSubheadingLabels="{!v.showSubheadingLabels}" /></div>
+                <div class="headerTxt">
+                    <c:PageHeaderPanel titleLabelName="pfc_header_home_l1" summaryLabelName="pfc_header_home_l2" header_background_image="{! v.header_background_image }"/>
+                </div>
+            </div>
+        </div>
+		
+    	
+        <div class="contentPnl">
+            {!v.body}
+        </div>
+        <div class="cFooterPanel">
+        	{!v.footer}
+        </div>
+    </div>
+</aura:component>

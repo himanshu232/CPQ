@@ -1,0 +1,134 @@
+<!--<base target="_blank"/>
+    <apex:enhancedList type="Payroll_Activities__c" height="600" /> -->
+<apex:page standardController="Payroll_Activities__c" recordSetVar="Payroll_Activities__c" extensions="ActivitiesNewTab_Controller_Extension" 
+              tabStyle="Payroll_Activities__c"
+    sidebar="false">
+   
+        
+
+    <apex:form style="width:100%">
+        
+        <apex:pageBlock >
+            <apex:pageMessages />
+            <apex:pageBlock >
+                <apex:panelGrid columns="2">
+                    <apex:outputLabel value="View:"/>
+                    <apex:selectList value="{!selectedFilterId}" size="1">
+                        <apex:actionSupport event="onchange" rerender="opp_table"/>
+                        <apex:selectOptions value="{!filters2}"/>
+                    </apex:selectList>
+                </apex:panelGrid>
+            </apex:pageBlock>
+
+            <!--
+			<apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}"/>
+            </apex:pageBlockButtons>
+			-->
+            <div id="outttt" style="width:100%; overflow-x: scroll">
+                
+            
+           <div id="innertable" style="width:0px">
+               
+           <apex:pageBlock >
+            <apex:pageBlockTable value="{!Payroll_Activities__c}" var="acc" id="opp_table" >
+                <apex:column headerValue="Link" style="min-width:75px">
+                    <apex:outputLink styleClass="btn" value="/apex/HRO_Checklist_MultiEdit?ActivityId={!acc.Id}&arrivedFromList=true&displayPopupTakeOwnership=true">Check List</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Link" style="min-width:75px">
+                    <apex:outputLink styleClass="btn" value="/apex/Ogn_Time_Card_Console?Id={!acc.Id}">Time Cards</apex:outputLink>
+                </apex:column> 
+                <apex:column headerValue="Name">
+                    <base target="_blank"/>
+                    <apex:outputLink value="/{!acc.Id}" id="theLink">{!acc.Name}</apex:outputLink>	
+                </apex:column>
+                
+                <apex:repeat value="{!$ObjectType.Payroll_Activities__c.FieldSets.Fields_to_include_in_New_Activity_Tab}" var="Var1">
+                    <apex:column headerValue="{!Var1.Label}" style="{! if (Var1.Label == 'Notes', 'min-width:250px', 'min-width:75px')}">
+                        <apex:outputField value="{!acc[Var1.fieldPath]}"/>
+                    </apex:column>
+                </apex:repeat>
+
+                <!-- Disabled while testing MHR fieldsets by AHA - 11/06/2018
+
+                <apex:column headerValue="Account">
+                    <apex:outputField value="{!acc.Account__c}"/>
+                </apex:column>
+                <apex:column headerValue="Activity">
+                    <apex:outputField value="{!acc.Activity__c}"/>
+                </apex:column>
+                <apex:column headerValue="Payroll Identifier">
+                    <apex:outputField value="{!acc.Payroll_Identifier__c}"/>
+                </apex:column>
+                <apex:column headerValue="Start Date">
+                    <apex:outputField value="{!acc.Start_Date_Time__c}"/>
+                </apex:column>
+                <apex:column headerValue="End Date">
+                    <apex:outputField value="{!acc.End_Date_Time__c}"/>
+                </apex:column>
+                <apex:column headerValue="Estimated Time To Complete">
+                    <apex:outputField value="{!acc.Estimated_Minutes_To_Complete__c}"/>
+                </apex:column>
+                <apex:column headerValue="Activity Completed">
+                    <apex:outputField value="{!acc.Activity_Completed__c}"/>
+                </apex:column>
+
+				-->
+                
+            </apex:pageBlockTable>
+            </apex:pageBlock>
+       	</div>
+                </div>
+                <table style="width: 100%"><tr>
+
+
+    <td>
+
+	Page: <apex:outputText value=" {!PageNumber} of {! CEILING(ResultSize / PageSize) }"/>    
+   </td>           
+
+ 
+
+    <!--<td align="center">-->
+	<td>
+<!-- Previous page -->
+
+<!-- active -->
+
+<apex:commandLink action="{! Previous }" value="« Previous"
+
+     rendered="{! HasPrevious }"/>
+
+<!-- inactive (no earlier pages) -->
+
+<apex:outputText style="color: #ccc;" value="« Previous"
+
+     rendered="{! NOT(HasPrevious) }"/>
+
+&nbsp;&nbsp; 
+
+ 
+
+<!-- Next page -->
+
+<!-- active -->
+
+<apex:commandLink action="{! Next }" value="Next »"
+
+     rendered="{! HasNext }"/>
+
+<!-- inactive (no more pages) -->
+
+<apex:outputText style="color: #ccc;" value="Next »"
+
+     rendered="{! NOT(HasNext) }"/>
+
+                </td>
+
+ 
+</tr></table>
+        </apex:pageBlock>
+            
+    </apex:form>
+           
+</apex:page>

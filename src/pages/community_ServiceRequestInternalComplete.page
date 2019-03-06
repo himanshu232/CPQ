@@ -1,0 +1,22 @@
+<apex:page controller="community_ServiceRequestInternalComplete" showHeader="true">
+    <apex:includeScript value="/support/console/38.0/integration.js"/>
+    
+    <div class="bPageTitle">
+        <div class="ptBody secondaryPalette brandSecondaryBrd">
+            <div class="content">
+                <h2 class="pageDescription">
+                    {!pageTitle}
+                </h2>
+                <h1 class="pageType">
+                    {!pageSubtitle}
+                </h1>
+            </div>
+        </div>
+    </div>   
+    
+    <div style="width: 1024px; margin-left: auto; margin-right: auto;">
+        <apex:pageBlock >
+            {!pageContent}
+        </apex:pageBlock>
+    </div>
+</apex:page>

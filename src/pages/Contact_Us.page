@@ -1,0 +1,22 @@
+<apex:page controller="bg_ContactUsController" docType="html-5.0" sidebar="false">
+
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.fontawesome403,'css/font-awesome.css')}" />
+
+<div class="home">
+    <div id="wrapper">
+   <div class="container-fluid">
+      <div class="row-fluid">
+         <div id="main" class="clearfix" role="main">
+            <div class="span12 clearfix" id="features">
+               <div class="text-left">
+                  <h4 style="text-align: left;"><a title="Service Desk" ><br />Service Desk</a></h4>
+                  <div style="font-size: 12px; line-height: 20px;">
+                      <p>The Service Desk is available between 9:00 and 17:00 , Monday to Friday (excluding English bank holidays ) and can be contacted on: <b> 0844 800 9278 </b>.    A telephone answering system is in operation outside of these hours for customers to leave voice messages.</p>                                       
+                  </div>
+                   </div>
+                   </div>
+                   </div>
+                   </div>
+                   </div>
+                   </div></div>
+</apex:page>

@@ -1,0 +1,716 @@
+<apex:component access="global">
+    <apex:attribute name="salesInvoice" type="c2g__codaInvoice__c"  description="Sales Invoice"/>
+    
+    <apex:componentBody >
+        <!-- RECORD TYPE -->
+        <apex:variable var="taxType" value="{!salesInvoice.c2g__OwnerCompany__r.RecordType.Name}"/>
+    
+        <!-- LABEL VARIABLES -->
+    
+        <!-- Invoice Title -->
+        <apex:variable var="lblInvoice"                     value="INVOICE" />
+    
+        <!-- Company info -->
+        <apex:variable var="lblPhone"                       value="Phone: " />
+        <apex:variable var="lblFax"                         value="Fax: " />
+        <apex:variable var="lblVATRegistrationNumber"       value="VAT Registration Number: " />
+    
+        <!-- Invoice Header -->
+        <apex:variable var="lblBillingAddress"              value="Billing Address" />
+        <apex:variable var="lblShippingAddress"             value="Shipping Address" />
+        <apex:variable var="lblInvoiceGroup"                value="Invoice Group" />
+        <apex:variable var="lblInvoiceNumber"               value="Invoice Number" />
+        <apex:variable var="lblInvoiceDate"                 value="Invoice Date" />
+        <apex:variable var="lblCustomerVATNumber"           value="Customer Vat Number" />
+        <apex:variable var="lblCustomerReference"           value="Customer Reference" />
+        <apex:variable var="lblShippingMethod"              value="Shipping Method" />
+        <apex:variable var="lblInvoiceCurrency"             value="Invoice Currency" />
+        <apex:variable var="lblDueDate"                     value="Due Date" />
+    
+        <!-- Payment Schedule -->
+        <apex:variable var="lblPaymentSchedules"            value="Payment Schedule" />
+        <apex:variable var="lblPaymentSchedulesDueDate"     value="Due Date" />
+        <apex:variable var="lblPaymentSchedulesAmount"      value="Amount" />
+    
+        <!-- Invoice Description -->
+        <apex:variable var="lblInvoiceDescription"          value="Invoice Description" />
+    
+        <!-- Invoice Lines -->
+        <apex:variable var="lblProductName"                 value="Product Name" />
+        <apex:variable var="lblProductCode"                 value="Product Code: " />
+        <apex:variable var="lblQuantity"                    value="Quantity" />
+        <apex:variable var="lblUnitPrice"                   value="Unit Price" />
+        <apex:variable var="lblTaxCode"                     value="Tax Code" />
+        <apex:variable var="lblTaxValue"                    value="Tax Value" />
+        <apex:variable var="lblNetValue"                    value="Net Value" />
+    
+        <!-- Invoice Total -->
+        <apex:variable var="lblInvoiceNetTotal"             value="Net Total" />
+        <apex:variable var="lblInvoiceTaxTotal"             value="Tax Total" />
+        <apex:variable var="lblInvoiceTotal"                value="Invoice Total" />
+    
+        <!-- Tax Summary -->
+        <apex:variable var="lbltaxsummary"                   value="Tax Summary" />
+        <apex:variable var="lbltaxRate"                      value="Tax Rate" />
+        <apex:variable var="lblnetValue"                    value="Net Value" />
+        <apex:variable var="lbltaxValue"                    value="Tax Value" />
+        <apex:variable var="lblproductCode"                 value="Product Code" />
+        
+        <!-- Discount Summary -->
+        <apex:variable var="lblsettlementdiscounts"      value="Settlement Discounts" />
+        <apex:variable var="lblpaymentdate"              value="Payment Date" />
+        <apex:variable var="lblValue"                    value="Value" />
+        
+        <!-- Currency Symbol -->
+        <apex:variable var="invoiceCurrencySymbol" value=""/>
+        <apex:variable var="invoiceFormat0dp" value=""/>
+        <apex:variable var="invoiceFormat2dp" value=""/>
+        <ffbext:currencysymbol iso="{!salesInvoice.c2g__InvoiceCurrency__r.Name}" symbolVar="invoiceCurrencySymbol" />
+    
+        <div class="email counterReset">
+            <!-- LOGO -->
+            <table>
+                <tr>
+                    <td class="textAlignRight">
+                        <apex:outputPanel rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__LogoURL__c != ''}">
+                            <img src="{!salesInvoice.c2g__OwnerCompany__r.c2g__LogoURL__c}"/>
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+            </table>
+    
+            <!-- COMPANY DETAILS
+            <table>
+                <tr>
+                    <td>
+                        <div>
+                            <apex:outputText value="{!salesInvoice.c2g__OwnerCompany__r.c2g__Street__c},&nbsp;" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__Street__c!=''}" escape="false"/>
+                            <apex:outputText value="{!salesInvoice.c2g__OwnerCompany__r.c2g__City__c},&nbsp;" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__City__c!=''}" escape="false"/>
+                            <apex:outputText value="{!salesInvoice.c2g__OwnerCompany__r.c2g__StateProvince__c},&nbsp;" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__StateProvince__c!=''}" escape="false"/>
+                            <apex:outputText value="{!salesInvoice.c2g__OwnerCompany__r.c2g__ZipPostCode__c},&nbsp;" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__ZipPostCode__c!=''}" escape="false"/>
+                            <apex:outputText value="{!salesInvoice.c2g__OwnerCompany__r.c2g__Country__c}" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__Country__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!lblPhone}{!salesInvoice.c2g__OwnerCompany__r.c2g__Phone__c}&nbsp;" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__Phone__c!=''}" escape="false"/>
+                            <apex:outputText value="{!lblFax}{!salesInvoice.c2g__OwnerCompany__r.c2g__Fax__c}" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__Fax__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!lblVATRegistrationNumber}{!salesInvoice.c2g__OwnerCompany__r.c2g__ECCountryCode__c}{!salesInvoice.c2g__OwnerCompany__r.c2g__VATRegistrationNumber__c}" rendered="{!taxType=='VAT'}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!salesInvoice.c2g__OwnerCompany__r.c2g__Website__c}" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__Website__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!salesInvoice.c2g__OwnerCompany__r.c2g__ContactEmail__c}" rendered="{!salesInvoice.c2g__OwnerCompany__r.c2g__ContactEmail__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="&nbsp;" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="&nbsp;" escape="false"/>
+                        </div>
+                    </td>
+                </tr>
+            </table> -->
+    
+            <!-- INVOICE ADDRESS AND INFORMATION-->
+            <table >
+                <td class="boxed" style="width: 40%; border-top:1px solid;">
+                    <apex:outputText rendered="{!salesInvoice.c2g__Account__r.Name!=''}" escape="false">
+                        {!salesInvoice.c2g__Account__r.Name}<br/><br/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!salesInvoice.c2g__Account__r.BillingStreet!=''}" escape="false">
+                        {!salesInvoice.c2g__Account__r.BillingStreet}<br/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!salesInvoice.c2g__Account__r.BillingCity!=''}" escape="false">
+                        {!salesInvoice.c2g__Account__r.BillingCity}<br/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!salesInvoice.c2g__Account__r.BillingState!=''}" escape="false">
+                        {!salesInvoice.c2g__Account__r.BillingState}<br/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!salesInvoice.c2g__Account__r.BillingPostalCode!=''}" escape="false">
+                        {!salesInvoice.c2g__Account__r.BillingPostalCode}<br/>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!salesInvoice.c2g__Account__r.BillingCountry!=''}" escape="false">{!salesInvoice.c2g__Account__r.BillingCountry}<br/></apex:outputText>
+                    <apex:outputText rendered="{!salesInvoice.c2g__Account__r.Invoice_Contact__c !=''}" escape="false">
+                        {!salesInvoice.c2g__Account__r.Invoice_Contact__r.Email}<br/>
+                    </apex:outputText>
+                </td>
+                <td style="width: 20%"></td>
+                    <td rowspan="2" class="alignTop">
+    
+                        <!-- SUT -->
+                        <apex:outputPanel rendered="{!taxType=='SUT'}" layout="none">
+                            <table  class="boxed">
+                                <tr>
+                                    <th class="textAlignRight">{!lblInvoiceNumber}</th>
+                                    <td>{!salesInvoice.Name}</td>
+                                </tr>
+                                <tr>
+                                    <th class="textAlignRight">{!lblInvoiceDate}</th>
+                                    <td>
+                                        <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                            <apex:param value="{!salesInvoice.c2g__InvoiceDate__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="textAlignRight">Account No.</th>
+                                    <td>{!salesInvoice.c2g__Account__r.Account_Code__c}</td>
+                                </tr>
+                                <tr>
+                                    <th class="textAlignRight">Purchase Order</th>
+                                    <td>{!salesInvoice.c2g__CustomerReference__c}</td>
+                                </tr>
+                            </table>
+                        </apex:outputPanel>
+    
+                        <!-- VAT -->
+                        <apex:outputPanel rendered="{!taxType=='VAT'}" layout="none">
+                            <apex:outputPanel rendered="{!salesInvoice.c2g__InvoiceGroup__r.Name!=''}">
+                                <table class="boxed">
+                                    <tr>
+                                        <th class="textAlignRight">{!lblInvoiceGroup}</th>
+                                        <td>{!salesInvoice.c2g__InvoiceGroup__r.Name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">{!lblInvoiceNumber}</th>
+                                        <td>{!salesInvoice.Name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">{!lblInvoiceDate}</th>
+                                        <td>
+                                            <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                <apex:param value="{!salesInvoice.c2g__InvoiceDate__c}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">Account No.</th>
+                                        <td>{!salesInvoice.c2g__Account__r.Account_Code__c}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">Purchase Order</th>
+                                        <td>{!salesInvoice.c2g__CustomerReference__c}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">{!lblCustomerVATNumber}</th>
+                                        <td>
+                                            <apex:outputText value="{!salesInvoice.c2g__Account__r.c2g__CODAECCountryCode__c}{!salesInvoice.c2g__Account__r.c2g__CODAVATRegistrationNumber__c}" rendered="{!salesInvoice.c2g__Account__r.c2g__CODAVATRegistrationNumber__c!=''}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!salesInvoice.c2g__InvoiceGroup__r.Name == ''}">
+                                <table class="boxed">
+                                    <tr>
+                                        <th class="textAlignRight">{!lblInvoiceNumber}</th>
+                                        <td>{!salesInvoice.Name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">{!lblInvoiceDate}</th>
+                                        <td>
+                                            <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                <apex:param value="{!salesInvoice.c2g__InvoiceDate__c}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">Account No.</th>
+                                        <td>{!salesInvoice.c2g__Account__r.Account_Code__c}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">Purchase Order</th>
+                                        <td>{!salesInvoice.c2g__CustomerReference__c}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="textAlignRight">{!lblCustomerVATNumber}</th>
+                                        <td>
+                                            <apex:outputText value="{!salesInvoice.c2g__Account__r.c2g__CODAECCountryCode__c}{!salesInvoice.c2g__Account__r.c2g__CODAVATRegistrationNumber__c}" rendered="{!salesInvoice.c2g__Account__r.c2g__CODAVATRegistrationNumber__c!=''}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </apex:outputPanel> 
+                        </apex:outputPanel>
+                    </td>
+            </table>
+    
+            <!-- INVOICE DETAILS 
+            <table class="boxed">
+                <tr>
+                    <th class="textAlignCenter">{!lblCustomerReference}</th>
+                    <th class="textAlignCenter">{!lblShippingMethod}</th>
+                    <th class="textAlignCenter">{!lblInvoiceCurrency}</th>
+                    <th class="textAlignCenter">{!lblDueDate}</th>
+                </tr>
+                <tr>
+                    <td class="textAlignCenter">{!salesInvoice.c2g__CustomerReference__c}</td>
+                    <td class="textAlignCenter">{!salesInvoice.c2g__ShippingMethod__c}</td>
+                    <td class="textAlignCenter">{!salesInvoice.c2g__InvoiceCurrency__r.Name}</td>
+                    <td class="textAlignCenter">
+                        <apex:outputText value="{!salesInvoice.c2g__PaymentSchedule__c}" rendered="{!salesInvoice.c2g__PaymentSchedule__c!=''}"/>
+                        <apex:outputPanel rendered="{!salesInvoice.c2g__PaymentSchedule__c==''}">
+                            <apex:outputText value="{0,date,M/d/yyyy}" rendered="{!taxType=='SUT'}">
+                                <apex:param value="{!salesInvoice.c2g__DueDate__c}"/>
+                            </apex:outputText>
+    
+                            <apex:outputText value="{0,date,dd/MM/yyyy}" rendered="{!taxType=='VAT'}">
+                                <apex:param value="{!salesInvoice.c2g__DueDate__c}"/>
+                            </apex:outputText>
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+            </table> -->
+            <apex:outputText rendered="{!salesInvoice.c2g__Account__r.Direct_Debit__c}"> 
+                <div style="text-align: center;color: red;"><b> Payment for this Invoice will be taken by direct debit on or after the below due date </b></div><br/>
+            </apex:outputText>
+            <!-- As the following fields are not directly or explicitly referenced elsewhere, 
+                 the following hidden, but explicit references are needed to ensure they are loaded -->
+            <apex:repeat value="{!salesInvoice.c2g__InvoiceLineItems__r}" var="line" rendered="false">
+                <apex:outputText rendered="false">
+                {!line.c2g__LineNumber__c} {!line.c2g__Product__r.Name} {!line.c2g__Product__r.ProductCode} {!line.c2g__LineDescription__c}
+                {!line.c2g__Quantity__c}yy {!line.c2g__UnitPrice__c} {!line.c2g__NetValue__c} {!line.c2g__TaxValueTotal__c}
+                {!line.c2g__TaxCode1__c} {!line.c2g__TaxCode2__c} {!line.c2g__TaxCode3__c}
+                {!line.c2g__TaxRate1__c} {!line.c2g__TaxRate2__c} {!line.c2g__TaxRate3__c}
+                {!line.c2g__TaxCode1__r.Name} {!line.c2g__TaxCode2__r.Name} {!line.c2g__TaxCode3__r.Name}
+                {!line.c2g__TaxValue1__c}{!line.c2g__TaxValue2__c}{!line.c2g__TaxValue3__c} {!line.Period_From__c}
+                {!line.Period_To__c} {!line.ffpsai__BillingEventItem__r.pse__Date__c}
+                {!line.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Assignment__r.Budget_Breakdown__r.OA_Number__c}
+                {!line.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.pse__Resource_Role__c}
+                {!line.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.Name}
+                {!line.ffpsai__BillingEventItem__r.pse__Expense__r.pse__Resource__r.Name}
+                {!line.ffpsai__BillingEventItem__r.pse__Category__c}{!line.ffpsai__BillingEventItem__r.pse__Expense__r.pse__Type__c}
+                {!line.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c}
+                {!line.ffpsai__BillingEventItem__r.pse__Unit_Price__c} {!line.ffpsai__BillingEventItem__r.pse__Description__c}
+                {!line.ffpsai__BillingEventItem__r.ffps_BillTrav__Billable_Travel_date__c}
+                </apex:outputText>
+            </apex:repeat>
+            
+            <apex:repeat value="{!salesInvoice.c2g__InvoiceInstallmentLineItems__r}" var="Instline" rendered="false">
+                <apex:outputText rendered="false">
+                {!Instline.c2g__LineNumber__c} {!Instline.c2g__DueDate__c} {!Instline.c2g__Amount__c} 
+                </apex:outputText> 
+            </apex:repeat>          
+                
+  
+                
+                
+            <!-- INVOICE LINES -->
+            <apex:variable var="lineNumber" value="{!0}" />
+            <ffps_BillTrav:CustomSINLineSorter2 salesInvoice="{!salesInvoice}" var="line" styleClass="boxed noBottomMargin" >
+                <apex:variable var="lineNumber" value="{!lineNumber+1}" /> 
+                <apex:outputText rendered="{!lineNumber==1}">
+                    <thead>
+                        <tr>
+                            <th class="textAlignCenter">Document Reference </th>
+                            <th class="textAlignCenter">Description</th>
+                            <th class="textAlignCenter">Period Covered</th>
+                            <th class="textAlignCenter">{!lblQuantity}</th>
+                            <th class="textAlignRight">Per Unit</th>
+                            <th class="textAlignRight widthMedium">Charge</th>
+                        </tr>
+                    </thead>
+                </apex:outputText>
+                
+                
+                <apex:outputText rendered="{!NOT(line.showTimeDate)}">
+                    <tr>
+                        <td>
+                            {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Assignment__r.Budget_Breakdown__r.OA_Number__c}
+                        </td>
+                        <td>
+                            <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c == 'Expense'}">
+                                Expense: {!line.invLine.ffpsai__BillingEventItem__r.pse__Expense__r.pse__Resource__r.Name} - {!line.invLine.ffpsai__BillingEventItem__r.pse__Expense__r.pse__Type__c} 
+                            </apex:outputText>
+                            <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c == 'Timecard' && line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c}">
+                                {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.pse__Resource_Role__c}: {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.Name} - Travel Time - {!line.invLine.ffpsai__BillingEventItem__r.pse__Description__c}
+                            </apex:outputText>
+                            
+                            <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c != 'Expense' && line.invLine.ffpsai__BillingEventItem__r.pse__Category__c != 'Timecard' && line.invLine.ffpsai__BillingEventItem__r.pse__Category__c != 'Timecard'}">
+                                {!line.invLine.c2g__LineDescription__c}
+                               <!-- <ffbext:salesinvoicecustomfield salesInvoice="{!salesInvoice}" headerFields="false" lineId="{!line.invLine.Id}" customFieldsVar="CustomFields1">
+                                    <apex:repeat value="{!CustomFields1}" var="customField">
+                                        <span class="description">{!customField.fieldName}: {!customField.fieldValue}</span>
+                                    </apex:repeat>
+                                 </ffbext:salesinvoicecustomfield> -->
+                            </apex:outputText>
+                        </td>
+                        <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c == 'Expense'}">
+                            <apex:outputText rendered="{!taxType=='SUT'}">
+                                <td align="center">
+                                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                         <apex:param value="{!line.invLine.ffpsai__BillingEventItem__r.pse__Date__c}"/> 
+                                    </apex:outputText>
+                                </td>
+                            </apex:outputText>
+                            <apex:outputText rendered="{!taxType=='VAT'}">
+                                <td align="center">
+                                    <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                         <apex:param value="{!line.invLine.ffpsai__BillingEventItem__r.pse__Date__c}"/> 
+                                    </apex:outputText>
+                                </td>
+                            </apex:outputText>
+                        </apex:outputText>
+                        
+                        <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c == 'Timecard' && line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c}">
+                            <apex:outputText rendered="{!taxType=='VAT'}">
+                                <td align="center">
+                              <!--  {!line.invLine.ffpsai__BillingEventItem__r.pse__Description__c}  -->
+                                    <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                         <apex:param value="{!line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Billable_Travel_date__c}"/> 
+                                    </apex:outputText>
+                                </td>
+                            </apex:outputText>
+                        </apex:outputText>
+                        
+                        <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c != 'Expense' && NOT(line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c)}">
+                            <apex:outputText rendered="{!taxType=='SUT'}">
+                                <td align="center">
+                                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                         <apex:param value="{!line.invLine.Period_From__c}"/> 
+                                    </apex:outputText>
+                                    &nbsp;-&nbsp;
+                                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                         <apex:param value="{!line.invLine.Period_To__c}"/> 
+                                    </apex:outputText> 
+                                </td>
+                            </apex:outputText>
+                            <apex:outputText rendered="{!taxType=='VAT'}">
+                                <td align="center">
+                                    <apex:outputText value="{0,date,dd/M/yyyy}">
+                                         <apex:param value="{!line.invLine.Period_From__c}"/> 
+                                    </apex:outputText>
+                                    &nbsp;-&nbsp;
+                                    <apex:outputText value="{0,date,d/MM/yyyy}">
+                                         <apex:param value="{!line.invLine.Period_To__c}"/> 
+                                    </apex:outputText> 
+                                </td>
+                            </apex:outputText>
+                        </apex:outputText>
+                        <td class="textAlignRight">
+                            <apex:outputText value="{0,number,0.00}">
+                                 <apex:param value="{!line.invLine.c2g__Quantity__c}"/> 
+                            </apex:outputText>              
+                        </td>
+                        <td class="textAlignRight widthMedium">
+                            <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                 {!invoiceCurrencySymbol}<apex:param value="{!line.invLine.c2g__UnitPrice__c}"/> 
+                            </apex:outputText>              
+                        </td>
+                        <td class="textAlignRight widthMedium">
+                            <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                {!invoiceCurrencySymbol}<apex:param value="{!line.invLine.c2g__NetValue__c}"/>
+                            </apex:outputText>
+                       </td>
+                    </tr>
+                </apex:outputText>
+                <apex:outputText rendered="{!line.showTimeDate}">
+                    <tr>
+                        <td>
+                            {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Assignment__r.Budget_Breakdown__r.OA_Number__c}
+                        </td>
+                        
+                        <td>
+                            <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c == 'Timecard' && line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c}">
+                                Travel Time: {!line.invLine.ffpsai__BillingEventItem__r.pse__Expense__r.pse__Resource__r.Name} - {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.Name} - T&amp;M 
+                            </apex:outputText>
+                            <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c == 'Timecard' && NOT(line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c)}">
+                                {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.pse__Resource_Role__c}: {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.Name} - T&amp;M 
+                            </apex:outputText>
+                            <apex:outputText rendered="{!line.invLine.ffpsai__BillingEventItem__r.pse__Category__c != 'Timecard' }" >
+                                {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.pse__Resource_Role__c}: {!line.invLine.ffpsai__BillingEventItem__r.pse__Timecard_Split__r.pse__Resource__r.Name} - T&amp;M 
+                            </apex:outputText>
+                             
+                        </td>
+                       <!-- <td class="textAlignRight">  -->
+                        <td align="center">
+                            <apex:outputText rendered="{!taxType=='SUT'}" value="{0,date,MM/dd/yyyy}">
+                                <apex:param value="{!line.timeDateline.pse__Date__c}"/>
+                            </apex:outputText>
+                            <apex:outputText rendered="{!taxType!='SUT'}" value="{0,date,dd/MM/yyyy}">
+                                <apex:param value="{!line.timeDateline.pse__Date__c}"/>
+                            </apex:outputText>
+                        </td>
+                        <td class="textAlignRight">
+                            <apex:outputText value="{0,number,0.00}" rendered="{!NOT(line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c)}">
+                                 <apex:param value="{!line.timeDateline.ffps_midl__HoursinDay__c}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0,number,0.00}ff" rendered="{!line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c}">
+                                 <apex:param value="{!line.invLine.c2g__Quantity__c}"/>
+                            </apex:outputText>
+                        </td>
+                        <td class="textAlignRight widthMedium">
+                            <apex:outputText value="{0,number,#,###,###,###,###,##0.00}" rendered="{!NOT(line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c)}">
+                                 {!invoiceCurrencySymbol}<apex:param value="{!line.invLine.c2g__UnitPrice__c}"/> 
+                            </apex:outputText> 
+                            <apex:outputText value="{0,number,#,###,###,###,###,##0.00}ff" rendered="{!line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c}">
+                                 {!invoiceCurrencySymbol}<apex:param value="{!line.invLine.c2g__UnitPrice__c}"/> 
+                            </apex:outputText>   
+                                       
+                        </td>
+                        <td class="textAlignRight widthMedium">
+                            <apex:outputText value="{0,number,#,###,###,###,###,##0.00}" rendered="{!NOT(line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c)}">
+                                {!invoiceCurrencySymbol}<apex:param value="{!line.invLine.c2g__UnitPrice__c * line.timeDateline.ffps_midl__HoursinDay__c}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0,number,#,###,###,###,###,##0.00}ff" rendered="{!line.invLine.ffpsai__BillingEventItem__r.ffps_BillTrav__Is_BillableTravel_Item__c}">
+                                {!invoiceCurrencySymbol}<apex:param value="{!line.invLine.ffpsai__BillingEventItem__r.pse__Unit_Price__c * line.invLine.c2g__Quantity__c}"/>
+                            </apex:outputText>
+                       </td>
+                    </tr>
+                </apex:outputText>
+            </ffps_BillTrav:CustomSINLineSorter2>
+                        
+            <table>
+                <tr>
+                    <!--<td class="noPadding">                    
+                        <!-- Tax Summary
+                        <ffbext:salesinvoicetaxtotals salesInvoice="{!salesInvoice}" summariesVar="TaxSummaries">
+                            <apex:dataTable value="{!TaxSummaries}" var="TaxSummary" styleClass="boxed tableTaxSummary" headerClass="textAlignCenter">
+                                <apex:facet name="header">{!lbltaxsummary}</apex:facet>  
+                                <apex:column headerClass="textAlignCenter widthMedium"  styleClass="alignTop textAlignCenter widthMedium">
+                                    <apex:facet name="header">{!lblTaxCode}</apex:facet>
+                                    <apex:outputText >
+                                        {!TaxSummary.taxCode}
+                                    </apex:outputText>
+                                </apex:column>
+        
+                                <apex:column headerClass="textAlignCenter widthMedium" styleClass="alignTop textAlignCenter widthMedium" rendered="{!taxType=='VAT'}">
+                                    <apex:facet name="header">{!lbltaxRate}</apex:facet>
+                                    <apex:outputText >
+                                        {!TaxSummary.taxRate}
+                                    </apex:outputText>
+                                </apex:column>
+        
+                                <apex:column headerClass="textAlignCenter widthMedium" styleClass="alignTop textAlignCenter widthMedium" rendered="{!taxType=='VAT'}">
+                                    <apex:facet name="header">{!lblnetValue}</apex:facet>
+                                    <apex:outputText value="{0,number,#,###,###,###,###,###.00}">
+                                        {!invoiceCurrencySymbol}<apex:param value="{!TaxSummary.netValue}"/>
+                                    </apex:outputText>
+                                </apex:column>
+        
+                                <apex:column headerClass="textAlignCenter widthMedium" styleClass="alignTop textAlignCenter widthMedium">
+                                    <apex:facet name="header">{!lbltaxValue}</apex:facet>
+                                    <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                        {!invoiceCurrencySymbol}<apex:param value="{!TaxSummary.taxValue}"/>
+                                    </apex:outputText>
+                                </apex:column>
+                            </apex:dataTable>
+                        </ffbext:salesinvoicetaxtotals>                  
+                    </td> -->
+    
+                    <!-- Summary Values -->
+                    <td class="alignTop noPadding">
+                        <table class="boxed boxedNoTop boxedNoBottom">
+                            <tr>
+                                <th class="nobg noLines textAlignRight">Sub Total</th>
+                                <td class="textAlignRight widthMedium boxedNoTop" style="width:100px"> 
+                                    <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                        {!invoiceCurrencySymbol}<apex:param value="{!salesInvoice.c2g__NetTotal__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="nobg noLines textAlignRight">Vat</th>
+                                <td class="textAlignRight widthMedium">
+                                    <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                        {!invoiceCurrencySymbol}<apex:param value="{!salesInvoice.c2g__TaxTotal__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="nobg noLines textAlignRight">{!lblInvoiceTotal}</th>
+                                <td class="textAlignRight widthMedium">
+                                    <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                        {!invoiceCurrencySymbol}<apex:param value="{!salesInvoice.c2g__InvoiceTotal__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!-- Description -->
+            <apex:outputPanel rendered="{!salesInvoice.c2g__InvoiceDescription__c!=''}" layout="block">
+                <table class="boxed"> 
+                    <tr>
+                        <th class="textAlignCenter">{!lblInvoiceDescription}</th>
+                    </tr>
+    
+                    <tr>
+                        <td class="textAlignCenter">Professional Services relating to {!salesInvoice.c2g__InvoiceDescription__c}</td>
+                    </tr>
+                </table>
+            </apex:outputPanel> 
+           <br/><br/>
+           <table class="boxed">
+               <tr>
+                   <th colspan="3" class="textAlignCenter">Direct payments may be made to:</th>
+               </tr>
+               <tr>
+                   <td style="width:50%">
+                       Lloyds Banking Group <br/>
+                       Old Market Square <br/>
+                       Account : MHR International UK Limited <br/>
+                       Sort Code : 30-96-18 <br/>
+                       A/C No: 03050538 <br/>
+                   </td>
+                   <td style="width:25%">
+                       Payment Reference: <br/><br/>
+                       Due Date: <br/><br/>
+                       Company Registration Number: <br/><br/>
+                       VAT Registration Number: <br/><br/>
+                   </td>
+                   <td style="width:25%">
+                       {!salesInvoice.Name}<br/><br/>
+                        <apex:outputPanel rendered="{!taxType=='SUT'}" layout="none">
+                            <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                <apex:param value="{!salesInvoice.c2g__DueDate__c}"/>
+                            </apex:outputText>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!taxType=='VAT'}" layout="none">
+                            <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                <apex:param value="{!salesInvoice.c2g__DueDate__c}"/>
+                            </apex:outputText>
+                        </apex:outputPanel><br/><br/>
+                       01852206<br/><br/>
+                       {!salesInvoice.c2g__OwnerCompany__r.c2g__ECCountryCode__c}{!salesInvoice.c2g__OwnerCompany__r.c2g__VATRegistrationNumber__c}<br/><br/>
+                   </td>
+               </tr>
+           </table>
+           <!-- Discount Summary     
+           <ffbext:salesinvoicediscount transId="{!salesInvoice.c2g__Transaction__c}" anyValueVar="anyValue" discountSummariesVar="DiscountSummaries">
+                    <table class="tableDescription">
+                        <tr>
+                            <td class="noPadding">                    
+                                    <apex:dataTable value="{!DiscountSummaries}" var="DiscountSummary"  styleClass="boxed noBottomMargin textAlignCenter" headerClass="textAlignCenter">
+                                        <apex:facet name="header">{!lblsettlementdiscounts}</apex:facet>
+                                        <apex:column headerClass="textAlignCenter" styleClass="alignTop textAlignCenter widthMedium">
+                                            <apex:facet name="header">{!lblpaymentdate}</apex:facet>
+                                                <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                    <apex:param value="{!DiscountSummary.discountDate}"/>
+                                                </apex:outputText>  
+                                        </apex:column>
+                
+                                        <apex:column headerClass="textAlignCenter" styleClass="alignTop textAlignCenter widthMedium" >
+                                            <apex:facet name="header">{!lblValue}</apex:facet>
+                                            <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                                {!invoiceCurrencySymbol}<apex:param value="{!DiscountSummary.discountValue}"/>
+                                            </apex:outputText>  
+                                        </apex:column>
+                                    </apex:dataTable>
+                            </td>
+                        </tr>
+                    </table>
+           </ffbext:salesinvoicediscount>  -->                 
+            
+            <!-- PAYMENT SCHEDULES 
+            <apex:outputPanel rendered="{!salesInvoice.c2g__PaymentSchedule__c!=''}" layout="block">    
+                <ffbext:salesinvoiceschedulelinesorter salesInvoice="{!salesInvoice}" var="line" >
+                    <table class="tableDescription">
+                        <tr>
+                            <td class="noPadding">                    
+                                <apex:dataTable value="{!line}" var="installmentLineItem" styleClass="boxed" headerClass="textaligncenter" style="width:40%">
+                                    <apex:facet name="header">{!lblPaymentSchedules}</apex:facet>
+                    
+                                    <apex:column styleClass="textAlignCenter" headerClass="textaligncenter">
+                                        <apex:facet name="header">&nbsp;</apex:facet>
+                                        <apex:outputText value="{0,number,0}">
+                                            <apex:param value="{!installmentLineItem.c2g__LineNumber__c}"/>
+                                        </apex:outputText>
+                                    </apex:column>
+                    
+                                    <apex:column headerClass="textaligncenter">
+                                        <apex:facet name="header">
+                                            {!lblPaymentSchedulesDueDate}
+                                        </apex:facet>
+                                        <apex:outputText value="{0,date,M/d/yyyy}" rendered="{!taxType=='SUT'}">
+                                            <apex:param value="{!installmentLineItem.c2g__DueDate__c}"/>
+                                        </apex:outputText>
+                                        <apex:outputText value="{0,date,d/M/yyyy}" rendered="{!taxType=='VAT'}">
+                                            <apex:param value="{!installmentLineItem.c2g__DueDate__c}"/>
+                                        </apex:outputText>
+                                    </apex:column>
+                    
+                                    <apex:column styleClass="textAlignRight"  headerClass="textaligncenter">
+                                        <apex:facet name="header">
+                                            <apex:outputPanel >{!lblPaymentSchedulesAmount}</apex:outputPanel>
+                                        </apex:facet>
+                                        <apex:outputText value="{0,number,#,###,###,###,###,###.00}">
+                                            {!invoiceCurrencySymbol}<apex:param value="{!installmentLineItem.c2g__Amount__c}"/>
+                                        </apex:outputText>
+                                    </apex:column>
+                                </apex:dataTable>                       
+                               </td>
+                        </tr>
+                    </table>
+                </ffbext:salesinvoiceschedulelinesorter>
+                </apex:outputPanel> -->
+
+            <!-- Custom Fields --> 
+            <div class="hspacer"></div>
+            <apex:outputpanel >    
+                <ffbext:salesinvoicecustomfield salesInvoice="{!salesInvoice}" headerFields="true" customFieldsVar="CustomFields2">
+                    <table style="width:405px" class="boxed tableAdditional">
+                        <tr>
+                            <th colspan="2" style="headerpadding rightline aligncenter">Additional Information</th>
+                        </tr>
+                        <apex:repeat value="{!CustomFields2}" var="customField">
+                            <tr>
+                              <td style="alignleft bottomline boxed boxedtop">{!customField.fieldName}</td>
+                              <td style="alignleft bottomline boxed boxedtop">{!customField.fieldValue}</td>
+                            </tr>
+                        </apex:repeat>
+                    </table>
+                 </ffbext:salesinvoicecustomfield>
+            </apex:outputpanel>            
+            
+            <!-- Printed Text  -->
+            <table class="tableDescription">
+                    <ffbext:salesinvoicetext salesInvoice="{!salesInvoice}" textSummariesVar="TextSummaries">
+                            <apex:repeat value="{!TextSummaries}" var="textSummary">
+                                <tr>
+                                    <th style="width:68%" class="boxed boxedtop" >{!textSummary.textHeader}</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="boxed" style="width:68%">
+                                            <apex:outputText escape="false" value="{!textSummary.textValue}"/>
+                                        </td>
+                                    <td></td>    
+                                </tr>
+                                </apex:repeat>
+                     </ffbext:salesinvoicetext>                  
+                </table>
+               <div class="footer">
+                   <table >
+                       <tr>
+                           <td class="textAlignCenter" style="font-size:7pt">
+                               Head Office: Ruddington Hall, Ruddington, Nottinghamshire, NG11 6LL <br/>
+                               Tel: 0115 945 6000 Email: salesledger@mhr.co.uk <br/>
+                               Web: https://www.mhr.co.uk <br/><br/>
+                              <apex:outputText value="{!salesInvoice.Company__c}"/>. Registered office: Peterbridge House, 3 The Lakes, NN4 7HB <br/>
+                           </td>
+                       </tr>
+                   </table>
+               </div>
+        </div>
+        
+        <!-- As the following fields are not directly or explicitly referenced elsewhere, 
+             the following hidden, but explicit references are needed to ensure they are loaded -->
+        <apex:outputText rendered="false">
+        {!salesInvoice.c2g__TaxCode2__c}
+        {!salesInvoice.c2g__Transaction__c}
+        {!salesInvoice.c2g__PrintedText1Heading__c}
+        {!salesInvoice.c2g__PrintedText1Text__c}
+        {!salesInvoice.c2g__PrintedText2Heading__c}
+        {!salesInvoice.c2g__PrintedText2Text__c}
+        {!salesInvoice.c2g__PrintedText3Heading__c}
+        {!salesInvoice.c2g__PrintedText3Text__c}
+        {!salesInvoice.c2g__PrintedText4Heading__c}
+        {!salesInvoice.c2g__PrintedText4Text__c}
+        {!salesInvoice.c2g__PrintedText5Heading__c}
+        {!salesInvoice.c2g__PrintedText5Text__c}
+        {!salesInvoice.c2g__InvoiceInstallmentLineItems__r}
+        </apex:outputText>
+    </apex:componentBody>
+</apex:component>

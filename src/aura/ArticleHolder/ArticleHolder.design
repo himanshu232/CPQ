@@ -1,0 +1,10 @@
+<design:component label="Article Holder">
+    <design:attribute name="variant" datasource="article,news article,list article" label="Variant"	description="Type of article layout and styling. CSS relies on keyword 'article'."/>
+    <design:attribute name="labelNameHeader" label="Heading text custom Label API Name" description="Blank to remove"/>
+    <design:attribute name="articleType" label="API Name of the Article Type(s) that you want to be displayed, used as a filter (Should end __kav)."
+                      description="Supports multiple article types in comma seperated format. Each type must end with '__kav'." />
+    <design:attribute name="maxNumber" label="Maximum number of articles of the type selected to display." description=""/>
+    <design:attribute name="evenSpread" label="Spread results evenly between article types" description="Where possible evenly spread results across each of the knowledge article types." />
+    <design:attribute name="sortOrder" datasource="asc,desc" default="desc" label="Sort order by date last published" description="Ascending (oldest first) or Descending (newest first) date order." />
+    <design:attribute name="dateFormat" label="Date Format" description="DateFormat as defined by: (java.text.SimpleDateFormat). Delete to default to user locale settings." />
+</design:component>

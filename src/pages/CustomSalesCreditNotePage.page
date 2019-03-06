@@ -1,0 +1,171 @@
+<apex:page standardController="c2g__codaCreditNote__c"  showHeader="false" sidebar="false" standardStylesheets="false"  renderas="{!if($CurrentPage.parameters.p == null, null, 'pdf')}">
+    
+    <!-- Styles -->
+    <apex:variable var="styleFontColor"                         value="#000000" />
+    <apex:variable var="styleHeaderBGColor"                     value="#b3b3b3" />
+    <apex:variable var="styleHeaderFontColor"                   value="#000000" />
+    <apex:variable var="styleLineColor"                         value="#000000" />
+    <head>
+        <style type="text/css">
+            body,td,th, h1 {
+            font-family:Verdana, Arial, Helvetica, sans-serif;
+            font-size:7.5pt;
+            color:{!styleFontColor};
+            }
+        
+            .email table{
+            width:100%;
+            border-collapse:collapse;
+            margin-bottom:10px;
+            }
+        
+            .email table.tableSummary{
+            width:250px;
+            }
+        
+            .email table.tableDescription{
+            width:68%;
+            margin-top:10px;
+            margin-bottom:5px;
+            }
+            
+            .email table.noBottomMargin{
+            margin-bottom:0px;
+            }
+            
+            .email table.tableTaxSummary, .email table.tableAdditional {
+            margin-top:10px;
+            margin-bottom:0px;
+            }
+        
+            .email table h1{
+            font-size:20px;
+            font-weight:700;
+            text-transform:uppercase;
+            text-align:right;
+            margin:0;
+            }
+        
+            .email table td,
+            .email table th{
+            padding:5px;
+            }
+            .email table th{
+            background-color:{!styleHeaderBGColor};
+            color:{!styleHeaderFontColor};
+            }
+        
+            .email table th.nobg{
+            background-color:transparent;
+            color:{!styleFontColor};
+            }
+        
+            .email table td.noPadding{
+            padding:0px;
+            }
+            .email table td.noPaddingLeft{
+            padding-left:0px;
+            }
+        
+            .email table td.alignTop{
+            vertical-align:top;
+            }
+        
+            .email table .textAlignLeft{
+            text-align:left;
+            }
+            .email table .textAlignCenter{
+            text-align:center;
+            }
+            .email table .textAlignRight{
+            text-align:right;
+            }
+        
+            .email table.boxed{
+            border-left:1px solid {!styleLineColor};
+            border-top:1px solid {!styleLineColor};
+            }
+        
+            .email table.boxed th, .email table.boxed td{
+            border-left:1px solid {!styleLineColor};
+            border-top:1px solid {!styleLineColor};
+            }
+        
+            .email table.boxedNoTop{
+            border-top:none;
+            border-left:none;
+            }
+            
+            .email table.boxedNoBottom{
+            border-bottom:none;
+            }
+            
+            .email table.boxedNoTop td.boxedNoTop{
+            border-top:none ;
+            }
+        
+            .email table.boxed th{
+            border-right:1px solid {!styleLineColor};
+            border-bottom:1px solid {!styleLineColor};
+            }
+        
+            .email table.boxed th.noLines{
+            border-right:1px solid {!styleLineColor};
+            border-left:none;
+            border-top:none;
+            border-bottom:none;
+            }
+        
+            .email table.boxed td{
+            border-right:1px solid {!styleLineColor};
+            border-bottom:1px solid {!styleLineColor};
+            }
+        
+            .email table.boxed td.widthLineNumbers{width:15pt;}
+            .email table.boxed td.widthSmall{width:45pt;}
+            .email table.boxed td.widthMedium{width:75pt;}
+            
+            .widthMedium{width:75pt;}
+        
+            .email table.boxed td span.description{
+            font-size:85%;
+            font-style:italic;
+            display:block;
+            }
+            
+            .boxedtop {
+            border-top:1px solid {!styleLineColor};
+            }
+                
+            .boxed {
+            border-left:1px solid {!styleLineColor};
+            border-right:1px solid {!styleLineColor};
+            border-bottom:1px solid {!styleLineColor};
+            }
+             
+            table { page-break-inside:auto }
+            tr    { page-break-inside:avoid; page-break-after:auto }
+            
+            @page {
+                margin-bottom: 100px;
+                
+                @bottom-left {content:"{!c2g__codaCreditNote__c.Name}";
+                    font-family:Verdana, Arial, Helvetica, sans-serif;
+                    font-size:7pt;
+                }
+                @bottom-right {content:"Page " counter(page) " of " counter(pages);
+                    font-family:Verdana, Arial, Helvetica, sans-serif;
+                    font-size:7pt;
+                }
+                @bottom-center {
+                    content: element(footer);
+                }
+              }
+
+            div.footer {
+                position: running(footer);
+            }
+          </style>
+    </head>
+    <c:CustomSalesCreditNotePDF creditNote="{!c2g__codaCreditNote__c}"/>    
+</apex:page>

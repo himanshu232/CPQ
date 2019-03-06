@@ -1,0 +1,31 @@
+<apex:page controller="bg_ContactUsController" docType="html-5.0" sidebar="false">
+
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.fontawesome403,'css/font-awesome.css')}" />
+
+
+<div class="home">
+    <div id="wrapper">
+   <div class="container-fluid">
+      <div class="row-fluid">
+         <div id="main" class="clearfix" role="main">
+            <div class="span12 clearfix" id="features">
+
+               <div class= "text-left">
+                  <h4 style="text-align: left;"><a title="Escalation Process" ><br />Escalation process</a></h4>
+                  <div style="font-size: 12px; line-height: 20px;">
+                      <p>Our goal is to resolve all cases in a satisfactory and timely manner, in accordance with their severity and urgency. However, we understand that from time to time support cases may require an increased focus. 
+                      If you wish to check the progress of a case, please contact the Service Desk in the first instance. If you still have concerns, please follow the escalation process below:                 
+                      </p>
+                      <p> 1st Level: Escalate directly via your case by selecting "Escalate" from the case feed
+                      </p>
+                      <p>{!contactUsDetails.Service_Desk_Manager_Name__c}, Service Desk Team Leaders <a href="mailto:{!contactUsDetails.Service_Desk_Manager_Email__c}">{!contactUsDetails.Service_Desk_Manager_Email__c}</a></p> 
+                      <p>{!contactUsDetails.Software_Director_Name__c}, Service Desk Manager <a href="mailto:{!contactUsDetails.Software_Director_Email__c}">{!contactUsDetails.Software_Director_Email__c}</a></p>
+                  </div>
+               </div>             
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+</apex:page>

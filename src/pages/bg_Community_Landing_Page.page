@@ -1,0 +1,685 @@
+<apex:page controller="CommunityLandingController" >
+
+
+<!-- Important Owl stylesheet -->
+<apex:stylesheet value="{!URLFOR($Resource.owl_resources, 'owl.carousel.css')}"/>
+
+<!-- Default Theme -->
+<apex:stylesheet value="{!URLFOR($Resource.owl_resources, 'owl.theme.css')}"/>
+
+<!--  jQuery 1.7+  -->
+<apex:includeScript value="{!$Resource.JQuery191}"/>
+
+<!-- Include js plugin -->
+<apex:includeScript value="{!$Resource.OwlCarouselJS}"/>
+
+
+<script>
+$(document).ready(function() {
+ 
+  $("#owl-demo").owlCarousel({
+ 
+      navigation : true, // Show next and prev buttons
+      slideSpeed : 300,
+      paginationSpeed : 400,
+      singleItem:true
+
+ 
+  });
+ 
+});
+</script>
+
+    <!-- oe:gen 23-12-2015 -->
+
+
+<div class="hr-home-wraps  intro-wrap">
+
+    <div class="grid-one-half   grid-marg--left">
+        <apex:outputText styleClass="customer" title="Customer" value="{!customer}" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputText styleClass="topTitle" title="Reference Balance" value="Reference Balance" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputText styleClass="topTitle" title="Your Dashboard" value="Your Dashboard" />
+    </div>
+</div>
+<div class="hr-home-wraps  intro-wrap  intro--seperator ">
+    <div class="grid-one-whole   grid-marg--left">
+        <hr/>
+    </div>
+</div>
+    
+<div class="hr-home-wraps  intro-wrap  intro-wrap--top">
+
+    <div class="grid-one-half    grid-marg--left">
+        <apex:outputText styleClass="introText" value="{!$Label.Service_Desk_Home_Page_Intro_Text}" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputText styleClass="pointsNumber" title="Reference Points" value="{!ReferencePoint}" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputLink styleClass="dashCTA" value="{!$Page.Community_Dashboards}">SUPPORT STATISTICS <i class="fa fa-arrow-right"></i></apex:outputLink>
+    </div>
+
+</div>
+    
+<div class="hr-home-wraps  intro-wrap  intro-wrap--bottom">
+<apex:outputPanel rendered="{!showServiceRequest}">
+    <div class="grid-one-whole   grid-marg--left">
+        <hr/>
+        <div class="float-right  dashCTALink-wrap">
+            <span class="dashCTALink-txt">Hosted Customers </span><apex:outputLink styleClass="dashCTALink" value="{!$Page.community_ServiceRequestList}">Service Requests <i class="fa fa-arrow-right"></i></apex:outputLink>
+        </div>
+    </div>
+</apex:outputPanel>
+
+</div>
+    
+
+<div class="hr-home-wraps">
+
+    <div class="grid-one-half  grid-marg--left">
+        <table class="table-height--long">
+            <tr>
+                <th><i class="fa fa-list-alt"></i> Latest News</th>
+            </tr>
+            <tr>
+                <td>
+                    <knowledge:articleList articleVar="article" sortBy="lastUpdated" pageSize="9" articleTypes="Latest_News__kav">
+                        <span>
+                            <span class="title"><apex:outputLink styleClass="articleLink" target="_parent" value="{!URLFOR($Action.KnowledgeArticle.View, article.id,['popup' = 'false'])}">{!IF(LEN(article.title) > 71, TRIM(LEFT(article.title, 71)) + '...', article.title)}</apex:outputLink></span>
+                            <apex:outputText >{!IF(LEN(article.abstract) > 150, TRIM(LEFT(article.abstract, 150)) + '...', article.abstract)}</apex:outputText>
+                        </span>
+                    </knowledge:articleList>
+                    <apex:outputLink styleClass="largeButton" value="/_ui/knowledge/ui/KnowledgeHome?articleType_Latest_News__kav=on">View All News Articles</apex:outputLink>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="grid-one-half  grid-marg--left">
+        <div class="grid-one-half">    
+            <table class="table-height--short">
+                 <tr>
+                    <th><i class="fa fa-file-o"></i> Latest Articles</th>
+                </tr>
+                <tr>      
+                    <td>
+                        <knowledge:articleList sortBy="lastUpdated" articleVar="article" pageSize="5" articleTypes="How_Do_I__kav, Somethings_Wrong__kav">
+                            <span>
+                                <span class="title"><apex:outputLink styleClass="articleLink" target="_parent" value="{!URLFOR($Action.KnowledgeArticle.View, article.id,['popup' = 'false'])}">{!IF(LEN(article.title) > 35, TRIM(LEFT(article.title, 35)) + '...', article.title)}</apex:outputLink></span>
+                                <apex:outputText >{!IF(LEN(article.abstract) > 65, TRIM(LEFT(article.abstract, 65)) + '...', article.abstract)}</apex:outputText>
+                            </span>
+                        </knowledge:articleList>
+                        <apex:outputLink styleClass="largeButton" value="/_ui/knowledge/ui/KnowledgeHome">View All Articles</apex:outputLink>
+                    </td>            
+                </tr>
+            </table>
+        </div>
+        
+        <div class="grid-one-half  grid-marg--left-inner">
+                <table class="table-height--short">
+                    <tr>
+                        <th><i class="fa fa-folder-open-o"></i> Recently Opened Cases</th>
+                    </tr>
+                    <tr>     
+                        <td>
+                            <apex:outputText style="color: #888;" value="{!IF(cases.size == 0, 'No cases to display', '')}"/>
+                            <apex:dataTable value="{!cases}" var="c" width="100%" rows="5" >
+                                <span>
+                                    <apex:column >
+                                        <span>
+                                            
+                                            <span class="title"><apex:outputLink styleClass="caseLink" target="_parent" value="{!URLFOR($Action.Case.View, c.id)}">{!c.CaseNumber}</apex:outputLink></span>
+                                            <apex:outputText value="{!IF(LEN(c.subject) > 65, TRIM(LEFT(c.subject, 65)) + '...', c.subject)}"></apex:outputText>
+                                        </span>
+                                    </apex:column>
+                                </span>
+                            </apex:dataTable>
+                            <apex:outputLink styleClass="largeButton" value="{!URLFOR($Action.Case.List,$ObjectType.Case,[fcf='00Bb0000003jOuj'])}">View All Open Cases</apex:outputLink>
+                        </td>
+                    </tr>
+                </table>
+        </div>
+        
+        
+        <!--
+        <div class="grid-one-half  grid-marg--left-inner">
+            <table class="logged-cases  table-height--short">
+                <tr>
+                    <th><i class="fa fa-folder-open-o"></i> Logged Cases</th>
+                </tr>
+                <tr>     
+                    <td>
+                        <apex:dataTable value="{!cases}" var="c" width="100%" rows="5" rowClasses="odd,even">
+                            <apex:column headerValue="Case No." style="vertical-align:middle" ><apex:outputLink styleClass="caseLink" target="_parent" value="{!URLFOR($Action.Case.View, c.id)}">{!c.CaseNumber}</apex:outputLink></apex:column>
+                            <apex:column headerValue="Subject" value="{!c.subject}" style="vertical-align:middle" /> 
+                        </apex:dataTable>
+                        <br/>
+                        <apex:outputLink styleClass="largeButton" value="{!URLFOR($Action.Case.List,$ObjectType.Case)}">View all Open Cases</apex:outputLink>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        -->
+        
+        <div class="grid-one-whole">
+            <div id="owl-demo" class="carouselWrap">
+                <div class="item"><a href="{!$Label.Service_Desk_Home_Page_CTA1_URL}" target="_blank"><apex:image url="{!$Resource.Carousel_Img1}" /></a></div>
+                <div class="item"><a href="{!$Label.Service_Desk_Home_Page_CTA2_URL}" target="_blank"><apex:image url="{!$Resource.Carousel_Img2}" /></a></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+<!------------  Retired 23-12-2015 ------------>
+<!--
+    <table style="width:100%">
+        <tr>
+            <td style="width:50%">
+                <apex:outputText styleClass="customer" title="Customer" value="{!customer}" />
+            </td>
+            <td style="width:25%;text-align:center;">
+                <apex:outputText styleClass="topTitle" title="Reference Points" value="Reference Points" />
+            </td>
+            <td style="width:25%;text-align:center;">
+                <apex:outputText styleClass="topTitle" title="Your Dashboard" value="Your Dashboard" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width:50%">
+                <apex:outputText styleClass="introText" value="{!$Label.Service_Desk_Home_Page_Intro_Text}" />
+            </td>
+            <td style="width:25%;text-align:center;">
+                <apex:outputText styleClass="pointsNumber" title="Reference Points" value="{!ReferencePoint}" />
+            </td>
+            <td style="width:25%;text-align:center;">
+                <apex:outputLink styleClass="dashCTA" value="{!$Page.Community_Dashboards}">SUPPORT STATISTICS -></apex:outputLink>
+            </td>
+        </tr>
+    </table>
+-->
+
+<!------------  Retired 23-12-2015 ------------>
+<!--
+        <div id="wrapper">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div id="main" class="clearfix" role="main">
+                        <div class="span11 text-center" id="features">
+                            <h3 style="float:left;"><a title="Customer">{!customer}</a></h3>
+                            <h3 style="float:right;"><a>Reference Points<span>&nbsp;&nbsp;{!ReferencePoint}</span></a></h3>
+                            <br></br>
+                        <h3><a title="ChartTitle">Age Profile of Cases</a></h3>
+                        <br></br>
+                    <apex:chart height="250" width="800" data="{!C1Data}" colorSet="#00B0F0,#A3A3A3" animate="false" >
+                        <apex:legend position="right" />                    
+                        <apex:axis type="Numeric" position="left" fields="data3,data2"
+                                   title="Number of Cases" grid="true" minimum="0" />                  
+                        <apex:axis type="Category" position="bottom" fields="name"
+                                   title="Age (Days)">
+                            <apex:chartLabel rotate="315"/>
+                        </apex:axis>
+                        <apex:barSeries orientation="vertical" axis="left" stacked="true"
+                                        xField="name" yField="data3,data2" title="Open Cases,Resolved Cases" highlight="false">
+                            <apex:chartTips height="20" width="120"/>
+                        </apex:barSeries>              
+                    </apex:chart>        
+
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+    
+<!------------  Retired 23-12-2015 ------------>
+<!--    
+    <apex:form >
+        <apex:pageBlock title="Latest News" >
+            <apex:panelGrid width="100%">
+                <table width="99%">
+                    <tr>
+                        <th width="40%">Title</th>
+                        <th width="59%">Summary</th>
+                    </tr>
+                </table>
+                <knowledge:articleList articleVar="article" pageSize="10" articleTypes="Latest_News__kav">
+                    <table  width="99%">
+                        <tr>
+                            <td width="40%">
+                                <apex:outputLink target="_blank" value="{!URLFOR($Action.KnowledgeArticle.View, article.id,['popup' = 'true'])}">{!article.title}</apex:outputLink>
+                            </td>
+                            <td width="59%"><apex:outputText >{!article.abstract}</apex:outputText></td>
+                        </tr>
+                    </table>
+                </knowledge:articleList>
+            </apex:panelGrid>
+        </apex:pageBlock>
+    </apex:form>
+-->
+    <!-- oe:gen 23-12-2015 -->
+    <!-- Temporary styles/formatting -->
+<!------------  Retired 06-01-2016 ------------>
+<!--    
+    <table style="width:100%">
+        <tr>
+            <td style="width:40%;text-align:center;">
+                <apex:outputText value="Latest News" />
+            </td>
+            <td style="width:30%;text-align:center;">
+                <apex:outputText value="Latest Articles" />
+            </td>
+            <td style="width:30%;text-align:center;">
+                <apex:outputText value="Recently Logged Cases" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40%;padding:10px;">
+                <knowledge:articleList articleVar="article" sortBy="lastUpdated" pageSize="6" articleTypes="Latest_News__kav">
+                    <apex:outputLink styleClass="articleLink" target="_parent" value="{!URLFOR($Action.KnowledgeArticle.View, article.id,['popup' = 'false'])}">{!article.title}</apex:outputLink>
+                    <br/>
+                    <apex:outputText >{!IF(LEN(article.abstract) > 160, LEFT(article.abstract, 160) + '...', article.abstract)}</apex:outputText>
+                    <br/>
+                    <br/>
+                </knowledge:articleList>
+                <apex:outputLink styleClass="largeButton" value="/_ui/knowledge/ui/KnowledgeHome?articleType_Latest_News__kav=on">View all News Articles</apex:outputLink>
+            </td>
+            <td style="width:30%;padding:10px;">
+                <knowledge:articleList sortBy="lastUpdated" articleVar="article" pageSize="3" articleTypes="How_Do_I__kav, Somethings_Wrong__kav">
+                    <apex:outputLink styleClass="articleLink" target="_parent" value="{!URLFOR($Action.KnowledgeArticle.View, article.id,['popup' = 'false'])}">{!article.title}</apex:outputLink>
+                    <br/>
+                    <apex:outputText >{!IF(LEN(article.abstract) > 160, LEFT(article.abstract, 160) + '...', article.abstract)}</apex:outputText>
+                    <br/>
+                    <br/>
+                </knowledge:articleList>
+                <apex:outputLink styleClass="largeButton" value="/_ui/knowledge/ui/KnowledgeHome?articleType_Latest_News__kav=on&articleType_How_Do_I__kav=on&articleType_Somethings_Wrong__kav=on">View all Articles</apex:outputLink>
+            </td>
+            <td style="width:30%;padding:10px;">
+                <apex:dataTable value="{!cases}" var="c" width="100%" rows="7" rowClasses="odd,even">
+                    <apex:column headerValue="Case No." style="vertical-align:middle" ><apex:outputLink styleClass="caseLink" target="_parent" value="{!URLFOR($Action.Case.View, c.id)}">{!c.CaseNumber}</apex:outputLink></apex:column>
+                    <apex:column headerValue="Subject" value="{!c.subject}" style="vertical-align:middle" /> 
+                </apex:dataTable>
+                <br/>
+                <apex:outputLink styleClass="largeButton" value="{!URLFOR($Action.Case.List,$ObjectType.Case)}">View all Open Cases</apex:outputLink>
+            </td>
+        </tr>
+        
+    </table>-->
+    
+    
+    <apex:outputPanel rendered="{!showServiceRequest}">
+        <apex:outputPanel rendered="{!environmentsToBookCount > 0}">
+            <style type="text/css">        
+                .upgradePrompt {
+                    position: fixed;
+                    left: 10px;
+                    bottom: 0;
+                    font-family: 'Didact Gothic', sans-serif !important;
+                    font-size: 1.25em;
+                    color: white;
+                    border: solid 1px #b4112e;
+                    border-bottom: 0;
+                    background-color: white;
+                    width: 400px;
+                }
+                
+                .upgradePrompt-Header {
+                    height: 40px;
+                    margin-left: 0;
+                    margin-right: 0;
+                    background-color: #b4112e;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                    line-height: 40px; 
+                }
+                
+                .upgradePrompt-Body {
+                    padding: 10px;
+                    color: black;
+                }
+                
+                .buttonDisabled {
+                    opacity: 0.7;
+                    background-color: grey;
+                }
+                
+            </style>
+            
+            <apex:includeScript value="{!$Resource.hsr_jQuery310}" />
+            <apex:includeScript value="{!$Resource.hsr_jQueryUI}" />
+            <apex:styleSheet value="{!$Resource.hsr_jQueryUICSS}" />
+            
+            <script type="text/javascript">
+                var mandatoryUpgradeState = true;
+                
+                function toggleUpgradeBox() {
+                    if(mandatoryUpgradeState == true) {
+                        mandatoryUpgradeState = false;
+                        
+                        $("#upb-icon").removeClass("fa-minus-square");
+                        $("#upb-icon").addClass("fa-plus-square");
+                        
+                         $("#upcontainer").slideUp("slow", function() {
+                            //anim complete
+                             $("#uph").animate({
+                                opacity: 0.50,
+                                width: "300px"
+                            }, 500, function() {
+                                //anim complete
+                            });
+                        });
+                        
+                    } else {
+                        mandatoryUpgradeState = true;
+                        
+                        $("#upb-icon").removeClass("fa-plus-square");
+                        $("#upb-icon").addClass("fa-minus-square");
+                        
+                        $("#uph").animate({
+                            opacity: 1.00,
+                            width: "400px"
+                        }, 500, function() {
+                            //anim complete
+                            $("#upcontainer").slideDown();
+                        });
+                    }
+                }
+                
+                function confirm() {
+                    if($("#upg-date").html() == "") {
+                        $("#upg-valid").html("Please select a date by clicking the textbox above.");
+                        window.setTimeout(function() {
+                            $("#upg-valid").html("&nbsp;");
+                        }, 10000);
+                        return;
+                    }
+                    $("#upc").show();
+                    $("#upb").hide();
+                }
+                
+                function cancel() {
+                    $("#upc").hide();
+                    $("#upb").show();
+                }
+            </script>
+            <div class="upgradePrompt" id="uph">
+                <div class="upgradePrompt-Header">
+                    <i class="fa fa-calendar" aria-hidden="true"></i> Mandatory iTrent Upgrade {!nextMandatory}  <a href="javascript:void" onclick="toggleUpgradeBox()" style="color: white;"><i id="upb-icon" style="float: right; margin-top: 12px;" class="fa fa-minus-square" aria-hidden="true"></i></a>
+                </div>
+                <apex:form >
+                    <apex:outputPanel rendered="{!hsr_CreditStop == false}">
+                        <div id="upcontainer" >            
+                            <div class="upgradePrompt-Body" id="upb">
+                                <span style="color: #b4112e; font-weight: bold;">Book your mandatory iTrent upgrade to version {!nextMandatory} </span><br />
+                                {!upgBoxText}
+                                <br /><br />
+                                <div id="safeguard">
+                                    <style type="text/css">
+                                        .btn1, .btn3 {
+                                            padding: 10px; 
+                                            background-color: #b4112e; 
+                                            color: white; 
+                                            text-align: center;
+                                        }
+                                        
+                                        .btn1:hover, .btn3:hover {
+                                            background-color: #750b1e;
+                                            cursor: pointer;
+                                        }
+                                        
+                                        .btn2 {
+                                            padding: 10px; 
+                                            background-color: #a6a6a6; 
+                                            color: white; 
+                                            text-align: center;
+                                        }
+                                        
+                                        .btn2:hover {
+                                            background-color: #808080;
+                                            cursor: pointer;
+                                        }
+                                    </style>
+                                    <div style="float: left; width: 49%;">
+                                        <div class="btn1">Book Independently</div>
+                                    </div>
+                                    <div style="float: right; width: 49%;">
+                                        <div class="btn2">Book Together</div>
+                                    </div>
+                                    <script>
+                                        $(".btn1").on("click", function() {
+                                            window.location.href = "/ServiceDesk/community_ServiceRequestCreate";
+                                        });
+                                    
+                                        $(".btn2").on("click", function() {
+                                            $("#unsafe").show();
+                                            $("#safeguard").hide();
+                                        });
+                                    </script>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div id="unsafe" style="display: none;">
+                                    <span style="color: #b4112e; font-weight: bold;">{!bookingString}</span><br />
+                                    <div style="text-align: left;">
+                                        <apex:actionFunction name="grabDate" action="{!upgGrabDate}" immediate="true" reRender="">
+                                            <apex:param name="upgDate" id="upgDate" value="" assignTo="{!serviceDate}" />
+                                        </apex:actionFunction>
+                                        <apex:inputText value="{!serviceDate}" html-readonly="true" id="serDate_Picker" onchange="grabDate(this.value);" html-placeholder="Click to choose a date" style="height: 20px;" />
+                                        <script type="text/javascript">
+                                            var availDates = null;
+                                            var availDateList = "{!serviceDateList}";
+                                                                            
+                                            $(document).ready(function() {
+                                                availDates = availDateList.split(",");
+                                            
+                                                $('input[id$="serDate_Picker"]').datepicker("destroy");
+                                                $('input[id$="serDate_Picker"]').datepicker({
+                                                    dateFormat: 'dd/mm/yy',
+                                                    changeMonth: true,
+                                                    changeYear: true,
+                                                    beforeShowDay: checkAvailable,
+                                                    minDate: "{!upg_Start_Date}",
+                                                    maxDate: "{!upg_End_Date}",
+                                                    onSelect: function(date, inst) {
+                                                        $("#upg-date").html(date);
+                                                        $("#contbutton").show();
+                                                    }
+                                                });
+                                            });
+                                            
+                                            function checkAvailable(date) {
+                                                console.log("checking date " + date);
+                                                var strM = date.getMonth() + 1;
+                                                
+                                                if(strM < 10) {
+                                                    strM = "0" + strM;
+                                                }
+                                                
+                                                var strD = date.getDate();
+                                                if(strD < 10) {
+                                                    strD = "0" + strD;
+                                                }
+                                                
+                                                if($.inArray(strD + "/" + strM + "/" + date.getFullYear(), availDates) != -1) {
+                                                    return [true, "", "Available"];
+                                                } else {
+                                                    return [false, "", "unAvailable"];
+                                                }
+                                            }
+                                        </script>
+                                        <!--<apex:commandButton onclick="confirm(); e.preventDefault(); return false;" value="Book Upgrades"></apex:commandButton>-->
+                                        <input class="btn" onclick="confirm();" type="button" value="Continue" />
+                                        <br /><span id="upg-valid">&nbsp;</span><br />
+                                        <span style="color: #b4112e; font-weight: bold;">Alternatively, book your upgrades independently:</span><br />
+                                        <div style="float: left; width: 49%; padding-top: 5px;">
+                                            <div class="btn3">Book Independently</div>
+                                            <script>
+                                                $(".btn3").on("click", function() {
+                                                    window.location.href = "/ServiceDesk/community_ServiceRequestCreate";
+                                                });
+                                            </script>
+                                        </div>
+                                        <div style="clear: both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="upc" class="upgradePrompt-Body" style="display:none;">
+                                <span style="color: #b4112e; font-weight: bold;">Confirm your upgrades</span><br />
+                                <apex:outputText escape="false" value="{!upgradeMiniTerms}"></apex:outputText><br /><br />
+                                <div style="text-align: center;"><apex:commandButton action="{!bookMandatoryUpgrades}" value="Book Upgrades"></apex:commandButton><input class="btn" onclick="cancel();" type="button" value="Cancel" /></div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!hsr_CreditStop == true}">
+                        <div id="upcontainer" >
+                            <div class="upgradePrompt-Body" id="upb">
+                                <span style="color: #b4112e; font-weight: bold;">It is not currently possible to schedule your upgrade</span><br /><br />
+                                Your organisation cannot currently upgrade to iTrent version {!nextMandatory}. <br /><br />
+                                <strong>Please contact the Credit Control team on 0115 977 6797 to proceed.</strong>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </apex:form>
+            </div>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!hsrUpg_Status != ''}" >
+            <style type="text/css">        
+                .upgradePrompt {
+                    position: fixed;
+                    left: 10px;
+                    bottom: 0;
+                    font-family: 'Didact Gothic', sans-serif !important;
+                    font-size: 1.25em;
+                    color: white;
+                    border: solid 1px #b4112e;
+                    border-bottom: 0;
+                    background-color: white;
+                    width: 400px;
+                }
+                
+                .upgradePrompt-Header {
+                    height: 40px;
+                    margin-left: 0;
+                    margin-right: 0;
+                    background-color: #b4112e;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                    line-height: 40px; 
+                }
+                
+                .upgradePrompt-Body {
+                    padding: 10px;
+                    color: black;
+                }
+                
+                .buttonDisabled {
+                    opacity: 0.7;
+                    background-color: grey;
+                }
+                
+            </style>
+            
+            <apex:includeScript value="{!$Resource.hsr_jQuery310}" />
+            <apex:includeScript value="{!$Resource.hsr_jQueryUI}" />
+            <apex:styleSheet value="{!$Resource.hsr_jQueryUICSS}" />
+            <style type="text/css">
+                .ui-state-hover .ui-icon,
+                .ui-state-focus .ui-icon,
+                .ui-button:hover .ui-icon,
+                .ui-button:focus .ui-icon,
+                .ui-state-default .ui-icon {
+                    background-image: url("{!$Resource.hsr_jQueryUISprite_555555}");
+                }
+                
+                .ui-widget-content .ui-icon {
+                    background-image: url("{!$Resource.hsr_jQueryUISprite_444444}");
+                }
+            </style>
+            
+            <script type="text/javascript">
+                var mandatoryUpgradeState = true;
+                
+                function toggleUpgradeBox() {
+                    if(mandatoryUpgradeState == true) {
+                        mandatoryUpgradeState = false;
+                        
+                        $("#upb-icon").removeClass("fa-minus-square");
+                        $("#upb-icon").addClass("fa-plus-square");
+                        
+                         $("#upcontainer").slideUp("slow", function() {
+                            //anim complete
+                             $("#uph").animate({
+                                opacity: 0.50,
+                                width: "300px"
+                            }, 500, function() {
+                                //anim complete
+                            });
+                        });
+                        
+                    } else {
+                        mandatoryUpgradeState = true;
+                        
+                        $("#upb-icon").removeClass("fa-plus-square");
+                        $("#upb-icon").addClass("fa-minus-square");
+                        
+                        $("#uph").animate({
+                            opacity: 1.00,
+                            width: "400px"
+                        }, 500, function() {
+                            //anim complete
+                            $("#upcontainer").slideDown();
+                        });
+                    }
+                }
+                
+                function confirm() {
+                    if($("#upg-date").html() == "") {
+                        $("#upg-valid").html("Please select a date by clicking the textbox above.");
+                        window.setTimeout(function() {
+                            $("#upg-valid").html("&nbsp;");
+                        }, 10000);
+                        return;
+                    }
+                    $("#upc").show();
+                    $("#upb").hide();
+                }
+                
+                function cancel() {
+                    $("#upc").hide();
+                    $("#upb").show();
+                }
+            </script>
+            <div class="upgradePrompt" id="uph">
+                <div class="upgradePrompt-Header">
+                    <i class="fa fa-calendar" aria-hidden="true"></i> Mandatory iTrent Upgrade {!nextMandatory}   <a href="javascript:void" onclick="toggleUpgradeBox()" style="color: white;"><i id="upb-icon" style="float: right; margin-top: 12px;" class="fa fa-minus-square" aria-hidden="true"></i></a>
+                </div>
+                <apex:form >
+                    <div id="upcontainer">            
+                        <apex:outputPanel rendered="{!hsrUpg_Status == 'complete'}">
+                            <div class="upgradePrompt-Body" id="upb">
+                                <span style="color: #b4112e; font-weight: bold;">Booking complete!</span><br />
+                                You have successfully completed booking your mandatory {!nextMandatory} upgrades. Click&nbsp;<apex:outputLink styleClass="dashCTALink" value="{!$Page.community_ServiceRequestList}">here</apex:outputLink> to approve the requests.
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!hsrUpg_Status == 'fault'}">
+                            <div class="upgradePrompt-Body" id="upb">
+                                <span style="color: #b4112e; font-weight: bold;">An error has occurred</span><br />
+                                Unfortunately, there was a problem completing the booking of your mandatory {!nextMandatory} upgrades.<br /><br />Please contact the Cloud Services Operations Team on 0115 977 6749 to progress your booking.
+                            </div>
+                        </apex:outputPanel>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:outputPanel>
+    </apex:outputPanel>
+</apex:page>

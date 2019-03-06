@@ -1,0 +1,7 @@
+<apex:page standardController="SCMC__Purchase_Order__c" renderAs="PDF">
+<apex:stylesheet value="{!$Resource.SCMC__LandscapePageStyle}"/>
+  <apex:outputpanel rendered="False"> 
+    {!SCMC__Purchase_Order__c.SCMC__Purchase_Order_Name__c}
+  </apex:outputpanel>
+    <c:FFCONS_SCMPurchaseOrderCUS purchaseOrderId="{!SCMC__Purchase_Order__c.id}" purchaseOrder="{!SCMC__Purchase_Order__c}" />
+</apex:page>

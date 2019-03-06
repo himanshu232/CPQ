@@ -1,0 +1,3 @@
+<design:component label="oe:gen themed">
+    <design:attribute name="showSubheadingLabels" label="Sub heading labels" description="In navigation side bar show sub heading labels if applicable." />
+</design:component>

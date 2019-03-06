@@ -1,0 +1,28 @@
+<aura:component implements="forceCommunity:availableforAllPageTypes" access="public">
+    
+    <!-- DATA VARS-->
+	
+    
+    <!-- COMPONENT STATE VARS -->
+
+
+    <!-- CONFIG VARS -->
+    <aura:attribute name="showSocialIcons" type="Boolean" description="Enable or disable Social icons in footer" default="true"/>
+
+    <!-- LABELS -->
+    <aura:attribute name="Copyright" type="String" description="Copyright notice" default="© 2017 People First Ltd"/>
+    
+    <!-- HANDLERS -->
+    
+    
+
+    <!-- MARKUP -->
+    <div class="footer">
+        
+        <p class="copyright">{! v.Copyright }</p>
+        <aura:if isTrue="{! v.showSocialIcons }">
+            <c:pfsocialIcons />
+        </aura:if>
+        
+    </div>
+</aura:component>

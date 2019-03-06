@@ -1,0 +1,30 @@
+<apex:page >
+
+
+
+<div class="home">
+    <div id="wrapper">
+   <div class="container-fluid">
+      <div class="row-fluid">
+         <div id="main" class="clearfix" role="main">
+            <div class="span12 clearfix" id="features">
+               <div class="text-left">
+                  <h4 style="text-align: left;"><a title="Customer Dashboard" ><br />Customer Dashboard</a></h4>
+                  <div style="font-size: 12px; line-height: 20px;">
+                      <p>Welcome to MidlandHR's customer dashboard.</p>                                       
+                  </div>
+                  
+               <div class="menuButton" id="refresh"><div class="menuButtonButton hasDefault" id="refreshButton"><span class="menuButtonLabel" id="refreshLabel" tabindex="0">Refresh</span></div><div class="menuButtonMenu" id="refreshMenu"><a href="javascript:sfdc.dashboardView.doRefresh%28false%29" class="menuButtonMenuLink firstMenuItem">Refresh Now</a><a href="/p/dash/sched/ScheduleDashboardPage/e?pid=01Zb0000000kHlF&amp;retURL=%2F01Zb0000000kHlF%3Fm%3DVIEW" class="menuButtonMenuLink" shouldstayinownframe="true">Schedule Refresh...</a></div></div>
+              
+               <p> </p>             
+               
+               <apex:iframe src="https://midlandhr.my.salesforce.com/servlet/servlet.ChartServer?rsid=0FLb00000019YXV&ruid=005b0000001DF1t&did=01Zb0000000kHlF&s=8&fs=12&tfg=12&tfs=-16777216&explode=0&c=donut&cs=0&title=Team+1&eh=no&compo=no&fg=-16777216&bg1=-1&bg2=-1&bgdir=2&dl1=Case+Owner&dl2=&l=1&sax=no&Yman=no&nc=0&actUrl=%2F00Ob00000049rdc&sd=1&scv=yes&sct=yes&spt=no&bd=yes&cu=GBP&ab=X&u=0&vt=0&ab2=Y&u2=0&vt2=0&vl0=Record+Count&spoc=no&topn=no&gm=0.0&gc0=-1&gm0=1.0&gc1=-1&gm1=2.0&gc2=-1&gm2=3.0&sona=0&refreshts=1444733752000" height="300" width="45%" frameborder="false"/> 
+         
+                <apex:iframe src="https://midlandhr.my.salesforce.com/servlet/servlet.ChartServer?rsid=0FLb00000019YXW&ruid=005b0000001DF1t&did=01Zb0000000kHlF&s=8&fs=12&tfg=12&tfs=-16777216&explode=0&c=donut&cs=0&title=Team+2&eh=no&compo=no&fg=-16777216&bg1=-1&bg2=-1&bgdir=2&dl1=Case+Owner&dl2=&l=1&sax=no&Yman=no&nc=0&actUrl=%2F00Ob00000049rdh&sd=1&scv=yes&sct=yes&spt=no&bd=yes&cu=GBP&ab=X&u=0&vt=0&ab2=Y&u2=0&vt2=0&vl0=Record+Count&spoc=no&topn=no&gm=0.0&gc0=-1&gm0=1.0&gc1=-1&gm1=2.0&gc2=-1&gm2=3.0&sona=0&refreshts=1444727995000" height="300" width="45%" frameborder="false"/>   
+                   </div>
+                   </div>
+                   </div>                                               
+                   </div>
+                   </div>
+                   </div></div>
+</apex:page>

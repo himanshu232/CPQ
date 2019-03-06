@@ -1,0 +1,64 @@
+<apex:page StandardController="Case" extensions="Escalation_QuickAction_Controller" showHeader="false" sidebar="false">
+    
+    <apex:includeScript value="/canvas/sdk/js/publisher.js"/>
+    <div>
+        <apex:form style="padding-top: 5px; padding-left: 2px; padding-right: 2px; display:block; color: rgba(51,51,51,1) !important;
+                          font-size: 12px !important;
+                          font-weight: bold !important;
+                          text-transform: none !important;
+                          text-decoration: none !important;">  
+            <apex:outputPanel layout="block" style="border:1px solid #c7ccce; padding:5px; max-height:245px; overflow:auto;">
+                <div style="padding-bottom:5px">
+                    
+                    <!-- Initial message -->
+                    <apex:outputLabel rendered="{!!alreadyExists}" style="padding-bottom:4px">What’s your escalation about?</apex:outputLabel>
+                    <br/>
+                    <apex:inputField label="" required="true" value="{!esc.Reason_for_Escalation__c}" rendered="{!!alreadyExists}" style="background-image: -webkit-gradient(linear,left top,left bottom,color-stop(.16,rgb(255,255,255) ),color-stop(.58,rgb(243,243,243) ) ); font-family: 'Arial','Helvetica',san-serif;
+                                                                                                                                                color: #222;
+                                                                                                                                                height: 30px;
+                                                                                                                                                padding-top: 6px;
+                                                                                                                                                padding-bottom: 6px;
+                                                                                                                                                padding-left: 5px;                                                                                                                                                               
+                                                                                                                                                width:100%;
+                                                                                                                                                align:centre;"/>
+                    <!-- Error States and confirmation messages -->
+                    <apex:outputPanel layout="block" rendered="{!alreadyExists && !completeMessage}">
+                        <apex:outputText >This case has already been escalated, please contact our Team Leaders</apex:outputText>
+                        <br/>
+                        <apex:commandLink title="Here" target="_top" value="using this Link" action="{!redirectToLink}"/>
+                    </apex:outputPanel>
+                    <apex:outputText rendered="{!errorMessage}">Escalation is not possible at this time, please try again later</apex:outputText>
+                    <apex:outputText rendered="{!completeMessage}">Your escalation was successfully created.</apex:outputText>
+                </div>
+                <div style="display:inline-block; width:99%; align:centre; padding-bottom:4px">
+                    <apex:outputLabel rendered="{!!alreadyExists}" style="padding-bottom:4px">Information about your escalation</apex:outputLabel>
+                    <br/>
+                    <apex:inputTextarea label="" required="true" value="{!esc.Escalation_Details__c}" rendered="{!!alreadyExists}" style="height:100px; width:100%; box-shadow: 0 1px 1px rgba(208,213,214,.5) inset; padding: 3px; "/>  
+                    <br/>
+                </div>
+            <apex:outputPanel layout="block" rendered="{!!alreadyExists}" style="padding: 9px;
+                        height: 30px;
+                        line-height: 30px;
+                        background: #f5f6f6;
+                        border: 1px solid #c7ccce;
+                        -moz-border-radius: 3px;
+                        border-radius: 3px;
+                        border-top-left-radius: 0;
+                        border-top-right-radius: 0;">
+                <apex:commandButton value="Submit" action="{!saveEscalation}" style="float:right; background: none;
+                                                                                                                        background: #b41f30;
+                                                                                                                        height:30px;
+                                                                                                                        width:60px;                                                                        
+                                                                                                                        background-color: #b41f30
+                                                                                                                        -webkit-border-radius: 0px;
+                                                                                                                        -moz-border-radius: 0px;
+                                                                                                                        border-radius: 0px;
+                                                                                                                        box-shadow: none;
+                                                                                                                        -webkit-box-shadow: none;
+                                                                                                                        border: 0px;
+                                                                                                                        color: #f8f8f8;"/> 
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:form>
+    </div>
+</apex:page>

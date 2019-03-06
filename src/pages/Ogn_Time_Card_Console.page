@@ -1,0 +1,280 @@
+<!--
+	///////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // Page: Ogn_Time_Card_Console
+    // Controller: Payroll_Activities__c
+	// Extends: Ogn_Time_Card_Console_Handler
+    // - Author: AHA 𝝺
+    // - Company: Oegen Ltd
+    // - Description: 
+	//
+	//	--	Variables -- 
+	//	
+    ///////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	--> 
+<apex:page StandardController="Payroll_Activities__c" extensions="Ogn_Time_Card_Console_Handler">
+    <style>
+        .headerRow{
+            text-align:center;
+        }
+        .dateFormat{display:none;}
+    </style>
+	<script type="text/javascript">
+        window.onload = setFocus
+        function setFocus() {
+                      document.getElementById("Timecard_Running_list").focus();
+        }
+    	function setFocus2() {
+                 var foccus = document.getElementById("{!$Component.all2.Timecard_Running_list.table1.col1111.field2}");
+            	foccus.focus();
+                foccus.select();
+            	
+        }
+    	  
+        function noenter(e){               
+            if(window.event){                    
+                key = window.event.keyCode;     //IE               
+            } 
+            else{                    
+                key = e.which;     //firefox               
+            }               
+            if(key == 13) {                    
+                redirct();
+            
+            	return false;
+            
+            }
+                    
+        }         
+    </script>
+    <apex:form id="all2">
+        <div style="width:1020">
+        <apex:sectionHeader title="Account: {!CustomerName}" rendered="{!runningTimecard}" subtitle="Checklist for Activity: {!ActivityName} due by {!EndDatetime} in Stage {!StageName} for {!ScheduleName}">
+            <apex:outPutLink value="/{!currentActivity}">
+                 [Back to Activity]
+            </apex:outPutLink>
+            <br/>
+            <br/>
+            <apex:outPutLink value="/apex/ActivitiesNewTab">
+                 [Back to Activity List]
+            </apex:outPutLink>
+            <br/>
+            <br/>
+            <h1>Create a Timecard for this activity</h1>
+            <span>    </span>
+            <apex:commandButton value="Create" action="{!createTimecard}" id="btn3"/>
+        </apex:sectionHeader>
+        
+        <apex:sectionHeader title="Account: {!CustomerName}" rendered="{!notrunningTimecard}" subtitle="Checklist for Activity: {!ActivityName} due by {!EndDatetime} in Stage {!StageName} for {!ScheduleName}">
+            <apex:outPutLink value="/{!currentActivity}">
+                 [Back to Activity]
+            </apex:outPutLink>
+            <br/>
+            <br/>
+            <apex:outPutLink value="/apex/ActivitiesNewTab">
+                 [Back to Activity List]
+            </apex:outPutLink>
+            <br/>
+            <br/>
+            <h1>You have no active Time cards</h1>
+            <br/>     
+            <h1>Please create one before continuing</h1>
+            <span>    </span>
+            <apex:commandButton value="Create" action="{!createTimecard}" id="btn4"/>
+        </apex:sectionHeader>
+        <br/> 
+        <br/> 
+        
+        <apex:pageBlock title="Time Cards Currently Running for this Activity" id="Timecard_Running_list_current" rendered="{!runningTimecard}" >
+            <!-- Time Card List -->
+            
+            <apex:pageBlockTable value="{! currnetTimeCards }" var="tc" style="text-align:center" Id="table1">
+                
+                <apex:column style="text-align:center">
+                    <apex:commandLink value="Stop" action="{!stopTimecard}" id="btn2" styleClass="btn">
+                        <apex:param name="timeC" value="{!tc.Id}" assignTo="{!timeCId}" />
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:commandLink value="Save" action="{!saveTC}" styleClass="btn" id="btn1" onmouseout="this.focus()">
+                        <apex:param name="timeC1" value="{!tc.Id}" assignTo="{!timeCId}" />
+                        <apex:param name="timeC12" value="{!TEXT(tc.Start__c)}" assignTo="{!timeCStart}" />
+                        <apex:param name="timeC13" value="{!TEXT(tc.End__c)}" assignTo="{!timeCEnd}" /> 
+                    </apex:commandLink>
+                </apex:column>
+        		<apex:column headerValue="TimeCard" style="text-align:center">
+                    <apex:outputLink value="/{!tc.Id}" id="theLink">{!tc.Name}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Customer Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Account__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Schedule Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Schedule_Name__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Stage Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Payroll_Stage__r.Stage__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Related Activity" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Activity Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Mentored Activity" style="text-align:center">
+                    <apex:outputField value="{! tc.Mentored_Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Rework" style="text-align:center">
+                    <apex:outputField value="{! tc.Re_work__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Has Notes" style="text-align:center">
+                    <apex:outputField value="{! tc.Has_Notes__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Start Date" id="col1" style="width:105px">
+                    <apex:inputField value="{! tc.Start__c}" onkeypress="">
+                        <apex:actionSupport event="onmouseout" action="{!donothing2}" reRender="btn1" />
+                        <apex:actionSupport event="onchange" action="{!donothing2}" reRender="btn1" />
+                    </apex:inputField>
+                </apex:column>
+                <apex:column headerValue="End Date" style="width:105px" id="col1111">
+                    <apex:inputField value="{! tc.End__c}" id="field2">
+                        <apex:actionSupport event="onchange" action="{!donothing2}" reRender="btn1"/>
+                    </apex:inputField>
+                </apex:column>
+            </apex:pageBlockTable>
+            <br/>
+            <br/>
+
+            <!-- Time Card List goes here -->
+        </apex:pageBlock>    
+            
+        <apex:pageBlock title="Time Cards Currently Running for other activities" id="Timecard_Running_list" rendered="{!runningTimecard}" >
+            <!-- Time Card List -->
+            
+            <apex:pageBlockTable value="{! stillRunningTimeCards }" var="tc" style="text-align:center" Id="table1">
+                
+                <apex:column style="text-align:center">
+                    <apex:commandLink value="Stop" action="{!stopTimecard}" id="btn2" styleClass="btn">
+                        <apex:param name="timeC" value="{!tc.Id}" assignTo="{!timeCId}" />
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:commandLink value="Save" action="{!saveTC}" styleClass="btn" id="btn1" onmouseout="this.focus()">
+                        <apex:param name="timeC1" value="{!tc.Id}" assignTo="{!timeCId}" />
+                        <apex:param name="timeC12" value="{!TEXT(tc.Start__c)}" assignTo="{!timeCStart}" />
+                        <apex:param name="timeC13" value="{!TEXT(tc.End__c)}" assignTo="{!timeCEnd}" /> 
+                    </apex:commandLink>
+                </apex:column>
+        		<apex:column headerValue="TimeCard" style="text-align:center">
+                    <apex:outputLink value="/{!tc.Id}" id="theLink">{!tc.Name}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Customer Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Account__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Schedule Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Schedule_Name__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Stage Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Payroll_Stage__r.Stage__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Related Activity" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Activity Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Mentored Activity" style="text-align:center">
+                    <apex:outputField value="{! tc.Mentored_Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Rework" style="text-align:center">
+                    <apex:outputField value="{! tc.Re_work__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Has Notes" style="text-align:center">
+                    <apex:outputField value="{! tc.Has_Notes__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Start Date" id="col1" style="width:105px">
+                    <apex:inputField value="{! tc.Start__c}" onkeypress="">
+                        <apex:actionSupport event="onmouseout" action="{!donothing2}" reRender="btn1" />
+                        <apex:actionSupport event="onchange" action="{!donothing2}" reRender="btn1" />
+                    </apex:inputField>
+                </apex:column>
+                <apex:column headerValue="End Date" style="width:105px" id="col1111">
+                    <apex:inputField value="{! tc.End__c}" id="field2">
+                        <apex:actionSupport event="onchange" action="{!donothing2}" reRender="btn1"/>
+                    </apex:inputField>
+                </apex:column>
+            </apex:pageBlockTable>
+            <br/>
+            <br/>
+
+            <!-- Time Card List goes here -->
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="Last 25 Timecards" id="Timecard_list" > 
+            <!-- Time Card List -->
+            
+            <apex:pageBlockTable value="{! TimeCards }" var="tc"  summary="All other related Timecards" style="text-align:center; align:center" align="center" headerClass="tableclass">
+               	<!--
+                <apex:column >
+                <apex:commandLink value="Save" action="{!saveTC}" styleClass="btn" id="btn11">
+                    <apex:param name="timeC1" value="{!tc.Id}" assignTo="{!timeCId}" />
+                    <apex:param name="timeC12" value="{!TEXT(tc.Start__c)}" assignTo="{!timeCStart}" />
+                    <apex:param name="timeC13" value="{!TEXT(tc.End__c)}" assignTo="{!timeCEnd}" /> 
+                </apex:commandLink>
+                
+				</apex:column>
+				-->
+                <apex:column headerValue="TimeCard" style="text-align:center;">
+                    <apex:outputLink value="/{!tc.Id}" id="theLink2">{!tc.Name}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Customer Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Account__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Schedule Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Schedule_Name__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Stage Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Payroll_Stage__r.Stage__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Related Activity" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__c }" /> 
+                </apex:column>
+                <apex:column headerValue="Activity Name" style="text-align:center">
+                    <apex:outputField value="{! tc.Activity__r.Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Mentored Activity" style="text-align:center">
+                    <apex:outputField value="{! tc.Mentored_Activity__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Rework" style="text-align:center">
+                    <apex:outputField value="{! tc.Re_work__c}" /> 
+                </apex:column>
+                <apex:column headerValue="Has Notes" style="text-align:center">
+                    <apex:outputField value="{! tc.Has_Notes__c}" /> 
+                </apex:column>
+                
+                <apex:column headerValue="Start Date" style="width:120px">
+                    <!--
+                    <apex:inputField value="{! tc.Start__c}">
+                        <apex:actionSupport event="onchange" action="{!donothing2}" reRender="btn11"/>
+                    </apex:inputField>
+					-->
+                    <apex:outputField value="{! tc.Start__c }" /> 
+                    </apex:column>
+                <apex:column headerValue="End Date" style="width:120px">
+                    <!--
+                    <apex:inputField value="{! tc.End__c}">
+                        <apex:actionSupport event="onchange" action="{!donothing2}" reRender="btn11"/>
+                    </apex:inputField>
+                    -->
+                    <apex:outputField value="{! tc.End__c }" /> 
+                </apex:column>
+                
+                <apex:column headerValue="Duration (mins)" style="text-align:center">
+                    <apex:outputField value="{! tc.Time_Card_Duration__c}" /> 
+                </apex:column>
+              
+                
+            </apex:pageBlockTable>
+            <!-- Time Card List goes here -->
+        </apex:pageBlock>
+        </div>
+    </apex:form>
+</apex:page>

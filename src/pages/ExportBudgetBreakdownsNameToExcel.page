@@ -1,0 +1,7 @@
+<apex:page standardController="Budget_Breakdown__c"
+
+recordSetVar="recordSet"
+
+extensions="RKExportToExcel.ExportToExcelController" readOnly="true">
+
+<RKExportToExcel:ExportToExcelComponent exportController="{!exportController}"/></apex:page>

@@ -1,0 +1,127 @@
+<apex:page standardController="ffc_statex__StatementAccount__c" recordSetVar="records" renderAs="pdf" extensions="ffc_statex.StatementPageController" showHeader="false" sidebar="false" applyHtmlTag="false">
+    <head>
+        <style type="text/css" >
+            .textAlignCenter{
+                text-align:center;
+                }
+            @page {
+                margin-bottom: 100px;
+              
+                @bottom-center {
+                    content: element(footer);
+                }
+                
+                @bottom-right {
+                    content: "Page " counter(page) " of " counter(pages);
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 8pt;
+                }
+            }
+            
+            div.footer {
+                
+                position: running(footer);
+            }
+                        
+        
+            tr {
+                page-break-inside: avoid;                
+            }
+            
+            
+            
+        </style>
+    </head>
+    <div class="footer">
+       <table width="100%">
+           <tr>
+               <td class="textAlignCenter" style="font-size:7pt">
+                   Head Office: Ruddington Hall, Ruddington, Nottinghamshire, NG11 6LL <br/>
+                   Tel: 0115 945 6000 Email: salesledger@mhr.co.uk <br/>
+                   Web: www.mhr.co.uk <br/><br/>
+                   MHR International UK Limited. Registered office: Peterbridge House, 3 The Lakes, NN4 7HB <br/>
+                   Company registration number: 01852206 <br/>
+                   VAT registration number: GB 705 8506 36 <br/>
+               </td>
+           </tr>
+       </table>
+    </div>
+    
+    <apex:variable var="pageCounter" value="{!0}"/>
+    
+    <apex:repeat value="{!accountList}" var="account">
+    
+        <div style="{!IF(pageCounter>0,'page-break-before: always;','')};  -fs-page-sequence: start;">
+
+            <apex:variable var="pageCounter" value="{!pageCounter + 1}"/>
+    
+            <div>
+                
+                    
+                        <p align="right">
+                            <img src="{!account.ffc_statex__OwnerCompany__r.c2g__LogoURL__c}" width="50px"/>
+                        </p>
+                    
+                    
+                        
+                            <apex:outputText rendered="{!account.ffc_statex__Account__r.Name!=''}" escape="false">{!account.ffc_statex__Account__r.Name}</apex:outputText><br/>
+                            <apex:outputText rendered="{!account.ffc_statex__Account__r.BillingStreet!=''}" escape="false">{!account.ffc_statex__Account__r.BillingStreet}</apex:outputText><br/>
+                            <apex:outputText rendered="{!account.ffc_statex__Account__r.BillingCity!=''}" escape="false">{!account.ffc_statex__Account__r.BillingCity}</apex:outputText><br/>
+                            <apex:outputText rendered="{!account.ffc_statex__Account__r.BillingState!=''}" escape="false">{!account.ffc_statex__Account__r.BillingState}</apex:outputText><br/>
+                            <apex:outputText rendered="{!account.ffc_statex__Account__r.BillingPostalCode!=''}" escape="false">{!account.ffc_statex__Account__r.BillingPostalCode}</apex:outputText><br/>
+                            <apex:outputText rendered="{!account.ffc_statex__Account__r.BillingCountry!=''}" escape="false">{!account.ffc_statex__Account__r.BillingCountry}<br/></apex:outputText><br/>
+                            <apex:outputText rendered="{!account.ffc_statex__Account__r.c2g__CODADescription1__c!=''}" escape="false">{!account.ffc_statex__Account__r.c2g__CODADescription1__c}<br/></apex:outputText>
+                        
+                    <p align="right">
+            <ffc_statex:CODALocalFormatterController date="{!TODAY()}"/>
+        </p>
+                    <p align="center">
+            <b><u><apex:outputText value="Statement of Account"/></u></b>
+        </p>               
+     
+     
+     <p align="left">
+            Please find below a breakdown of your open transactions with MHR.
+        </p>
+        
+        <apex:variable var="showDDMessage" value="false"/>
+        <apex:repeat value="{!account.ffc_statex__StatementAccountLines__r}" var="line">
+            <apex:outputText rendered="{!line.ffc_statex__Transaction__r.Collection_Status__c == '01. Direct Debit'}">
+                <apex:variable var="showDDMessage" value="true" />
+            </apex:outputText>
+        </apex:repeat>
+        
+        <p align="left">
+            <apex:outputText rendered="{!showDDMessage}" value="Please note that any Collection Status with Direct Debit is going to be taken at the end of the month"/>
+        </p>
+        <apex:dataTable value="{!account.ffc_statex__StatementAccountLines__r}" var="line" border="1" cellpadding="3" >
+            <apex:column style="text-align:left" headervalue="Document Date" value="{!line.ffc_statex__Transaction__r.c2g__TransactionDate__c}"/>       
+            <apex:column style="text-align:left" headervalue="Document Number" value="{!line.DocumentReference__c}"/>
+            <apex:column style="text-align:center" headervalue="Description" value="{!line.ffc_statex__TransactionLineItem__r.c2g__LineDescription__c}"/>
+            <apex:column style="text-align:right" headervalue="Outstanding Amount">
+                <apex:outputPanel layout="none" rendered="{!line.ffc_statex__DocumentOutstandingValue__c >=0}">
+                    <ffc_statex:CODALocalFormatterController number="{!line.ffc_statex__DocumentOutstandingValue__c}" currency="{!line.ffc_statex__TransactionLineItem__r.c2g__DocumentCurrency__r.Name}"/>            
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!line.ffc_statex__DocumentOutstandingValue__c <0}">
+                    (<ffc_statex:CODALocalFormatterController number="{!ABS(line.ffc_statex__DocumentOutstandingValue__c)}" currency="{!line.ffc_statex__TransactionLineItem__r.c2g__DocumentCurrency__r.Name}"/>)            
+                </apex:outputPanel>
+                <!--<ffc_statex:CODALocalFormatterController number="{!IF(line.ffc_statex__Transaction__r.c2g__TransactionType__c!='Journal',ABS(line.ffc_statex__DocumentOutstandingValue__c),line.ffc_statex__DocumentOutstandingValue__c)}" currency="{!line.ffc_statex__TransactionLineItem__r.c2g__DocumentCurrency__r.Name}"/>-->
+            </apex:column>
+            <apex:column style="text-align:left" headervalue="Collection Status" value="{!line.ffc_statex__Transaction__r.Collection_Status__c}" />
+        </apex:dataTable>
+        <br/>
+        <p>
+            If you have any queries or require further copy invoices please email salesledger@mhr.co.uk with full details.    
+            <br/><br/>
+            Kind regards,
+            <br/><br/>
+            Credit Control Team<br/>
+            0115 945 7792 – Ellen Wright<br/>
+            0115 977 6907 – Vicki Houghton
+            <br/><br/>
+            MHR International UK Limited
+        </p>
+        </div>
+        </div>
+    </apex:repeat>
+</apex:page>

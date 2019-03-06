@@ -1,0 +1,8 @@
+.cPfsocialIcons a {text-decoration:none;display:inline-block;margin-left:10px;}
+.cPfsocialIcons a i {font-size:22px;}
+.cPfsocialIcons a.blogger i {
+    background: top left no-repeat;
+    background-image : url('sfsites/c/resource/PFResources/img/blogger-trans.png');
+    width:23px;
+}
+.cPfsocialIcons a.blogger i:before {color:transparent;}

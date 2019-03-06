@@ -1,0 +1,72 @@
+<apex:page showHeader="true" controller="community_RequestDetailsController" tabStyle="Report">
+       <div class="bPageTitle">
+        <div class="ptBody secondaryPalette brandSecondaryBrd">
+            <div class="content">
+                <h1 class="pageType">
+                    Service Request Details
+                </h1>
+                <h2 class="pageDescription">
+                    Support for Patches/Upgrades/Database
+                </h2>
+            </div>
+        </div>
+    </div>
+    <apex:form >
+    <apex:pageBlock >
+        <apex:pageBlockButtons location="bottom">
+        	<apex:commandButton action="{!CancelRequest}" value="Cancel Request"/>
+        </apex:pageBlockButtons>
+    	<apex:pageBlockSection >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Service Request"></apex:outputLabel>
+            	<apex:outputField value="{!servicerequest.Name}"/>  	
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+            	<apex:outputLabel value="Request Type"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.RecordType.Name}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Requested By"></apex:outputLabel>
+            	<apex:outputField value="{!serviceRequest.CreatedBy.Name}"/>
+            </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Date Created"></apex:outputLabel>
+            	<apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!serviceRequest.Created__c}" /> 
+            </apex:outputText>
+            </apex:pageBlockSectionItem>
+        	<apex:pageBlockSectionItem >
+            	<apex:outputLabel value="Service Date"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.Service_Request_Availablity__r.Date__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageblocksectionItem >
+            	<apex:outputLabel value="Status"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.Status__c}"></apex:outputField>
+            </apex:pageblocksectionItem>
+         
+            <apex:pageBlockSectionItem rendered="{!showDatabase}">
+            	<apex:outputLabel value="Source Envrionment"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.source_environment_del__r.Environment_Type__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem rendered="{!showDatabase}">
+            	<apex:outputLabel value="Target Envrionment"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.Target_Environment_del__r.Environment_Type__c}"/>
+            </apex:pageBlockSectionItem>
+            
+             <apex:pageBlockSectionItem rendered="{!showPatches}">
+            	<apex:outputLabel value="Patch Envrionment"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.Patch_Environment__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem rendered="{!showPatches}">
+            	<apex:outputLabel value="Match Envrionment"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.Match_Environment__c}"/>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem rendered="{!showUpgrade}">
+            	<apex:outputLabel value="Upgrade Envrionment"></apex:outputLabel>
+                <apex:outputField value="{!serviceRequest.Upgrade_Environment__c}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

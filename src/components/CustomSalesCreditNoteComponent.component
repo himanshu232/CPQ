@@ -1,0 +1,456 @@
+<apex:component access="global">
+    <apex:attribute name="creditNote" type="c2g__codaCreditNote__c" description="The record passed in." access="global" required="true"/>
+    <!-- RECORD TYPE -->
+        <apex:variable var="taxType" value="{!creditNote.c2g__OwnerCompany__r.RecordType.Name}"/>
+    
+        <!-- LABEL VARIABLES -->
+    
+        <!-- Credit Note Title -->
+        <apex:variable var="lblCreditNote"                  value="CREDIT NOTE" />
+    
+        <!-- Company info -->
+        <apex:variable var="lblPhone"                       value="Phone: " />
+        <apex:variable var="lblFax"                         value="Fax: " />
+        <apex:variable var="lblVATRegistrationNumber"       value="VAT Registration Number: " />
+    
+        <!-- Credit Note Header -->
+        <apex:variable var="lblBillingAddress"              value="Billing Address" />
+        <apex:variable var="lblCreditNoteNumber"            value="Credit Note Number" />
+        <apex:variable var="lblCreditNoteDate"              value="Credit Note Date" />
+        <apex:variable var="lblCustomerVATNumber"           value="Customer Vat Number" />
+        <apex:variable var="lblCustomerReference"           value="Customer Reference" />
+        <apex:variable var="lblCreditNoteCurrency"          value="Credit Note Currency" />
+        <apex:variable var="lblDueDate"                     value="Due Date" />
+    
+        <!-- Credit Note Description -->
+        <apex:variable var="lblCreditNoteDescription"       value="Credit Note Description" />
+    
+        <!-- Credit Note Lines -->
+        <apex:variable var="lblProductName"                 value="Product Name" />
+        <apex:variable var="lblProductCode"                 value="Product Code: " />
+        <apex:variable var="lblQuantity"                    value="Quantity" />
+        <apex:variable var="lblUnitPrice"                   value="Unit Price" />
+        <apex:variable var="lblTaxCode"                     value="Tax Code" />
+        <apex:variable var="lblTaxValue"                    value="Tax Value" />
+        <apex:variable var="lblNetValue"                    value="Net Value" />
+    
+        <!-- Credit Note Total -->
+        <apex:variable var="lblCreditNoteNetTotal"          value="Net Total" />
+        <apex:variable var="lblCreditNoteTaxTotal"          value="Tax Total" />
+        <apex:variable var="lblCreditNoteTotal"             value="Credit Note Total" />
+    
+        <!-- Tax Summary -->
+        <apex:variable var="lbltaxsummary"                  value="Tax Summary" />
+        <apex:variable var="lbltaxRate"                     value="Tax Rate" />
+        <apex:variable var="lblnetValue"                    value="Net Value" />
+        <apex:variable var="lbltaxValue"                    value="Tax Value" />
+        <apex:variable var="lblproductCode"                 value="Product Code" />
+        
+        <!-- Discount Summary -->
+        <apex:variable var="lblsettlementdiscounts"      value="Settlement Discounts" />
+        <apex:variable var="lblpaymentdate"              value="Payment Date" />
+        <apex:variable var="lblValue"                    value="Value" />
+        
+        <!-- Currency Symbol -->
+        <apex:variable var="creditNoteCurrencySymbol" value=""/>
+        <ffbext:currencysymbol iso="{!creditNote.c2g__CreditNoteCurrency__r.Name}" symbolVar="creditNoteCurrencySymbol" />
+    
+        <div class="email">
+    
+            <!-- LOGO -->
+          
+               <table width="100%">
+                <tr>
+                    <td align="right">      
+                        <apex:outputPanel rendered="{!creditNote.c2g__OwnerCompany__r.c2g__LogoURL__c != ''}">
+                            <img src="{!creditNote.c2g__OwnerCompany__r.c2g__LogoURL__c}"/>
+                        </apex:outputPanel>
+                    </td>
+                    <!--<td>
+                        <h1>{!lblCreditNote}</h1>
+                     </td>-->
+                </tr>
+            </table>
+    
+            <!-- COMPANY DETAILS -->
+          <!--<table>
+                <tr>
+                    <td>
+                        <div>
+                            <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__Street__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Street__c!=''}" escape="false"/>
+                            <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__City__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__City__c!=''}" escape="false"/>
+                            <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__StateProvince__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__StateProvince__c!=''}" escape="false"/>
+                            <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__ZipPostCode__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__ZipPostCode__c!=''}" escape="false"/>
+                            <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__Country__c}" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Country__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!lblPhone}{!creditNote.c2g__OwnerCompany__r.c2g__Phone__c}&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Phone__c!=''}" escape="false"/>
+                            <apex:outputText value="{!lblFax}{!creditNote.c2g__OwnerCompany__r.c2g__Fax__c}" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Fax__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!lblVATRegistrationNumber}{!creditNote.c2g__OwnerCompany__r.c2g__ECCountryCode__c}{!creditNote.c2g__OwnerCompany__r.c2g__VATRegistrationNumber__c}" rendered="{!taxType=='VAT'}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__Website__c}" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Website__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__ContactEmail__c}" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__ContactEmail__c!=''}" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="&nbsp;" escape="false"/>
+                        </div>
+                        <div>
+                            <apex:outputText value="&nbsp;" escape="false"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>-->
+            
+            
+             <table>
+                <tr>
+                    <td valign="top" width="40%">
+                        <table class="boxed">
+                            <tr>
+                                <th class="textAlignLeft">{!lblBillingAddress}</th>
+                            </tr>
+                            <tr>
+                                <td class="alignTop" valign="top">
+                                    <p>
+                                        <apex:outputText rendered="{!creditNote.c2g__Account__r.Name!=''}" escape="false">
+                                            {!creditNote.c2g__Account__r.Name}<br/>
+                                        </apex:outputText>
+                                        <apex:outputText rendered="{!creditNote.c2g__Account__r.Address_Name__c!=''}" escape="false">
+                                            {!creditNote.c2g__Account__r.Address_Name__c}<br/>
+                                        </apex:outputText>
+                                        <apex:outputText rendered="{!creditNote.c2g__Account__r.Address_Line_1__c!=''}" escape="false">
+                                            {!creditNote.c2g__Account__r.Address_Line_1__c}<br/>
+                                        </apex:outputText>
+                                        <apex:outputText rendered="{!creditNote.c2g__Account__r.Address_Line_2__c!=''}" escape="false">
+                                            {!creditNote.c2g__Account__r.Address_Line_2__c}<br/>
+                                        </apex:outputText>
+                                        <apex:outputText rendered="{!creditNote.c2g__Account__r.Post_Code__c!=''}" escape="false">
+                                            {!creditNote.c2g__Account__r.Post_Code__c}<br/>
+                                        </apex:outputText>
+                                        <apex:outputText rendered="{!creditNote.c2g__Account__r.BillingCountry!=''}" escape="false">{!creditNote.c2g__Account__r.BillingCountry}</apex:outputText>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td width="30%" style="padding-top: 40px;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;">
+                        <table  class="boxed">
+                            <tr>
+                                <th width="50%" class="textAlignRight">Credit Note Number</th>
+                                <td width="50%">{!creditNote.Name}</td>
+                            </tr>
+                            <tr>
+                                <th class="textAlignRight">{!lblCreditNoteDate}</th>
+                                <td>
+                                    <apex:outputText value="{0,date,MM/dd/yyyy}" rendered="{!taxType=='SUT'}">
+                                        <apex:param value="{!creditNote.c2g__CreditNoteDate__c}"/>
+                                    </apex:outputText>
+                                    <apex:outputText value="{0,date,dd/MM/yyyy}" rendered="{!taxType!='SUT'}">
+                                        <apex:param value="{!creditNote.c2g__CreditNoteDate__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="textAlignRight">{!lblDueDate}</th>
+                                <td>
+                                    <apex:outputText value="{0,date,MM/dd/yyyy}" rendered="{!taxType=='SUT'}">
+                                        <apex:param value="{!creditNote.c2g__DueDate__c}"/>
+                                    </apex:outputText>
+                                    <apex:outputText value="{0,date,dd/MM/yyyy}" rendered="{!taxType!='SUT'}">
+                                        <apex:param value="{!creditNote.c2g__DueDate__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th width="50%" class="textAlignRight">Account Number</th>
+                                <td width="50%">{!creditNote.c2g__Account__r.Name}</td>
+                            </tr>
+                            <apex:outputText rendered="{!taxType!='SUT'}">
+                                <tr>
+                                    <th class="textAlignRight">{!lblCustomerVATNumber}</th>
+                                    <td>
+                                        <apex:outputText value="{!creditNote.c2g__Account__r.c2g__CODAECCountryCode__c}{!creditNote.c2g__Account__r.c2g__CODAVATRegistrationNumber__c}" rendered="{!creditNote.c2g__Account__r.c2g__CODAVATRegistrationNumber__c!=''}"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                <th width="50%" class="textAlignRight">Reference</th>
+                                <td width="50%">{!creditNote.c2g__CustomerReference__c}</td>
+                            </tr>
+                            </apex:outputText>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+        
+    
+            <!-- As the following fields are not directly or explicitly referenced elsewhere, 
+                 the following hidden, but explicit references are needed to ensure they are loaded -->
+            <apex:repeat value="{!creditNote.c2g__CreditNoteLineItems__r}" var="line" rendered="false">
+                <apex:outputText rendered="false">
+                {!line.c2g__LineNumber__c} {!line.c2g__Product__r.Name} {!line.c2g__Product__r.ProductCode} {!line.c2g__LineDescription__c}
+                {!line.c2g__Quantity__c} {!line.c2g__UnitPrice__c} {!line.c2g__NetValue__c} {!line.c2g__TaxValueTotal__c}
+                {!line.c2g__TaxCode1__c} {!line.c2g__TaxCode2__c} {!line.c2g__TaxCode3__c}
+                {!line.c2g__TaxRate1__c} {!line.c2g__TaxRate2__c} {!line.c2g__TaxRate3__c}
+                {!line.c2g__TaxCode1__r.Name} {!line.c2g__TaxCode2__r.Name} {!line.c2g__TaxCode3__r.Name}
+                {!line.c2g__TaxValue1__c}{!line.c2g__TaxValue2__c}{!line.c2g__TaxValue3__c}
+                </apex:outputText>
+            </apex:repeat>
+                
+            <!-- LINES -->
+            <apex:variable var="lineNumber" value="{!0}" />
+            <ffbext:creditnotelinesorter creditNote="{!creditNote}" var="line" styleClass="boxed noBottomMargin">
+                <apex:variable var="lineNumber" value="{!lineNumber+1}" />
+                <apex:outputText rendered="{!lineNumber==1}">
+                    <thead>
+                        <tr>
+                           <th class="textAlignLeft">Description</th>
+                            <th class="textAlignLeft">Period Covered</th>
+                            <th class="textAlignCenter" width="10%">{!lblQuantity}</th>
+                            <th class="textAlignCenter" width="15%">Per Unit</th>
+                            <th class="textAlignCenter" width="15%">Charge</th>
+                        </tr>
+                    </thead>
+                </apex:outputText>
+                <tr>
+                    <td>
+                        {!line.c2g__LineDescription__c}<!--<br/>
+                        <span class="description">{!lblproductCode}: {!line.c2g__Product__r.ProductCode}</span>
+                        <span class="description">{!line.c2g__LineDescription__c}</span>
+                        <ffbext:creditnotecustomfield salesInvoice="{!salesInvoice}" headerFields="false" lineId="{!line.Id}" customFieldsVar="CustomFields1">
+                            <apex:repeat value="{!CustomFields1}" var="customField">
+                                <span class="description">{!customField.fieldName}: {!customField.fieldValue}</span>
+                            </apex:repeat>
+                         </ffbext:creditnotecustomfield>-->
+                    </td>
+                    <td align="center">
+                        <apex:outputText value="{0,date,d/M/yyyy}">
+                             <apex:param value="{!creditNote.Period_From__c}"/> 
+                        </apex:outputText>
+                        &nbsp;-&nbsp;
+                        <apex:outputText value="{0,date,d/M/yyyy}">
+                             <apex:param value="{!creditNote.Period_To__c}"/> 
+                        </apex:outputText>          
+                    </td>
+                    <td align="center">
+                        <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                             <apex:param value="{!line.c2g__Quantity__c}"/> 
+                        </apex:outputText>              
+                    </td>
+                    <td class="textAlignRight">
+                        <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                             <apex:param value="{!line.c2g__UnitPrice__c}"/> 
+                        </apex:outputText>              
+                    </td>
+                    <td class="textAlignRight">
+                        <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                            <apex:param value="{!line.c2g__NetValue__c}"/>
+                        </apex:outputText>
+                   </td>
+                        
+                    
+                    
+                
+                  
+                </tr>
+            </ffbext:creditnotelinesorter>
+                        
+            <table>
+                <tr>
+                    <td class="noPadding"> 
+                    &nbsp;                   
+                        <!-- Tax Summary -->
+                       <!--<ffbext:salescreditnotetaxtotals creditNote="{!creditNote}" summariesVar="TaxSummaries">
+                            <apex:dataTable value="{!TaxSummaries}" var="TaxSummary" styleClass="boxed tableTaxSummary" headerClass="textAlignCenter">
+                                <apex:facet name="header">{!lbltaxsummary}</apex:facet>  
+                                <apex:column headerClass="textAlignCenter widthMedium"  styleClass="alignTop textAlignCenter widthMedium">
+                                    <apex:facet name="header">{!lblTaxCode}</apex:facet>
+                                    <apex:outputText >
+                                        {!TaxSummary.taxCode}
+                                    </apex:outputText>
+                                </apex:column>
+        
+                                <apex:column headerClass="textAlignCenter widthMedium" styleClass="alignTop textAlignCenter widthMedium" rendered="{!taxType=='VAT'}">
+                                    <apex:facet name="header">{!lbltaxRate}</apex:facet>
+                                    <apex:outputText >
+                                        {!TaxSummary.taxRate}
+                                    </apex:outputText>
+                                </apex:column>
+        
+                                <apex:column headerClass="textAlignCenter widthMedium" styleClass="alignTop textAlignCenter widthMedium" rendered="{!taxType=='VAT'}">
+                                    <apex:facet name="header">{!lblnetValue}</apex:facet>
+                                    <apex:outputText value="{0,number,#,###,###,###,###,###.00}">
+                                        {!creditNoteCurrencySymbol}<apex:param value="{!TaxSummary.netValue}"/>
+                                    </apex:outputText>
+                                </apex:column>
+        
+                                <apex:column headerClass="textAlignCenter widthMedium" styleClass="alignTop textAlignCenter widthMedium">
+                                    <apex:facet name="header">{!lbltaxValue}</apex:facet>
+                                    <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                        {!creditNoteCurrencySymbol}<apex:param value="{!TaxSummary.taxValue}"/>
+                                    </apex:outputText>
+                                </apex:column>
+                            </apex:dataTable>
+                        </ffbext:salescreditnotetaxtotals>-->                
+                    </td>
+    
+                    <!-- Summary Values -->
+                    <td class="alignTop noPadding" width="30%">
+                        <table class="boxed boxedNoTop boxedNoBottom">
+                            <tr>
+                                <th class="nobg textAlignLeft">Total&nbsp;{!creditNote.c2g__CreditNoteCurrency__r.Name}</th>
+                                <td class="textAlignRight" width="50%"> 
+                                    <apex:outputText value="{0,number,#,###,###,###,###,###.00}">
+                                        <apex:param value="{!creditNote.c2g__NetTotal__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="nobg textAlignLeft">Vat at 20%</th>
+                                <td class="textAlignRight">
+                                    <apex:outputText value="{0,number,#,###,###,###,###,##0.00}">
+                                        <apex:param value="{!creditNote.c2g__TaxTotal__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="nobg textAlignLeft">{!lblCreditNoteTotal}</th>
+                                <td class="textAlignRight">
+                                    <apex:outputText value="{0,number,#,###,###,###,###,###.00}">
+                                        <apex:param value="{!creditNote.c2g__CreditNoteTotal__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+           
+                         
+            
+            <!-- Custom Fields --> 
+            <div class="hspacer"></div>
+            <apex:outputpanel >    
+                <ffbext:salescreditnotecustomfield creditNote="{!creditNote}" headerFields="true" customFieldsVar="CustomFields2">
+                    <table style="width:405px" class="boxed tableAdditional">
+                        <tr>
+                            <th colspan="2" style="headerpadding rightline aligncenter">Additional Information</th>
+                        </tr>
+                        <apex:repeat value="{!CustomFields2}" var="customField">
+                            <tr>
+                              <td style="alignleft bottomline boxed boxedtop">{!customField.fieldName}</td>
+                              <td style="alignleft bottomline boxed boxedtop">{!customField.fieldValue}</td>
+                            </tr>
+                        </apex:repeat>
+                    </table>
+                 </ffbext:salescreditnotecustomfield>
+            </apex:outputpanel>            
+            
+            <!-- Description -->
+            <apex:outputPanel rendered="{!creditNote.c2g__CreditNoteDescription__c!=''}" layout="block">
+                <table class="boxed tableDescription">
+                    <tr>
+                        <th class="textAlignLeft">{!lblCreditNoteDescription}</th>
+                    </tr>
+    
+                    <tr>
+                        <td>{!creditNote.c2g__CreditNoteDescription__c}</td>
+                    </tr>
+                </table>
+            </apex:outputPanel>
+    
+     <br/>  <br/> <br/>
+     <!--<table class="boxed">
+                <tr>
+                    <th>Direct payments may be made to:</th>
+                </tr>
+                <tr>
+                    <td>-->
+                        <table class="paymentInfo boxed">
+                            <tr>
+                                <th colspan="4">Direct payments may be made to:</th>
+                            </tr>
+                            <tr>
+                                <td width="15%" class="alignTop">Account Name:<br/>Sort Code:<br/>Account Number:<br/><br/>Payment Reference:</td>
+                                <td width="30%" class="alignTop">{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__AccountName__c}<br/>{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__SortCode__c}<br/>{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__AccountNumber__c}<br/><br/>{!creditNote.Name}</td>
+                                <td width="25%" class="alignTop textAlignRight">Bank Name:</td>
+                                <td width="30%" class="alignTop">
+                                    <apex:outputText value="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__BankName__c}<br/>" rendered="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__BankName__c != ''}" escape="false"/>
+                                    <apex:outputText value="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__Street__c}<br/>" rendered="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__Street__c != ''}" escape="false"/>
+                                    <apex:outputText value="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__City__c}<br/>" rendered="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__City__c != ''}" escape="false"/>
+                                    <apex:outputText value="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__StateProvince__c}<br/>" rendered="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__StateProvince__c != ''}" escape="false"/>
+                                    <apex:outputText value="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__ZipPostalCode__c}<br/>" rendered="{!creditNote.c2g__CreditNoteCurrency__r.Bank_Account__r.c2g__ZipPostalCode__c != ''}" escape="false"/>
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    <!--</td>
+                </tr>
+            </table>-->
+            <!-- Printed Text  -->
+            <table class="tableDescription">
+                <ffbext:salescreditnotetext creditNote="{!creditNote}" textSummariesVar="TextSummaries">
+                        <apex:repeat value="{!TextSummaries}" var="textSummary">
+                            <tr>
+                                <th style="width:68%" class="boxed boxedtop" >{!textSummary.textHeader}</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="boxed" style="width:68%">
+                                        <apex:outputText escape="false" value="{!textSummary.textValue}"/>
+                                    </td>
+                                <td></td>    
+                            </tr>
+                            </apex:repeat>
+                 </ffbext:salescreditnotetext>                  
+            </table>
+
+        </div>
+        
+        <div class="footer">
+            <div>
+                <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__Street__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Street__c!=''}" escape="false"/>
+                <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__City__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__City__c!=''}" escape="false"/>
+                <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__StateProvince__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__StateProvince__c!=''}" escape="false"/>
+                <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__ZipPostCode__c},&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__ZipPostCode__c!=''}" escape="false"/>
+            </div>
+            <div>
+                <apex:outputText value="t:&nbsp;{!creditNote.c2g__OwnerCompany__r.c2g__Phone__c}&nbsp;" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Phone__c!=''}" escape="false"/>
+                <apex:outputText value="f:&nbsp;{!creditNote.c2g__OwnerCompany__r.c2g__Fax__c}" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Fax__c!=''}" escape="false"/>
+            </div>
+            
+            <div>
+                <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__ContactEmail__c}" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__ContactEmail__c!=''}" escape="false"/>
+                <apex:outputText value="{!creditNote.c2g__OwnerCompany__r.c2g__Website__c}" rendered="{!creditNote.c2g__OwnerCompany__r.c2g__Website__c!=''}" escape="false"/>
+            </div>
+            <div>
+                <apex:outputText value="{!lblVATRegistrationNumber}{!creditNote.c2g__OwnerCompany__r.c2g__ECCountryCode__c}{!creditNote.c2g__OwnerCompany__r.c2g__VATRegistrationNumber__c}" rendered="{!taxType=='VAT'}" escape="false"/>
+            </div>
+        </div>
+        
+        <!-- As the following fields are not directly or explicitly referenced elsewhere, 
+             the following hidden, but explicit references are needed to ensure they are loaded -->
+        <apex:outputText rendered="false">
+        {!creditNote.c2g__TaxCode2__c}
+        {!creditNote.c2g__Transaction__c}
+        {!creditNote.c2g__PrintedText1Heading__c}
+        {!creditNote.c2g__PrintedText1Text__c}
+        {!creditNote.c2g__PrintedText2Heading__c}
+        {!creditNote.c2g__PrintedText2Text__c}
+        {!creditNote.c2g__PrintedText3Heading__c}
+        {!creditNote.c2g__PrintedText3Text__c}
+        {!creditNote.c2g__PrintedText4Heading__c}
+        {!creditNote.c2g__PrintedText4Text__c}
+        {!creditNote.c2g__PrintedText5Heading__c}
+        {!creditNote.c2g__PrintedText5Text__c}
+        </apex:outputText>
+                
+        <!-- ************************* END COPY / PASTE HERE ******************************** -->  
+</apex:component>

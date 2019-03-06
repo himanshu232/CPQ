@@ -1,0 +1,953 @@
+<apex:page cache="false" showHeader="true" contentType="text/css">
+    
+    /*CSS for the portal. Change at your own risk.
+    Portal CSS additions should be put in SSEPortalCSSEdit*/
+    
+    /*Page positioning and size*/
+        body{
+            min-width:900px;
+                background: rgba(248,251,253,1);   
+                background: -moz-linear-gradient(top,  rgba(248,251,253,1) 0%, rgba(255,255,255,1) 100%); 
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(248,251,253,1)), color-stop(100%,rgba(255,255,255,1)));
+                background: -webkit-linear-gradient(top,  rgba(248,251,253,1) 0%,rgba(255,255,255,1) 100%);
+                background: linear-gradient(to bottom,  rgba(248,251,253,1) 0%,rgba(255,255,255,1) 100%);
+    	}
+    	#portalwrapper{
+    		width:100%;
+    		min-height:100px;
+    		display:table;
+                box-shadow:0px 0px 10px #4d4d4d;
+                -webkit-box-shadow:0px 0px 10px #4d4d4d;
+                -moz-box-shadow:0px 0px 10px #4d4d4d;        
+    		margin:auto;
+    	}
+        .bodyDiv{
+            background:none !important;
+            border:none;
+            position:relative;
+            top:-55px;
+        }
+        .outer td.oRight {
+            padding: 0px;
+            padding-left: 20px;
+        }
+        #portalheaderpadding{
+            
+        }
+        #portalheader{
+            width:100%;
+            height:401px;
+                box-shadow:0px 0px 10px #4d4d4d;
+                -webkit-box-shadow:0px 0px 10px #4d4d4d;
+                -moz-box-shadow:0px 0px 10px #4d4d4d;
+        }
+        
+        
+        }
+        #portalheadermid{
+            width:100%;
+            height:90px;
+            background: rgba(234,243,249,1);
+            background: -moz-linear-gradient(top,  rgba(234,243,249,1) 0%, rgba(248,251,253,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(234,243,249,1)), color-stop(100%,rgba(248,251,253,1)));
+            background: -webkit-linear-gradient(top,  rgba(234,243,249,1) 0%,rgba(248,251,253,1) 100%);
+            background: linear-gradient(to bottom,  rgba(234,243,249,1) 0%,rgba(248,251,253,1) 100%);
+        }
+        #portalheaderbot{
+            width:100%;
+            height:275px;
+            background: rgba(248,251,253,1);
+            background: -moz-linear-gradient(top,  rgba(248,251,253,1) 0%, rgba(248,251,253,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(248,251,253,1)), color-stop(100%,rgba(248,251,253,1)));
+            background: -webkit-linear-gradient(top,  rgba(248,251,253,1) 0%,rgba(248,251,253,1) 100%);
+            background: linear-gradient(to bottom,  rgba(248,251,253,1) 0%,rgba(248,251,253,1) 100%);
+        }
+        #portalbody{
+            width:900px;
+            min-height:900px;
+            margin:auto;
+            margin-top:20px;
+        }
+        #portalfooter{
+            width:100%;
+            height:245px;
+            border-top:5px solid rgba(248,251,253,1);
+            background: rgba(255,255,255,1);
+            background-image:url('{!URLFOR($Resource.PortalImages,'Copyright.jpg')}');
+            background: url('{!URLFOR($Resource.PortalImages,'Copyright.jpg')}'), -moz-linear-gradient(top,  rgba(255,255,255,1)  0%, rgba(255,255,255,1) 100%); 
+            background: url('{!URLFOR($Resource.PortalImages,'Copyright.jpg')}'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1) ), color-stop(100%,rgba(255,255,255,1)));
+            background: url('{!URLFOR($Resource.PortalImages,'Copyright.jpg')}'), -webkit-linear-gradient(top,  rgba(255,255,255,1)  0%,rgba(255,255,255,1) 100%);
+            background: url('{!URLFOR($Resource.PortalImages,'Copyright.jpg')}'), linear-gradient(to bottom,  rgba(255,255,255,1)  0%,rgba(255,255,255,1) 100%);
+            background-repeat:no-repeat;
+            background-position:center top; 
+            margin:auto;
+        }
+        .portalheadercenter{
+            width: 900px;
+            margin: auto;
+            position:relative;
+        }
+        .portalfootercenter{
+            width: 900px;
+            height: 130px;
+            margin: auto;
+            padding-top: 15px;
+        }
+        #SSEPortalLogo{
+             background-image:url('{!URLFOR($Resource.PortalImages,'ServiceDeskLogo.png')}');
+            background-repeat:no-repeat;
+            background-position:left; 
+            height:90px;
+        }
+    	#homepageimage{
+    		margin-bottom:10px;
+    	}
+        #homepageimage img{
+                box-shadow:0px 0px 10px -2px #4D4D4D;
+                -webkit-box-shadow:0px 0px 10px -2px #4D4D4D;
+                -moz-box-shadow:0px 0px 0px 10px -2px #4D4D4D;
+    		border-radius:0px;
+            -webkit-border-radius:0px;
+            -moz-border-radius:0px;
+    	}
+    	.oRight #homePageFrame{
+    		position:relative;
+    		top:-10px;
+    	}
+        /*Classic portal look and feel*/
+    
+    /*User profile menu*/
+        #portalheaderiframe{
+            border:0px;
+            float:right;
+            height:36px;
+            width:240px;
+            visibility:hidden;
+            pointer-events:none;
+        }
+        #userborder{
+            float:left;
+            height:36px;
+            width:1px;
+            background:rgba(51,51,51,1);
+            border-left:1px solid rgba(74,78,78,1);
+            border-right:1px solid rgba(74,78,78,1);
+        }
+        #usersection{
+            width:237px;
+            height:35px;
+            float:right;
+            border-bottom:1px solid rgba(51,51,51,1);
+            position:absolute;
+            right:0px;
+            z-index:-1;
+            visibility:hidden;
+        }
+        #usersection:hover, #navsection:hover{
+            cursor:pointer;
+        }
+        .userselected {
+            background:rgba(74,78,78,1);
+        }
+        #usersection:hover #userarrow, #navsection:hover #userarrow{
+            background: url('/img/chatterservice/btnArrow_sprite.png') 0 -327px no-repeat;
+        }
+        #username{
+    		color:rgba(194,195,195,1);
+            font-size:12px;
+            font-weight:bold;
+            text-transform:none;
+            text-decoration:none;
+            line-height: 34px;
+            margin-left: 56px;
+        }
+        #userarrow{
+            width: 8px;
+            height: 5px;
+            background: url('/img/chatterservice/btnArrow_sprite.png') 0 -305px no-repeat;
+            position: absolute;
+            right: 12px;
+            top: 16px;
+            border: none;
+            margin: 0;
+        }
+        #userimage{
+            position: absolute;
+            height: 20px;
+            width: 20px;
+    		background: url('/resource/SSEPortalResources/images/SSEPortalUser.png');
+            background-size: 100%;
+            border: 2px solid white;
+            top: 5px;
+            left: 23px;
+        }
+        #usermenu{
+            width:237px;
+            position:absolute;
+            right:0px;
+            top:36px;
+            border-radius: 0px 0px 4px 4px;
+            -webkit-border-radius:0px 0px 4px 4px;
+    		-moz-border-radius:0px 0px 4px 4px;
+            background:rgba(74,78,78,1);
+            display:none;
+        }
+        .userlink{
+            padding-left:20px;
+            padding-top:10px;
+            padding-bottom:10px;
+            border-top:1px solid rgba(92,96,96,1);
+    		color:rgba(194,195,195,1);
+            font-size:12px;
+            font-weight:bold;
+            text-transform:none;
+            text-decoration:none;
+        }
+        .userlink:hover{
+            background:rgba(92,96,96,1);
+            cursor:pointer;
+        	color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:bold;
+            text-transform:none;
+            text-decoration:none;
+        }
+        #link5{
+            border-radius: 0px 0px 4px 4px;
+            -webkit-border-radius:0px 0px 4px 4px;
+    		-moz-border-radius:0px 0px 4px 4px;
+        }
+ 
+    /*iPad navigation bar*/
+        #navsection{
+            width: 183px;
+            height: 35px;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            color:rgba(194,195,195,1);
+            font-size:12px;
+            font-weight:bold;
+            text-transform:none;
+            text-decoration:none;
+    		border-bottom:1px solid rgba(51,51,51,1);
+            line-height: 34px;
+            padding-left: 20px;
+            display:none;
+        }
+        #navsection #userborder{
+            float:right;    
+        }
+    
+    /*Image slideshow*/
+        .slides_container{
+            width:900px;
+            height:275px;
+            margin:auto;
+            visibility:hidden;
+        }
+        .slides_container div{
+            width:900px;
+            height:275px;
+        }
+        #SSEPortalSlide1{
+            background-image:url('{!URLFOR($Resource.PortalImages,'PortalSlider1.jpg')}');
+            background-repeat:no-repeat;
+            background-position:center; 
+        }
+        #SSEPortalSlide2{
+            background-image:url('{!URLFOR($Resource.PortalImages,'PortalSlider2.jpg')}');
+            background-repeat:no-repeat;
+            background-position:center; 
+        }
+        #SSEPortalSlide3{
+            background-image:url('{!URLFOR($Resource.PortalImages,'PortalSlider3.jpg')}');
+            background-repeat:no-repeat;
+            background-position:center; 
+        }
+    
+    /*Buttons*/
+        .btn, .miniTab ul.miniTabList li{
+            font-weight: normal;
+            padding: 3px;
+            padding-right: 5px;
+            border: 0px;
+            padding-left: 5px;
+            border-radius: 1px;
+            -webkit-border-radius: 1px;
+            box-shadow: inset 0px 0px 6px -1px #333;
+            -webkit-box-shadow: inset 0px 0px 6px -1px #333;
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png') rgba(160,160,160,1);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -moz-linear-gradient(top,  rgba(160,160,160,1)  0%, rgba(160,160,160,1) 100%); 
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(160,160,160,1) ), color-stop(100%,rgba(160,160,160,1)));
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-linear-gradient(top,  rgba(160,160,160,1)  0%,rgba(160,160,160,1) 100%);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), linear-gradient(to bottom,  rgba(160,160,160,1)  0%,rgba(160,160,160,1) 100%);
+        }
+        .btn:hover, .miniTab ul.miniTabList li:hover{
+			border:0px;
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png') rgba(75,75,75,1);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -moz-linear-gradient(top,  rgba(75,75,75,1)  0%, rgba(160,160,160,1) 100%); 
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(75,75,75,1) ), color-stop(100%,rgba(75,75,75,1)));
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-linear-gradient(top,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), linear-gradient(to bottom,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+        }
+    
+    /*Chatter Answers*/
+		a.action{
+        	background: rgba(57,169,229,1);
+            background: -moz-linear-gradient(top, rgba(57,169,229,1)  0%, rgba(57,169,229,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(57,169,229,1) ), color-stop(100%,rgba(57,169,229,1)));
+            background: -webkit-linear-gradient(top,  rgba(57,169,229,1)  0%,rgba(57,169,229,1) 100%);
+            background: linear-gradient(to bottom,  rgba(57,169,229,1)  0%,rgba(57,169,229,1) 100%);
+    	    color:rgba(255,255,255,1);
+    	}
+    	a.action:hover{
+    		background: rgba(75,75,75,1);
+            background: -moz-linear-gradient(top, rgba(75,75,75,1)  0%, rgba(75,75,75,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(75,75,75,1) ), color-stop(100%,rgba(75,75,75,1)));
+            background: -webkit-linear-gradient(top,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+            background: linear-gradient(to bottom,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);  
+    		color:rgba(255,255,255,1);
+    	}
+    	.leftContent li.selected a, .leftContent .feedcriterialinks li.selected a, #cs\:profile li.selected a, .togglePill .selected a, .togglePill .selected a:hover, .breadCrumbs .current span, .breadCrumbs .current a:hover span{
+    		background: rgba(37,155,219,1) !important;
+            background: -moz-linear-gradient(top,  rgba(37,155,219,1) 0%, rgba(37,155,219,1) 100%) !important; 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(37,155,219,1)), color-stop(100%,rgba(37,155,219,1))) !important;
+            background: -webkit-linear-gradient(top,  rgba(37,155,219,1) 0%,rgba(37,155,219,1) 100%) !important;
+            background: linear-gradient(to bottom,  rgba(37,155,219,1) 0%,rgba(37,155,219,1) 100%) !important;  
+    		color:rgba(255,255,255,1)
+    	}
+    	.togglePill .selected a, .togglePill .selected a:hover, .breadCrumbs .current span, .breadCrumbs .current a:hover span{
+    		border: 1px solid rgba(37,155,219,1) !important;
+    		color:rgba(255,255,255,1)
+		}
+    	.csfeedcontainer .feeditemcomment, .csfeedcontainer .feedcommentsshowmore, .csfeedcontainer .feeditemcommentplaceholder, .csfeedcontainer .feeditemaddcomment, .csfeedcontainer .header{
+    		background:rgba(246,246,246,1);
+    	}
+    	.csfeedcontainer .showmorecommentscontainer a{
+    		background:rgba(255,255,255,1);
+    	}
+    	#cs\:searchAskInputContainer {
+    		border:1px solid rgba(57,169,229,1);
+    	}
+    	.csfeedcontainer a {
+    		color:rgba(51,51,51,1);
+    	}
+    	.csMini .threecolumn .mainContent{
+    		background: rgba(255,255,255,1);
+            background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,1)));
+            background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 100%);
+            background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 100%);
+    		-webkit-border-radius: 0px;
+    		-moz-border-radius: 0px;
+    		border-radius: 0px;
+    	}
+    	.csCustomerSupportUserIcon {
+            border-color: rgba(255,255,255,1);
+            -webkit-box-shadow: 0 0 5px 1px rgba(255,255,255,1);
+            -moz-box-shadow: 0 0 5px 1px rgba(255,255,255,1);
+            box-shadow: 0 0 5px 1px rgba(255,255,255,1);
+        }
+    	.csMini #cs\:footer{
+    		display:none;
+    	}
+    	.csfeedcontainer .feeditemextras, .singleArticleTitle{
+    		background:transparent !important;
+    	}
+    	.csMini .mainContent .lowerMainContent {
+    		background:none;
+    	}
+    	.csMini .threecolumn{
+    		background:none;
+    	}
+    
+    /*Answers*/
+    	.ansContent a {
+    		color:rgba(51,51,51,1);
+    	}
+    	.ansContent button.ansAskButton{
+    		background: rgba(57,169,229,1);
+            background: -moz-linear-gradient(top, rgba(57,169,229,1)  0%, rgba(57,169,229,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(57,169,229,1) ), color-stop(100%,rgba(57,169,229,1)));
+            background: -webkit-linear-gradient(top,  rgba(57,169,229,1)  0%,rgba(57,169,229,1) 100%);
+            background: linear-gradient(to bottom,  rgba(57,169,229,1)  0%,rgba(57,169,229,1) 100%);
+    	    color:rgba(255,255,255,1);
+    		border-radius: 5px;
+    		-webkit-border-radius: 5px;
+    		-moz-border-radius: 5px;
+    	}
+    	.ansContent button.ansAskButton:hover{
+    		background: rgba(75,75,75,1);
+            background: -moz-linear-gradient(top, rgba(75,75,75,1)  0%, rgba(75,75,75,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(75,75,75,1) ), color-stop(100%,rgba(75,75,75,1)));
+            background: -webkit-linear-gradient(top,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+            background: linear-gradient(to bottom,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);  
+    		color:rgba(255,255,255,1);
+    	}
+    	.ansContent button.ansSearchButton{
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png') rgba(160,160,160,1);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -moz-linear-gradient(top,  rgba(160,160,160,1)  0%, rgba(160,160,160,1) 100%); 
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(160,160,160,1) ), color-stop(100%,rgba(160,160,160,1)));
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-linear-gradient(top,  rgba(160,160,160,1)  0%,rgba(160,160,160,1) 100%);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), linear-gradient(to bottom,  rgba(160,160,160,1)  0%,rgba(160,160,160,1) 100%);
+    		color:rgba(255,255,255,1) !important;
+    		border-radius: 1px;
+    		-webkit-border-radius: 1px;
+    		-moz-border-radius: 1px;
+    	}
+    	.ansContent button.ansSearchButton:hover{
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png') rgba(75,75,75,1);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -moz-linear-gradient(top,  rgba(75,75,75,1)  0%, rgba(160,160,160,1) 100%); 
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(75,75,75,1) ), color-stop(100%,rgba(75,75,75,1)));
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-linear-gradient(top,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), linear-gradient(to bottom,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+    		color:rgba(255,255,255,1) !important;
+    	}
+    	.ansContent button.ansAskButton span, .ansContent button.ansAskButton span:hover, .ansContent button.ansSearchButton span, .ansContent button.ansSearchButton span:hover{
+        	background: none;
+    	}
+    	.ansContent button.ansSearchButton span{
+   			color:rgba(255,255,255,1) !important;
+    	}
+    	.ansContent button.ansSearchButton span:hover{
+    		color:rgba(255,255,255,1) !important;
+    	}
+    	.ansContent button.ansAskButton span, .ansContent button.ansAskButton span:hover{
+        	padding-top: 7px;
+    	}
+        .ansContent{
+            width:900px;
+        }
+        .ansNavigation, .ansReplyList{
+            width:880px;
+        }
+        .ansGlobalActionsContent{
+            margin-right:100px;
+        }   
+        .ansAskQuestionBoxTop {
+            padding: 16px 60px 0 10px;
+        }
+        .ansPostReplyBoxTop {
+            padding: 21px 50px 0 10px;
+        }
+        .ansHomeGetAnswerSecondary{
+            margin-right:70px;
+        }
+        .ansCommunityCategories {
+            width: 420px;
+        
+        }
+
+    /*Sidebar and sidebar elements*/
+    	.noTableContainerWithSidebar #sidebarDiv{
+    		margin-bottom:0px;
+    		padding-bottom:10px;
+    	}
+    	.noTableSidebar{
+    		width:240px;
+    	}
+    	.noTableBody{
+			padding-left: 20px;
+    	}
+    	#noTableContainer{
+    		display:table;
+    	}
+    	.bFilterReport .btn, .bFilterReport .btnDisabled{
+    		font-size:100%;
+    	}
+        #sidebarDiv{
+            background: rgba(0,0,0,0.1);
+            background: -moz-linear-gradient(top,  rgba(0,0,0,0.1)  0%, rgba(0,0,0,0.1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.1) ), color-stop(100%,rgba(0,0,0,0.1)));
+            background: -webkit-linear-gradient(top,  rgba(0,0,0,0.1)  0%,rgba(0,0,0,0.1) 100%);
+            background: linear-gradient(to bottom,  rgba(0,0,0,0.1)  0%,rgba(0,0,0,0.1) 100%);
+    		width:220px;
+            padding: 10px;
+            border-radius:0px;
+            -webkit-border-radius:0px;
+    		-moz-border-radius:0px;
+    		z-index: 0;
+        }
+        .sidebarModule{
+            margin:0px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0);
+            background: -moz-linear-gradient(top,  rgba(255,255,255,0)  0%, rgba(255,255,255,0) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0) ), color-stop(100%,rgba(255,255,255,0)));
+            background: -webkit-linear-gradient(top,  rgba(255,255,255,0)  0%,rgba(255,255,255,0) 100%);
+            background: linear-gradient(to bottom,  rgba(255,255,255,0)  0%,rgba(255,255,255,0) 100%);
+            border: none;
+    		border-radius:0px;
+            -webkit-border-radius:0px;
+            -moz-border-radius:0px;
+        }
+        .sidebarModule a{
+            text-decoration:none;
+            text-transform:uppercase;
+        }
+        .sidebarModuleHeader{
+            padding: 10px;
+    		background: rgba(255,255,255,0);
+            background: -moz-linear-gradient(top,  rgba(255,255,255,0)  0%, rgba(255,255,255,0) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0) ), color-stop(100%,rgba(255,255,255,0)));
+            background: -webkit-linear-gradient(top,  rgba(255,255,255,0)  0%,rgba(255,255,255,0) 100%);
+            background: linear-gradient(to bottom,  rgba(255,255,255,0)  0%,rgba(255,255,255,0) 100%);
+   			border-top-right-radius:0px;
+            -webkit-border-top-right-radius:0px;
+            -moz-border-top-right-radius:0px;   
+            border-top-left-radius:0px;
+            -webkit-border-top-left-radius:0px;
+            -moz-border-top-left-radius:0px;
+    	}
+        .sidebarModuleBody{
+            padding:10px;
+        }
+        .searchModule{
+            margin:0px;
+    		margin-bottom:10px;
+        }
+        .searchModule .searchTextBox{
+            width: 100%;
+            margin: 0px;
+            padding: 5px;
+            border: 0px;
+            margin-top: 5px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .searchModule .standardSearchElementBody select {
+            margin-top:5px;
+        }
+        .standardSearchElementBody .btn, .sidebarModuleBody .pbSearch .btn, .searchModule .standardSearchElementBody .btn{
+            padding-top: 7px;
+            padding-bottom: 7px;
+            width: 100%;
+            margin-top: 10px;
+            background: none;
+            background: rgba(57,169,229,1);
+            background: -moz-linear-gradient(top, rgba(57,169,229,1)  0%, rgba(57,169,229,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(57,169,229,1) ), color-stop(100%,rgba(57,169,229,1)));
+            background: -webkit-linear-gradient(top,  rgba(57,169,229,1)  0%,rgba(57,169,229,1) 100%);
+            background: linear-gradient(to bottom,  rgba(57,169,229,1)  0%,rgba(57,169,229,1) 100%);
+            border-radius:5px;
+            -webkit-border-radius:5px;
+    		-moz-border-radius:5px;
+            padding-left:0px;
+            padding-right:0px;
+            margin-left:0px;
+            margin-right:0px;
+            box-shadow:none;
+            -webkit-box-shadow:none;
+        }
+        .standardSearchElementBody .btn:hover, .pbSearch .btn:hover{
+            background: rgba(75,75,75,1);
+            background: -moz-linear-gradient(top, rgba(75,75,75,1)  0%, rgba(75,75,75,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(75,75,75,1) ), color-stop(100%,rgba(75,75,75,1)));
+            background: -webkit-linear-gradient(top,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+            background: linear-gradient(to bottom,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+            border:0px;
+        }
+        #sen{
+            border:none;
+        }
+    	.mruItem{
+    		z-index:0;
+    	}
+        .searchFooter{
+            margin-top: 10px;
+            padding: 0px;
+            border:0px;
+        }
+        #createNew .menuButtonButton{
+            font-weight:normal;
+            padding:5px;
+            padding-top:2px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            border:none;
+        }
+
+        /*Sidebar on right*/
+            .outer td.oRight {
+                padding-top: 0;
+                padding-bottom: 10px;
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+            #sidebarDiv{
+                position:absolute;
+                right:0px;
+            }
+            #bodyCell{
+                display: block;
+                left: -200px;
+                padding: 0;
+                position: relative;
+                width: 638px;
+            } 
+            .noTableBody{
+            	width: 638px;
+				padding: 0px;
+            }
+            .noTableSidebar{
+                margin-left: 20px;
+            }
+    
+    /*Tab bar and tabs*/
+        .tabNavigation{
+            padding:0px;
+            background:none;
+            position:relative;
+            top:-355px;
+            float:right;
+    		z-index:1;
+        }
+     	.tab td, .tab td.last, .tab td.currentTab{
+    		background: none;
+    		border:0px;
+    	}
+        .tab td.last div, .tab td div{
+    		background: none;
+    		background: rgba(255,255,255,0);
+            background: -moz-linear-gradient(top,  rgba(255,255,255,0)  0%, rgba(255,255,255,0) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0) ), color-stop(100%,rgba(255,255,255,0)));
+            background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,0) 100%);
+            background: linear-gradient(to bottom,  rgba(255,255,255,0)  0%,rgba(255,255,255,0) 100%);
+            border:0px;
+        }
+        .tab td.last div, .tab td div, .tab td.currentTab div{
+            padding:10px;
+            border-radius:5px;
+            -webkit-border-radius:5px;
+    		-moz-border-radius:5px;
+        }
+        .tab td.currentTab div{
+    		background: none;
+            background: rgba(57,169,229,1);
+            background: -moz-linear-gradient(top,  rgba(57,169,229,1)  0%, rgba(57,169,229,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(57,169,229,1) ), color-stop(100%,rgba(57,169,229,1)));
+            background: -webkit-linear-gradient(top,  rgba(57,169,229,1) 0%,rgba(57,169,229,1) 100%);
+            background: linear-gradient(to bottom,  rgba(57,169,229,1)  0%,rgba(57,169,229,1) 100%);
+        	border:0px;
+    	}
+        .tab td div:hover, .tab td.last div:hover{
+    		background: rgba(75,75,75,1);
+            background: -moz-linear-gradient(top,  rgba(75,75,75,1)  0%, rgba(75,75,75,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(75,75,75,1) ), color-stop(100%,rgba(75,75,75,1)));
+            background: -webkit-linear-gradient(top,  rgba(75,75,75,1) 0%,rgba(75,75,75,1) 100%);
+            background: linear-gradient(to bottom,  rgba(75,75,75,1)  0%,rgba(75,75,75,1) 100%);
+            cursor:pointer;
+        }
+    
+        /*Tabs and header bar at bottom*/
+    
+        /*Hide slider*/
+    
+    	/*Tabs across mid*/
+    
+        /*Tabs at left*/
+        
+    /*Page blocks and page block content*/
+        .bPageTitle .ptBody .content{
+            padding:0px;
+        }
+        .bPageBlock, .individualPalette .bPageBlock{
+            border:none;
+        }
+        .pbSubheader, .pbFooter, #ideaSubtabs ul#nav .ideasCurrentTab div {
+            /*
+            background: rgba(37,155,219,1) !important;
+            background: -moz-linear-gradient(top,  rgba(37,155,219,1) 0%, rgba(37,155,219,1) 100%) !important; 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(37,155,219,1)), color-stop(100%,rgba(37,155,219,1))) !important;
+            background: -webkit-linear-gradient(top,  rgba(37,155,219,1) 0%,rgba(37,155,219,1) 100%) !important;
+            background: linear-gradient(to bottom,  rgba(37,155,219,1) 0%,rgba(37,155,219,1) 100%) !important; 
+            */
+            background-color:#A3A3A3 !important; 
+    		padding-left: 15px;
+    	}
+        .bPageTitle .secondaryPalette{
+            background:none;
+            padding-top:0px;
+        }
+        .bPageTitle .ptBody  .pageType{
+            font-weight:normal;
+            text-transform:uppercase;
+        }
+        .bPageBlock .pbHeader, .bSubBlock .lbHeader, .miniTab{
+            padding:10px;
+            background-color:#00B0F0 !important;
+            /*
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png') rgba(37,155,219,1);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -moz-linear-gradient(top,  rgba(37,155,219,1) 0%, rgba(37,155,219,1) 100%); 
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(37,155,219,1)), color-stop(100%,rgba(37,155,219,1)));
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-linear-gradient(top,  rgba(37,155,219,1) 0%,rgba(37,155,219,1) 100%);
+                background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), linear-gradient(to bottom,  rgba(37,155,219,1) 0%,rgba(37,155,219,1) 100%);
+                */
+        }
+    	.bPageBlock, .individualPalette .bPageBlock{
+            background: rgba(255,255,255,1);
+            background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,1)));
+            background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 100%);
+            background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 100%);
+    	}
+        .bPageBlock{
+            border:none;
+        }
+        .hotListElement .bPageBlock .pbHeader .pbTitle h3{
+            position:relative;
+            top:-7px;
+        }
+        .pbSubsection{
+            width:100%;
+    		overflow: hidden;
+        }
+        .bPageBlock .pbBody{
+            padding:10px;
+        }
+        .bPageBlock .detailList tr td, .bPageBlock .detailList tr th, bPageBlock .list tr td, bPageBlock .list tr th{
+            border:0px;
+        }
+        .bPageBlock .detailList tr td, bPageBlock .list tr td{
+            padding-top:5px;
+            padding-bottom:5px;
+        }
+        .detailList tr:nth-child(odd),.bPageBlock .list tr:nth-child(odd){ 
+            background-color:rgba(255,255,255,1); 
+        }
+        .detailList tr:nth-child(even), .bPageBlock .list tr:nth-child(even){ 
+            background-color:rgba(246,246,246,1); 
+        }
+        .detailList .customLinks tr{
+            background:none;
+        }
+        .bPageBlock, .bSubBlock{
+                box-shadow:0px 0px 10px -2px #4D4D4D;
+                -webkit-box-shadow:0px 0px 10px -2px #4D4D4D;
+                -moz-box-shadow:0px 0px 10px -2px #4D4D4D;
+        }
+        .list .headerRow th, .list .headerRow th a {
+            border-bottom-color: #757575;
+            text-decoration: none;
+        }
+        .list tr.even th, .list tr.odd th, .list tr.even td, .list tr.odd td {
+            border:0px;
+        }
+        .bSubBlock {
+            border:none;
+        }
+       .bPageBlock .labelCol {
+            font-weight: normal;
+        }
+        .bPageBlock .pbButtonb {
+            width:65%;  
+        }
+        .bPageBlock .pbBottomButtons {
+            margin-top:5px;
+    		background:none;
+        }
+        .requiredLegend {
+            background:none;
+        }
+        .pbSubheader .requiredLegend .requiredMark {
+            display:none;
+        }
+        .pbSubheader .pbSubExtra {
+            margin-right:5px;
+        }
+        /*Page block rounded corners*/
+            .bPageBlock{
+                border-radius:0px;
+                -webkit-border-radius:0px;
+                -moz-border-radius:0px;
+            }
+            .pbHeader{
+                -webkit-border-top-left-radius:0px;
+                -webkit-border-top-right-radius:0px;
+                -moz-border-radius-topleft:0px;
+                -moz-border-radius-topright:0px;
+                border-top-left-radius:0px;
+                border-top-right-radius:0px;
+            }
+    
+    /*Main page content*/
+        .bNext, .bFilter{
+            margin-left:0px;
+        }
+        .accountTab .bPageTitle .ptBody .pageDescription, .taskTab .bPageTitle .ptBody .pageDescription, .eventTab .bPageTitle .ptBody .pageDescription, .productTab .bPageTitle .ptBody .pageDescription, .solutionTab .bPageTitle .ptBody .pageDescription, .documentTab .bPageTitle .ptBody .pageDescription {
+            margin-left: 0px;
+        }
+        .bPageTitle{
+            margin-bottom:0px;
+        }
+        .overviewHeaderDescription{
+            padding:0px;
+            padding-bottom:10px;
+        }
+        .bPageTitle .ptBreadcrumb {
+            margin-bottom: 10px;
+        }
+        .bOverviewSearch {
+            margin-left:0px;
+        }
+        .fewerMore img{
+            display:none;
+        }
+        .brandTertiaryBgr{
+            background:none;
+        }
+        .bFilterSearch .bFilter .view{
+            background:none;
+        }
+    	#ideaSubtabs .bg {
+    		background:none !important;
+    	}
+
+    /*First font size and colour* (Main text)*/
+        .pbBody a:hover, .lbBody a:hover, #ideaSubtabs ul#nav a:link, #tabs ul#nav-primary a:visited, .ansHomeRecentlyAsked h2, .ansHomeRecentlyReplied h2, .ansHomeStillOpen h2, .outer td, advancedCapabilities td, .searchBoxTitle, .searchScopeHeader, #createNew .menuButtonButton, .searchFooter a, #sen, .searchModule .searchTextBox, .bPageTitle .ptBody  .pageType,.pbBody, .pbBody td, .lbBodyDescription, .list .headerRow .noRowsHeader, .bOverviewSearch, .bPageBlock .pbTitle, .bPageBlock .detailList .labelCol, .bPageBlock .detailList .dataCol, .bPageBlock .detailList .data2Col, .pbBody a, .lbBody a, .filterOverview .bFilter, .bPageBlock .pbHeader select, .bPageBlock .pbBottomButtons select, .bFilter select, .overviewHeaderDescription, .bPageBlock .labelCol, .list tr.even th, .list tr.odd th, .list tr.even td, .list tr.odd td, .list .headerRow th, .list .headerRow th a {
+            color:rgba(51,51,51,1);
+            font-size:12px;
+    		font-weight:normal;
+    		text-transform:none;
+    		text-decoration:none;
+        }
+     
+    /*Second font size and colour* (Page block headers and secondary titles)*/
+        .ideaViewCategory, #ideaSubtabs ul#nav .ideasCurrentTab div a, .requiredLegend, .pbHeader .pbTitle h2, .pbHeader .pbTitle h2 a, .pbHeader .pbTitle h3, .pbHeader .pbTitle h3 a, .pbSubheader h3, .pbSubheader h3 a, body .secondaryPalette .lbHeader{
+            color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+
+    /*Third font size and colour* (Small information text)*/
+        .pSearchShowMore a, .pSearchShowMore, .listHoverLinks .linklet .listTitle, .bFilterSearch .bFilter .view .fFooter, .bFilterSearch .bFilter .view .fFooter a, .searchCustomization a, .bPageBlock .pbHeader .pbHelp, .sidebarModule a, .ptBreadcrumb a, .fewerMore a, .fewerMore, .bPageTitle .ptBody .links .configLinks {
+            color:rgba(51,51,51,1);
+            font-size:10px;
+            font-weight:normal;
+            text-decoration:none;
+            text-transform:uppercase;
+        }
+    
+    /*Fourth font size and colour (Detail page title)*/
+        .bPageTitle .ptBody  .pageDescription{
+            color:rgba(51,51,51,1);
+            font-size:26px;
+            font-weight:normal;
+            text-transform:uppercase;
+    		text-decoration:none;
+        }
+    
+    /*Fifth font size and colour (Side bar module headers)*/
+        .sidebarModuleHeader, .brandPrimaryFgr{
+            color:rgba(51,51,51,1);
+            text-transform:uppercase;
+            font-weight:normal;
+            font-size:12px;
+    		text-decoration:none;
+        }
+    	.sidebarModuleHeader {
+            border-bottom: 1px solid rgba(51,51,51,1);
+    	}
+    
+    /*Sixth font size and colour (Active tab)*/
+        .tab td.currentTab div, .tab td.currentTab div a{
+            color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+    
+    /*Seventh font size and colour (In-active tabs)*/
+        body .tab, body .tab a {
+            color:rgba(51,51,51,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+    
+    /*Eigth font size and colour (All tabs hover)*/
+        .tab td.currentTab div:hover a,.tab td div:hover a,.tab td.last div:hover a,.tab td.currentTab div:hover,.tab td div:hover,.tab td.last div:hover{
+            color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+    
+    /*Ninth font size and colour (Buttons)*/
+        .btn, .miniTab ul.miniTabList li a{
+            color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+        .btn:hover, .miniTab ul.miniTabList li:hover a, .miniTab ul.miniTabList li a:hover{
+            color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+    
+    /*Tenth font size and colour (Sidebar buttons)*/
+        .standardSearchElementBody .btn,.sidebarModuleBody .pbSearch .btn {
+            color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+        .standardSearchElementBody .btn:hover,.sidebarModuleBody .pbSearch .btn:hover {
+            color:rgba(255,255,255,1);
+            font-size:12px;
+            font-weight:normal;
+            text-transform:uppercase;
+            text-decoration:none;
+        }
+
+    /*Content*/
+        #body_content #container_content, #body_content .outer, #body_content #bodyDiv, #body_content .oRight, #body_content .wsWidgets, #body_content #wsTabs, #body_content .x-tab-panel-body, #body_content .x-panel-body, #body_content .x-tab-panel-header, #body_content #sharedWorkspaces{
+            width:900px !important;
+            margin:auto;
+        }
+        #body_content .x-panel-body{
+            overflow: hidden !important;
+        }
+        #body_content #sidebarCell{
+            display:none;
+        }
+        #container_content{
+            top:-880px;
+            left:-10px;
+            position:relative;
+        }
+        #container_pageFooter #portalfooter{
+            top:-880px;
+    		position: relative;
+        }
+        #body_content #docContentTabs .x-tab-panel-body, #body_content #docContentTabs .x-panel-body{
+            width:auto !important;
+        }
+        #container_pageHeader #portalheader{
+            height:126px;
+            overflow:hidden;
+        }
+        #container_pageHeader #portalheadermid{
+            top:0px;
+        }
+        #container_pageHeader #portalheaderbot{
+            display:none;
+        }
+        #container_pageHeader .tabNavigation {
+        	top: -80px;
+        }
+            
+</apex:page>

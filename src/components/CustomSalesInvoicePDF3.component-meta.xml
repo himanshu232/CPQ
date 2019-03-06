@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>38.0</apiVersion>
+    <description>This is a generic template for Visualforce Component.  With this template, you may adjust the default elements and values and add new elements and values.</description>
+    <label>CustomSalesInvoicePDF3</label>
+    <packageVersions>
+        <majorNumber>16</majorNumber>
+        <minorNumber>0</minorNumber>
+        <namespace>c2g</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>8</minorNumber>
+        <namespace>ffbext</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>18</minorNumber>
+        <namespace>ffps_BillTrav</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>192</minorNumber>
+        <namespace>pse</namespace>
+    </packageVersions>
+</ApexComponent>

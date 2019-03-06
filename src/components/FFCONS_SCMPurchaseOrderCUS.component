@@ -1,0 +1,166 @@
+<apex:component access="global" controller="SCMC.PurchaseOrderController">
+<apex:attribute name="purchaseOrderId" type="String" required="false" assignTo="{!poId}" description="The id of the PO that is being rendered."/> 
+<apex:attribute name="purchaseOrder" type="SCMC__Purchase_Order__c" required="false" description="The PO that is being rendered."/> 
+<apex:stylesheet value="{!$Resource.SCMC__MainStyleSheet}"/>                
+<apex:stylesheet value="{!$Resource.SCMC__portraitLayout}"/>                
+<apex:componentBody >
+<div style="font-size: 12px;">
+    <table class="quoteDetailTable" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="55%">
+                <apex:image value="{!CompanyLogo}" rendered="{!if(CompanyLogo != '', true, false)}" width="150px" />
+                <div style="clear: both; padding: 0 2px;">
+<!--                    <strong>{!org.SCMC__Name__c}</strong><br />  -->
+<!--                    <apex:outputText escape="false" value="{!CompanyDetail}" />  -->
+
+                    <Strong><apex:outputText escape="false" rendered="{!PurchaseOrder.FFSCM_Mirror_Company__c != null}"> {!PurchaseOrder.FFSCM_Mirror_Company__r.name} <br/> </apex:outputtext> </Strong>
+                    <apex:outputText escape="false" rendered="{!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_Street__c!=null}"> {!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_Street__c} <br/> </apex:outputtext>
+                    <apex:outputText escape="false" rendered="{!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_StateProvince__c!=null}"> {!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_StateProvince__c} <br/> </apex:outputtext>
+                    <apex:outputText escape="false" rendered="{!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_Country__c!=null}"> {!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_Country__c} <br/> </apex:outputtext>
+                    <apex:outputText escape="false" rendered="{!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_ZipPostCode__c!=null}"> {!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_ZipPostCode__c} <br/> </apex:outputtext>
+                    <apex:outputText escape="false" rendered="{!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_City__c!=null}"> {!PurchaseOrder.FFSCM_Mirror_Company__r.FFSCM_City__c} <br/> </apex:outputtext>
+                </div>
+            </td>
+            <td class="quoteCellDetail" width="45%">
+                <apex:outputText escape="false" value="{!PurchaseOrder.SCMC__Purchase_Order_Name__c}" />
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td colspan="2" class="secTitle">Purchase Order</td>
+                    </tr>
+                    <tr>
+                        <td width="33%" class="title">Date.</td>
+                        <td>
+                            <apex:outputField value="{!po.SCMC__Purchase_Order_Date__c}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title">P.O.</td>
+                        <td>{!po.name}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <br/>
+        <tr>
+            <td style="padding-top: 20px;" colspan="2">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td width="33%">
+                            <div class="title">Supplier</div>
+                            <apex:outputText escape="false" value="{!SupplierAddress}"/>
+                        </td>                   
+                        <td width="33%">
+                            <div class="title">Ship To</div>
+                            <apex:outputText escape="false"> {!PurchaseOrder.FFSCM_Mirror_Company__r.name} <br/> </apex:outputText>
+                            <apex:outputText escape="false" value="{!ShipToAddress}"/>
+                        </td>
+                        <td>
+                            <div class="title">Bill To</div>
+                            <apex:outputText escape="false"> {!PurchaseOrder.FFSCM_Mirror_Company__r.name} <br/> </apex:outputText>
+                            <apex:outputText escape="false" value="{!BillToAddress}"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>   
+    </table>
+    <br/>            
+    <table class="quoteTable" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr class="headerRow">
+             <td class="firstCell">Line</td>
+             <!--<td>Item #</td>-->
+             <td style="width: 230px;">Description</td>
+             <!--<td>Commitment Date</td>-->
+             <td class="right">Unit Price</td>
+             <td>Quantity</td>
+             <td class="right lastCell">Line Total</td>
+        </tr>
+        
+        <apex:repeat value="{!Lines}" var="line">
+            <tr>
+                <td class="firstCell"><Apex:OutputField value="{!line.SCMC__Line_Number__c}"/></td>
+                <!--<td><Apex:OutputField value="{!line.SCMC__Item_Master__r.Name}"/></td>-->
+                <td><Apex:OutputField value="{!line.SCMC__Item_Description__c}" rendered="{!IF(line.SCMC__Description__c = null, true, false)}"/><Apex:OutputField value="{!line.SCMC__Description__c}" rendered="{!IF(line.SCMC__Description__c != null, true, false)}"/></td>
+                <!--<td><Apex:OutputField value="{!line.SCMC__Supplier_Commitment_Date__c}"/></td>-->
+                <td class="right">
+                    <apex:outputText value="{0, number, #,###,##0.00}"><apex:param value="{!line.SCMC__Unit_Cost_With_Options__c}" /></apex:outputText>&nbsp;
+                </td>
+                <td class = "right">
+                    <Apex:outputText value="{0,number, #,###,##0}"><apex:param value="{!line.SCMC__Quantity__c}"/></apex:outputText>
+                </td>
+                <td class="right lastCell">
+                    <Apex:OutputField value="{!PurchaseOrder.SCMC__Currency_Master__r.name}"/>
+                    <apex:outputText value="{0, number, #,###,##0.00}"><apex:param value="{!line.SCMC__Total_Cost__c}" /></apex:outputText>
+                </td>
+            </tr>
+        </apex:repeat>
+        
+        <tr class="noLine">
+            <td colspan="2" rowspan="4">
+                <table class="contactDetail" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td colspan="2">This Purchase Order excludes tax</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div style="padding: 5px 0 2px 0; font-weight: bold;">Buyer Instructions to Supplier:</div>
+                            {!po.SCMC__Buyer_Instructions_to_Supplier__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Please direct all correspondence to</td>
+                    </tr>
+                    <tr>
+                        <td width="25%">Buyer:</td>
+                        <td>{!po.SCMC__Buyer_User__r.Name}</td>
+                    </tr>
+                    <tr>
+                        <td>Number:</td>
+                        <td class="sign">{!po.SCMC__Buyer_User__r.Phone}</td>
+                    </tr>   
+                    <!-- <tr>
+                        <td>Office Extension:</td>
+                        <td class="sign">{!po.SCMC__Buyer_User__r.Extension}</td>
+                    </tr>   
+                    <tr>
+                        <td>Fax Number:</td>
+                        <td class="sign">{!po.SCMC__Buyer_User__r.Fax}</td>
+                    </tr>   -->
+                    <tr>
+                        <td>E-mail:</td>
+                        <td class="sign">{!po.SCMC__Buyer_User__r.Email}</td>
+                    </tr>   
+                </table>
+            </td>
+            <td></td>
+            <td colspan="1" class="title">Total</td>
+            <td class="total">
+                    <Apex:OutputField value="{!PurchaseOrder.SCMC__Currency_Master__r.name}"/>
+                    <apex:outputText value="{0, number, #,###,##0.00}"><apex:param value="{!po.SCMC__Total_Value_of_PO__c}" /></apex:outputText>
+            </td>
+        </tr>
+        <tr class="noLine">
+            <td colspan="3" style="padding-top: 110px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td class="sign" colspan="2" style="padding: 0;"><div style="width: 100%;">&nbsp;</div></td>
+                    </tr> 
+                    <tr>
+                        <td class="smallItacText" >Authorised By</td>
+                        <td class="smallItacText">{!PurchaseOrder.Department_Approver_Text__c}</td>
+                        <!-- <td class="smallItacText">Date</td> -->
+                    </tr>
+                    <tr>
+                        <td class="smallItacText">Authorised Date</td>
+                        <td class="smallItacText">
+                            <Apex:outputField value="{!PurchaseOrder.FFSCM_Approval_Date__c}"/>
+                        </td>
+                    </tr>    
+                </table>
+                
+            </td>
+        </tr>
+    </table>
+</div>
+</apex:componentBody>
+</apex:component>

@@ -1,0 +1,513 @@
+<apex:page controller="community_ServiceRequestCreateController" showHeader="true">
+    <apex:includeScript value="/support/console/38.0/integration.js"/>
+    
+    <div class="bPageTitle">
+        <div class="ptBody secondaryPalette brandSecondaryBrd">
+            <div class="content">
+                <h2 class="pageDescription">
+                    Raise a Hosted Service Request
+                </h2>
+                <h1 class="pageType">
+                    Raise a Hosted Service Request on behalf of a customer using this page.
+                </h1>
+            </div>
+            <!--<apex:outputLink styleClass="dashCTALink" value="javascript:">Existing HRO IT Service Requests <i class="fa fa-arrow-right"></i></apex:outputLink>-->
+        </div>
+    </div>   
+    
+    <!--<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js" />
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css" />-->
+    
+    <apex:includeScript value="{!$Resource.hsr_jQuery310}" />
+    <apex:includeScript value="{!$Resource.hsr_jQueryUI}" />
+    <apex:styleSheet value="{!$Resource.hsr_jQueryUICSS}" />
+    <style type="text/css">
+        .ui-state-hover .ui-icon,
+        .ui-state-focus .ui-icon,
+        .ui-button:hover .ui-icon,
+        .ui-button:focus .ui-icon,
+        .ui-state-default .ui-icon {
+            background-image: url("{!$Resource.hsr_jQueryUISprite_555555}");
+        }
+        
+        .ui-widget-content .ui-icon {
+            background-image: url("{!$Resource.hsr_jQueryUISprite_444444}");
+        }
+    </style>
+
+    <apex:form >    
+        <apex:actionFunction name="customerCheck" action="{!srCustomerCheck}" immediate="true" reRender="customerApprover,formDisplays,readyButtons,status,alertOutput,alertOutput2,clearDate">
+            <apex:param name="srCustomer" id="srCustomer" value="" assignTo="{!input_Customer}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="approverCheck" action="{!srApproverCheck}" immediate="true" reRender="formDisplays,readyButtons,status,alertOutput,alertOutput2,clearDate">
+            <apex:param name="srApprover" id="srApprover" value="" assignTo="{!input_Authoriser}" />
+        </apex:actionFunction>
+    
+        <apex:actionFunction name="typeCheck" action="{!srTypeCheck}" immediate="true" reRender="hsr_CreditStopMessage,formDisplays,readyButtons,status,alertOutput,alertOutput2,clearDate">
+            <apex:param name="srType" id="srType" value="" assignTo="{!input_TypeRequest}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="serviceUpgCheckEnvironment" action="{!serviceUpgCheckEnv}" immediate="false" reRender="hsr_CreditStopMessage,upgForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputTargetEnvironment" name="inputTargetEnvironment" value="" assignTo="{!input_TargetEnvironment}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="serviceUpgDate" action="{!serviceUpgDate}" immediate="false" reRender="hsr_CreditStopMessage,upgForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputServiceDate" name="inputServiceDate" value="" assignTo="{!input_ServiceDate}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="servicePatEnvCheck" action="{!servicePatEnvCheck}" immediate="false" reRender="patForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputPatchEnvironment" name="inputPatchEnvironment" value="" assignTo="{!input_TargetEnvironment}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="servicePatDate" action="{!servicePatDate}" immediate="false" reRender="patForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputPatchDate" name="inputPatchDate" value="" assignTo="{!input_ServiceDate}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="servicePatType" action="{!servicePatType}" immediate="false" reRender="patForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputPatchType" name="inputPatchType" value="" assignTo="{!input_PatchType}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="serviceCopSourceEnvCheck" action="{!serviceCopEnvCheck}" immediate="false" reRender="copForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputCopySource" name="inputCopySource" value="" assignTo="{!input_SourceEnvironment}" />
+        </apex:actionFunction>    
+        
+        <apex:actionFunction name="serviceCopDate" action="{!serviceCopDate}" immediate="false" reRender="copForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputCopyDate" name="inputCopyDate" value="" assignTo="{!input_ServiceDate}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="serviceCopPIT" action="{!serviceCopPIT}" immediate="false" reRender="copForm,readyButtons,status,alertOutput,alertOutput2">
+            <apex:param id="inputCopyPIT" name="inputCopyPIT" value="" assignTo="{!input_DBPIT}" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="doValidate" action="{!checkSaveReady}" immediate="false" reRender="hsr_CreditStopMessage,patForm,copForm,upgForm,readyButtons,status,alertOutput,alertOutput2">
+        
+        </apex:actionFunction>
+        
+        <div style="width: 1024px; margin-left: auto; margin-right: auto;">
+            <apex:pageBlock rendered="{!IS_CONSOLE=='YES'}">
+                <apex:outputPanel id="clearDate">
+                    <script type="text/javascript">
+                        $('input[id$="serDate_Picker"]').val('');
+                    </script>
+                </apex:outputPanel>
+                <apex:pageBlockButtons id="actionButtons" location="bottom">
+                    <apex:outputPanel id="readyButtons">
+                        <div id="hideThisButton">
+                            <apex:commandButton value="Continue" action="{!pageContinue}" rendered="{!readyToSave}" onclick="$('#hideThisButton').hide();">
+                                <apex:actionSupport reRender="readyButtons" />
+                            </apex:commandButton>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockButtons>
+                <apex:actionRegion rendered="{!disablePage==true}">
+                    <apex:outputPanel >
+                        <apex:outputPanel >
+                            <apex:pageMessages />
+                            <apex:pageMessage summary="<strong>Hosted Service Request Portal Unavailable</strong>" severity="info" strength="3" escape="false" detail="Access to the Hosted Service Request Portal has been temporarily disabled. In the meantime, please raise a case with our Service Desk to have your Service Request actioned as quickly as possible. You can contact them on 0844 800 9278." />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:actionRegion>
+                <apex:actionRegion rendered="{!IS_SUPER==true}">
+                    <apex:outputPanel >
+                        <apex:outputPanel >
+                            <apex:pageMessages />
+                            <apex:pageMessage summary="<strong>Super User <a style='margin-right: 0;' href='javascript:void;' id='debugPrompt' onclick='toggleDebug();'>Show Debug Window</a></strong>" severity="info" strength="3" escape="false" detail="Your account is configured as a super-user and some validation has been disabled. Please confirm all input before saving." />
+                            <apex:pageMessage rendered="{!pageDisabled_SUPER}" summary="<strong>PORTAL DISABLED</strong>" severity="warning" strength="3" escape="false" detail="The portal is disabled and is only available to super users. Enable debugging using the toggle above." />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:actionRegion>
+                <apex:actionRegion rendered="{!copVersionTargetErr != ''}">
+                    <apex:outputPanel >
+                        <apex:outputPanel >
+                            <apex:pageMessages />
+                            <apex:pageMessage summary="Validation Error" severity="info" strength="3" escape="false" detail="{!copVersionTargetErr != ''}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:actionRegion>
+                <apex:actionRegion rendered="{!disablePage==false}">
+                    <apex:outputPanel id="alertOutput">
+                        <apex:outputPanel rendered="{!validationMessage!=''}">
+                            <apex:pageMessages />
+                            <apex:pageMessage summary="<strong>Duplicate Request</strong>" severity="error" strength="2" escape="false" detail="{!validationMessage}" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    <apex:outputPanel id="alertOutput2">
+                        <apex:outputPanel rendered="{!nopeMessage!=''}">
+                            <apex:pageMessages />
+                            <apex:pageMessage summary="<strong>There is a validation issue</strong>" severity="warning" strength="2" escape="false" detail="{!nopeMessage}" />
+                        </apex:outputPanel>    
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel id="customerChoice">
+                        <apex:pageBlockSection columns="2">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel value="Please select the customer you wish to raise a request for"></apex:outputLabel>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputPanel >
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:inputField id="accName" value="{!input_Customer_Lookup.srCustomer__c}" onchange="customerCheck(this.value);" />
+                                    </div>
+                                </apex:outputPanel>
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>
+        
+                    <apex:outputPanel id="customerApprover">
+                        <apex:pageBlockSection columns="2">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel rendered="{!type_ShowAuth}" value="Please select the approver for this service request"></apex:outputLabel>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputPanel rendered="{!type_ShowAuth}" >
+                                    <div class="requiredInput">
+                                        <div class="requiredBlock"></div>
+                                        <apex:selectList value="{!input_CustomerApprover}" size="1" onchange="approverCheck(this.value);">
+                                            <apex:selectOptions value="{!requestApproverList}"></apex:selectOptions>
+                                        </apex:selectList>
+                                    </div>
+                                </apex:outputPanel>
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>  
+                    
+                    <apex:outputPanel id="formDisplays">
+                        <apex:outputPanel rendered="{!type_ShowList}">
+                            <apex:pageBlockSection columns="2">
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Please select the type of service you wish to request"></apex:outputLabel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:selectList value="{!input_TypeRequested}" size="1" onchange="typeCheck(this.value);">
+                                                <apex:selectOptions value="{!requestTypeItems}"></apex:selectOptions>
+                                            </apex:selectList>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+                            <div style="clear:both; height: 20px; width: 100%;"></div>
+                            <apex:pageBlockSection rendered="{!pat_ShowForm}" id="patForm">
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Environment to patch"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:selectList value="{!input_TargetEnvironment}" size="1" onchange="servicePatEnvCheck(this.value);">
+                                                <apex:selectOptions value="{!targetEnvironments}"></apex:selectOptions>
+                                            </apex:selectList> 
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Service Date"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:inputText html-readonly="true" id="serDate_Picker" html-placeholder="Click to choose a date" onchange="servicePatDate(this.value);" />
+                                            <script type="text/javascript">
+                                                var availDates = null;
+                                                var availDateList = "{!serviceDateList}";
+                                                                                
+                                                $(document).ready(function() {
+                                                    availDates = availDateList.split(",");
+                                                
+                                                    $('input[id$="serDate_Picker"]').datepicker("destroy");
+                                                    $('input[id$="serDate_Picker"]').datepicker({
+                                                        dateFormat: 'dd/mm/yy',
+                                                        changeMonth: true,
+                                                        changeYear: true,
+                                                        beforeShowDay: checkAvailable,
+                                                        minDate: 0,
+                                                        maxDate: "{!serviceEndDate}"
+                                                    });
+                                                });
+                                                
+                                                function checkAvailable(date) {
+                                                    var strM = date.getMonth() + 1;
+                                                    
+                                                    if(strM < 10) {
+                                                        strM = "0" + strM;
+                                                    }
+                                                    
+                                                    var strD = date.getDate();
+                                                    if(strD < 10) {
+                                                        strD = "0" + strD;
+                                                    }
+                                                    
+                                                    if($.inArray(strD + "/" + strM + "/" + date.getFullYear(), availDates) != -1) {
+                                                        return [true, "", "Available"];
+                                                    } else {
+                                                        return [false, "", "unAvailable"];
+                                                    }
+                                                }
+                                            </script>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!pat_ShowPatchTypes==false}"></apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!pat_ShowPatchTypes}">
+                                    <apex:outputLabel value="Patch Type"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <apex:selectRadio value="{!input_PatchType}" onchange="servicePatType(this.value);">
+                                            <apex:selectOptions value="{!patchTypes}"></apex:selectOptions>
+                                        </apex:selectRadio>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!showServiceTimes}">
+                                    <apex:outputLabel value="Available Time Slot"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <apex:selectRadio value="{!input_TimeSlot}" onchange="doValidate();">
+                                            <apex:selectOptions value="{!serviceTimes}"></apex:selectOptions>
+                                        </apex:selectRadio>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!showServiceTimes==false}"></apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!pat_ShowMatchEnvironment}">
+                                    <apex:outputLabel value="Select an environment to match"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:selectList value="{!input_SourceEnvironment}" size="1" onchange="doValidate();">
+                                                <apex:selectOptions value="{!sourceEnvironments}"></apex:selectOptions>
+                                            </apex:selectList>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+            
+                            <apex:pageBlockSection rendered="{!cop_ShowForm}" id="copForm">
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Source Environment"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:selectList value="{!input_SourceEnvironment}" size="1" onchange="serviceCopSourceEnvCheck(this.value);">
+                                                <apex:selectOptions value="{!sourceEnvironments}"></apex:selectOptions>
+                                            </apex:selectList> 
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Service Date"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:inputText html-readonly="true" id="serDate_Picker" html-placeholder="Click to choose a date" onchange="serviceCopDate(this.value);" />
+                                            <script type="text/javascript">
+                                                var availDates = null;
+                                                var availDateList = "{!serviceDateList}";
+                                                
+                                                $(document).ready(function() {
+                                                    availDates = availDateList.split(",");
+                                                    
+                                                    $('input[id$="serDate_Picker"]').datepicker("destroy");
+                                                    $('input[id$="serDate_Picker"]').datepicker({
+                                                        dateFormat: 'dd/mm/yy',
+                                                        changeMonth: true,
+                                                        changeYear: true,
+                                                        beforeShowDay: checkAvailable,
+                                                        minDate: 0,
+                                                        maxDate: "{!serviceEndDate}"
+                                                    });
+                                                });
+                                                
+                                                function checkAvailable(date) {
+                                                    var strM = date.getMonth() + 1;
+                                                    
+                                                    if(strM < 10) {
+                                                        strM = "0" + strM;
+                                                    }
+                                                    
+                                                    var strD = date.getDate();
+                                                    if(strD < 10) {
+                                                        strD = "0" + strD;
+                                                    }
+                                                    
+                                                    if($.inArray(strD  + "/" + strM + "/" + date.getFullYear(), availDates) != -1) {
+                                                        return [true, "", "Available"];
+                                                    } else {
+                                                        return [false, "", "unAvailable"];
+                                                    }
+                                                }
+                                            </script>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!cop_ShowTargets==false}"></apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!cop_ShowTargets}">
+                                    <apex:outputLabel value="Target Environment"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:selectList value="{!input_TargetEnvironment}" size="1" onchange="doValidate();">
+                                                <apex:selectOptions value="{!targetEnvironments}"></apex:selectOptions>
+                                            </apex:selectList>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!showServiceTimes}">
+                                    <apex:outputLabel value="Available Time Slot"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <apex:selectRadio value="{!input_TimeSlot}" onchange="doValidate();">
+                                            <apex:selectOptions value="{!serviceTimes}"></apex:selectOptions>
+                                        </apex:selectRadio>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!showServiceTimes==false}"></apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!cop_ShowPITOptions}">
+                                    <apex:outputLabel value="Would you like this copy from a point in time?"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <apex:selectRadio value="{!input_DBPIT}" onchange="serviceCopPIT(this.value);">
+                                            <apex:selectOptions value="{!copPITOptions}"></apex:selectOptions>
+                                        </apex:selectRadio>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!cop_ShowPIT}">
+                                    <apex:outputLabel value="Choose the date and time for the data to be taken from"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:selectList value="{!input_DBPITDate}" size="1" onchange="doValidate();">
+                                                <apex:selectOptions value="{!copPITDateSelect}"></apex:selectOptions>
+                                            </apex:selectList>
+                                            &nbsp;
+                                            <apex:selectList value="{!input_DBPITHour}" size="1" onchange="doValidate();">
+                                                <apex:selectOptions value="{!copPITTime_Hour}"></apex:selectOptions>
+                                            </apex:selectList>&nbsp;:&nbsp;
+                                            <apex:selectList value="{!input_DBPITMins}" size="1" onchange="doValidate();">
+                                                <apex:selectOptions value="{!copPITTime_Mins}"></apex:selectOptions>
+                                            </apex:selectList>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+            
+                            <apex:pageBlockSection columns="2" rendered="{!upg_ShowForm}" id="upgForm">
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Environment to Upgrade"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:selectList value="{!input_TargetEnvironment}" size="1" onchange="serviceUpgCheckEnvironment(this.value);">
+                                                <apex:selectOptions value="{!targetEnvironments}"></apex:selectOptions>
+                                            </apex:selectList> 
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Service Date"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <div class="requiredInput">
+                                            <div class="requiredBlock"></div>
+                                            <apex:inputText html-readonly="true" id="serDate_Picker" html-placeholder="Click to choose a date" onchange="serviceUpgDate(this.value);" />
+                                            <script type="text/javascript">
+                                                var availDates = null;
+                                                var availDateList = "{!serviceDateList}";
+                                            
+                                                $(document).ready(function() {
+                                                    availDates = availDateList.split(",");
+                                                    
+                                                    $('input[id$="serDate_Picker"]').datepicker("destroy");
+                                                    $('input[id$="serDate_Picker"]').datepicker({
+                                                        dateFormat: 'dd/mm/yy',
+                                                        changeMonth: true,
+                                                        changeYear: true,
+                                                        beforeShowDay: checkAvailable,
+                                                        minDate: 0,
+                                                        maxDate: "{!serviceEndDate}"
+                                                    });
+                                                });
+                                                
+                                                function checkAvailable(date) {
+                                                    var strM = date.getMonth() + 1;
+                                                    
+                                                    if(strM < 10) {
+                                                        strM = "0" + strM;
+                                                    }
+                                                    
+                                                    var strD = date.getDate();
+                                                    if(strD < 10) {
+                                                        strD = "0" + strD;
+                                                    }
+                                                    
+                                                    if($.inArray(strD  + "/" + strM + "/" + date.getFullYear(), availDates) != -1) {
+                                                        return [true, "", "Available"];
+                                                    } else {
+                                                        return [false, "", "unAvailable"];
+                                                    }
+                                                }
+                                            </script>
+                                        </div>
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="iTrent Version"></apex:outputLabel>
+                                    <apex:outputPanel id="upgVersionCalc">
+                                        <apex:outputText value="{!trentVersionString}" escape="false" />
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel ></apex:outputLabel>
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!upg_IfNotLive}">
+                                    <apex:outputLabel value="Pre-upgrade copy"></apex:outputLabel>
+                                    <apex:outputPanel >
+                                        <apex:inputCheckbox value="{!input_UpgCopyRequired}"></apex:inputCheckbox><br />Tick the box if you would like to copy your Live environment to the selected environment before an upgrade takes place. The selected environment will be unavailable from 17:00 on the previous working day to begin the copy. The Live environment can only be copied to the selected environment if the environments are on the same version level.
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:actionRegion>            
+            </apex:pageBlock>
+            <apex:outputPanel id="hsr_CreditStopMessage">
+                <apex:outputPanel rendered="{!hsr_CreditStop_ShowMessage}">
+                    <center>
+                        <br /><span style="color: #b4112e; font-weight: bold; font-size: x-large;">It is not currently possible to schedule this upgrade</span><br /><br />
+                        This organisation cannot currently upgrade to this iTrent version.<br /><br />
+                        <strong>Please contact the Credit Control team on 0115 977 6797 to proceed.</strong>
+                    </center>
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <apex:pageBlock id="status" rendered="{!IS_SUPER}">
+                <h1>Super User Debugging</h1><br />
+                <apex:outputPanel rendered="{!debugString!=''}">
+                    <apex:outputText escape="false" value="{!debugString}"></apex:outputText>
+                </apex:outputPanel>
+                <apex:outputText escape="false" rendered="{!debugString==''}" value="There is currently no debug output from the controller."></apex:outputText>
+            </apex:pageBlock>
+        </div>
+    </apex:form>
+    
+    <script type="text/javascript">
+        $("form").on("keyup keypress keydown", function(e) {
+            var keyCode = e.keyCode || e.which;
+            if(keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        var debugShown = false;
+        $("[id$=status]").hide();
+    
+        function toggleDebug() {
+            if(debugShown) {
+                $("[id$=status]").hide();
+                $("[id$=debugPrompt]").html("Show Debug Window");
+                debugShown = false;
+            } else {
+                $("[id$=status]").show();
+                $("[id$=debugPrompt]").html("Hide Debug Window");
+                debugShown = true;
+            }
+        }
+    </script>
+</apex:page>

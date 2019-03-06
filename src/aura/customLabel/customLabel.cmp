@@ -1,0 +1,35 @@
+<!-- Written by Hj 🌵 2017.09 -->
+<aura:component access="public" implements="forceCommunity:availableForAllPageTypes" >
+    
+    <!-- DATA VARS-->
+    <aura:attribute name="labelText" type="string" required="false" default="" description="Text received from custom label read in from Org."/>
+    
+    <!-- COMPONENT STATE VARS -->
+    
+    <!-- CONFIG VARS -->
+    <aura:attribute name="labelName" type="string" required="false" description="The custom label name to read text from for display."/>
+    <aura:attribute name="styleClass" default="default" type="string" required="false" description="(Optional) Style class value to style text label."/>
+    <aura:attribute name="destPage" type="String" default="" required="false"  description="(Optional) The URL to link to if the label is to be a link." />
+    
+    <!-- LABELS -->
+    
+    <!-- HANDLERS -->
+    <aura:handler name="init" value="{! this }" action="{! c.init }" />
+    <aura:handler name="change" value="{! v.labelName }" action="{! c.init }" />
+    <!--aura:registerEvent name="NavEvent" type="c:NavEvent" /-->
+    
+    <!-- MARKUP -->
+    <span class="{! v.styleClass }">
+        
+        <!-- Label text is a link -->
+        <aura:if isTrue="{! v.destPage != '' }">
+            <a onclick="{! c.linkClicked }" href="#"><aura:unescapedHtml value="{! v.labelText }" /></a>
+            
+        <!-- Not a link -->
+        <aura:set attribute="else">
+            <aura:unescapedHtml value="{! v.labelText }" />
+            
+        </aura:set>
+        </aura:if>
+    </span>
+</aura:component>

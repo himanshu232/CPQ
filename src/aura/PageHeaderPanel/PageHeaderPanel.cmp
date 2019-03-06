@@ -1,0 +1,66 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="public" controller="com_whichPageController" >
+<!--
+ ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by Hj 🌵 2017.11.23 -
+	//
+	// Description Page header panel adapted to be used with design
+    // attributes to alter the text displayed via labels or raw
+    // text values.
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	/* >>- Changelog -<<
+	 * _REPLACE_WITH_DATE_
+	
+	 */
+--> 
+	<!-- DATA VARS-->
+    
+    <!-- COMPONENT STATE VARS -->
+    <aura:attribute name="loading" type="String" default="true"/>
+    <aura:attribute name="header_background_image"	type="String"	default="this-changes-everything.jpg" />
+    
+    <!-- CONFIG VARS -->
+    <aura:attribute name="titleLabelName"	type="String"	default="" />
+    <aura:attribute name="titlePassedIn"	type="String"	default="" />
+    
+    <aura:attribute name="summaryLabelName"	type="String"	default="" />
+    <aura:attribute name="summaryLabelText"	type="String"	default="" />
+    
+    
+            
+    <!-- LABELS -->
+    
+    <!-- HANDLERS -->
+    <aura:handler event="c:pageChange" action="{! c.pageChanged }"/>
+	
+    <!-- MARKUP -->
+    <div class="wrapper">
+        <c:loadingBalls visible="{! v.loading }"/>    
+        <div class="inner">
+            <aura:if isTrue="{! v.titleLabelName != '' }">
+                <c:customLabel labelName="{! v.titleLabelName }" styleClass="H1" />
+                
+                <aura:set attribute="else">
+                    <!--Display Raw Version-->
+                    <c:customLabel labelText="{! v.titlePassedIn }" styleClass="H1" />
+                    
+                </aura:set>
+            </aura:if>
+            
+            
+            <aura:if isTrue="{! v.summaryLabelName != '' }">
+                <c:customLabel labelName="{! v.summaryLabelName }" styleClass="intro-txt" />
+                    
+                <aura:set attribute="else" >
+                    
+                    
+                    <c:customLabel labelText="{! v.summaryLabelText }" styleClass="intro-txt" />
+                        
+                    
+                    
+                    
+                </aura:set>
+            </aura:if>
+        </div>
+        
+    </div>
+</aura:component>

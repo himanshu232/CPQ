@@ -1,0 +1,14 @@
+<apex:page showHeader="false" standardStylesheets="true">
+    <style type="text/css">
+        @import url("/apex/SSEPortalCSSMain");
+        body{
+            background:none;
+            min-width:0px;
+        }
+    </style>
+    <div id="userborder"></div>
+    <div id="userimage"></div>
+    <div id="username">
+        {!$User.FirstName} {!$User.LastName}
+    </div>
+</apex:page>

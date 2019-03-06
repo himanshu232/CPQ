@@ -1,0 +1,4 @@
+<design:component label="People First Footer">
+	<design:attribute name="Copyright"			label="Copyright notice"	description="Copyright notice to display"/>
+    <design:attribute name="showSocialIcons"	label="Show social icons"	description="Enable or disable Social icons in footer"/>
+</design:component>

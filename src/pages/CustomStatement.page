@@ -1,0 +1,89 @@
+<apex:page standardController="ffc_statex__StatementAccount__c" recordSetVar="records" renderAs="pdf" extensions="ffc_statex.StatementPageController">
+    <head>    
+        <style type="text/css">
+            .textAlignCenter{
+                text-align:center;
+            }        
+            @page {
+                margin-bottom: 100px;
+                
+                @bottom-center {
+                    content: element(footer);
+                }
+              }
+    
+            div.footer {
+                position: running(footer);
+            }
+        </style>
+    </head>
+    <div class="footer">
+       <table width="100%">
+           <tr>
+               <td class="textAlignCenter" style="font-size:7pt">
+                   Head Office: Ruddington Hall, Ruddington, Nottinghamshire, NG11 6LL <br/>
+                   Tel: 0115 945 6000 Email: salesledger@mhr.co.uk <br/>
+                   Web: www.mhr.co.uk <br/><br/>
+                   MHR International UK Limited. Registered office: Peterbridge House, 3 The Lakes, NN4 7HB <br/>
+                   Company registration number: 01852206 <br/>
+                   VAT registration number: GB 705 8506 36 <br/>
+               </td>
+           </tr>
+       </table>
+    </div>
+    <apex:repeat value="{!accountList}" var="account">
+    <div style="page-break-after:always">
+        <p align="right">
+            <img src="{!account.ffc_statex__OwnerCompany__r.c2g__LogoURL__c}" width="50px"/>
+        </p>
+        <p>
+            <apex:outputField value="{!account.ffc_statex__Account__r.Name}"/><br/>
+            <apex:outputField value="{!account.ffc_statex__Account__r.BillingStreet}"/><br/>
+            <apex:outputField value="{!account.ffc_statex__Account__r.BillingCity}"/><br/>
+            <apex:outputField value="{!account.ffc_statex__Account__r.BillingState}"/><br/>
+            <apex:outputField value="{!account.ffc_statex__Account__r.BillingPostalCode}"/><br/> 
+            <apex:outputField value="{!account.ffc_statex__Account__r.BillingCountry}"/><br/> 
+            <apex:outputField value="{!account.ffc_statex__Account__r.c2g__CODADescription1__c}"/>
+        </p>
+        <p align="right">
+            <ffc_statex:CODALocalFormatterController date="{!TODAY()}"/>
+        </p>
+        <p align="center">
+            <b><u><apex:outputText value="Statement of Account"/></u></b>
+        </p>
+        <p align="left">
+            Please find below a breakdown of your open transactions with MHR.
+        </p>
+        
+        <apex:variable var="showDDMessage" value="false"/>
+        <apex:repeat value="{!account.ffc_statex__StatementAccountLines__r}" var="line">
+            <apex:outputText rendered="{!line.ffc_statex__Transaction__r.Collection_Status__c == '01. Direct Debit'}">
+                <apex:variable var="showDDMessage" value="true" />
+            </apex:outputText>
+        </apex:repeat>
+        
+        <p align="left">
+            <apex:outputText rendered="{!showDDMessage}" value="Please note that any Collection Status with Direct Debit is going to be taken at the end of the month"/>
+        </p>
+        <apex:dataTable value="{!account.ffc_statex__StatementAccountLines__r}" var="line" border="1" cellpadding="3" >
+            <apex:column style="text-align:left" headervalue="Document Date" value="{!line.ffc_statex__Transaction__r.c2g__TransactionDate__c}"/>       
+            <apex:column style="text-align:left" headervalue="Document Number" value="{!line.DocumentReference__c}"/>
+            <apex:column style="text-align:center" headervalue="Description" value="{!line.ffc_statex__TransactionLineItem__r.c2g__LineDescription__c}"/>
+            <apex:column style="text-align:right" headervalue="Outstanding Amount"><ffc_statex:CODALocalFormatterController number="{!IF(line.ffc_statex__Transaction__r.c2g__TransactionType__c!='Journal',ABS(line.ffc_statex__DocumentOutstandingValue__c),line.ffc_statex__DocumentOutstandingValue__c)}" currency="{!line.ffc_statex__TransactionLineItem__r.c2g__DocumentCurrency__r.Name}"/></apex:column>
+            <apex:column style="text-align:left" headervalue="Collection Status" value="{!line.ffc_statex__Transaction__r.Collection_Status__c}" />
+        </apex:dataTable>
+        <br/>
+        <p>
+            If you have any queries or require further copy invoices please email salesledger@mhr.co.uk with full details.    
+            <br/><br/>
+            Kind regards,
+            <br/><br/>
+            Credit Control Team<br/>
+            0115 945 7792 – Ellen Wright<br/>
+            0115 977 6907 – Vicki Houghton
+            <br/><br/>
+            MHR International UK Limited
+        </p>
+        </div>
+    </apex:repeat>
+</apex:page>

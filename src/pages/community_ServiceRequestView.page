@@ -1,0 +1,94 @@
+<apex:page controller="community_ServiceRequestViewController" showHeader="true">
+    <div style="width: 90%; margin-left: auto; margin-right: auto;">
+        <div class="bPageTitle">
+            <div class="ptBody secondaryPalette brandSecondaryBrd">
+                <div class="content">
+                    <h2 class="pageDescription">
+                        Hosted Service Request: {!srName}
+                    </h2>
+                    <h1 class="pageType">
+                        Please find the existing service request below.
+                    </h1>
+                </div>
+                <apex:outputLink styleClass="dashCTALink" value="/ServiceDesk/community_ServiceRequestList">Existing HRO IT Service Requests <i class="fa fa-arrow-right"></i></apex:outputLink>
+            </div>
+        </div>   
+        <apex:form >
+                <apex:pageBlock >
+                    <apex:pageBlockButtons id="actionButtons" location="bottom" rendered="{!showCancelButton}">
+                    <apex:outputPanel >
+                        <apex:commandButton value="Cancel Request" action="{!srCancel}">
+                            <apex:actionSupport reRender="" />
+                        </apex:commandButton>
+                    </apex:outputPanel>
+                </apex:pageBlockButtons>
+            
+                <apex:pageBlockSection columns="1" rendered="{!errorString!=''}">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Oops! Something went wrong."></apex:outputLabel>
+                        <apex:outputPanel >{!errorString}</apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection columns="1" rendered="{!errorString==''}">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Service Request ID"></apex:outputLabel>
+                        <apex:outputPanel >
+                            {!srName}
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Service Request Status"></apex:outputLabel>
+                        <apex:outputPanel >
+                            {!srStatus}
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>  
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Raised by"></apex:outputLabel>
+                        <apex:outputPanel >
+                            {!srOwnerName}
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Service Type"></apex:outputLabel>
+                        <apex:outputPanel >
+                            {!srType}
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Service Date"></apex:outputLabel>
+                        <apex:outputPanel >
+                            {!srDate} <apex:outputPanel rendered="{!srTimeSlot!=''}"> {!srTimeSlot}</apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Affected Environment"></apex:outputLabel>
+                        <apex:outputPanel >
+                            {!srTargetEnvironment}
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value=" "></apex:outputLabel>
+                        <apex:outputPanel >&nbsp;</apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Service Request Description"></apex:outputLabel>
+                        <apex:outputText value="{!srDescription}" escape="false" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!srApproverLabel}"></apex:outputLabel>
+                        <apex:outputText value="{!srApprover}" escape="false" />
+                    </apex:pageBlockSectionItem>    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value=" "></apex:outputLabel>
+                        <apex:outputPanel >&nbsp;</apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Terms and Conditions"></apex:outputLabel>
+                        <apex:outputText value="{!terms}" escape="false" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </div>
+</apex:page>

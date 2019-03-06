@@ -1,0 +1,360 @@
+/**********************/
+/*** PAGE CONTAINER ***/
+/**********************/
+
+.cOegen_Theme {
+    overflow:hidden!important;
+    max-width:1170px;
+    margin: 0 auto;
+    padding:0;
+}
+
+/**************/
+/*** HEADER ***/
+/**************/
+
+.cOegen_Theme .headerPnl {position:relative;}
+.cOegen_Theme .headerPnl > div {
+    padding:20px 0 0 0;
+	display:flex;
+	margin:0 auto;
+	box-sizing:border-box;
+	height:auto!important;
+	max-width:1170px;
+    flex-wrap:wrap;
+}
+
+/* logo */
+
+.cOegen_Theme .headerPnl .branding {position:relative;}
+
+.cOegen_Theme .headerPnl .branding:before {
+	position:absolute;
+	content:"";
+	display:block;
+	/*background:rgba(255,0,0,0.5);*/
+    background:rgba(255,255,255,1);
+	width:267px;
+	height:186px;
+	transform:rotate(31.5deg);
+	top:-116px;
+	left:10px;
+    transition: all 300ms ease;
+}
+
+.cOegen_Theme .headerPnl .logo {
+    width:131px;
+    height:36px;
+    background-image: url('/s/sfsites/c/resource/PFResources/img/logo.png');
+    display:block;
+    position:relative;
+    top:17px;
+    left:106px;
+    transition: all 300ms ease;
+}
+
+/* search */
+
+.cOegen_Theme .headerPnl .searchPnl {flex-grow:0;flex-shrink:0;padding-top:1px;}
+
+.cOegen_Theme .headerPnl .searchPnl .search-field {
+    border: 1px solid #e5005a;
+    border-radius:3px;
+    font-size:15px;
+    height:49px;
+}
+.cOegen_Theme .headerPnl .searchPnl .search-field:focus{box-shadow:none;}
+.cOegen_Theme .headerPnl .searchPnl .uiButton {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-color: #e5005a;
+    width:140px;
+}
+
+/* profile */
+
+.cOegen_Theme .headerPnl .profilePnl {display:flex;align-items:center;justify-content:center;}
+
+.cOegen_Theme .headerPnl .profilePnl > div {width:100%;}
+.cOegen_Theme .headerPnl .profilePnl span.profileName {font-size:15px;}
+
+.cOegen_Theme .headerPnl .profilePnl .uiMenuList ul li.myAccount {display:none;}
+
+.cOegen_Theme .selfServiceUserProfileMenu .down-arrow {color:#63686b!important;margin: 2px 0 0 4px!important;}
+.cOegen_Theme .selfServiceUserProfileMenu .profileName {text-shadow:none!important;color:#63686b;text-transform:none!important;}
+.cOegen_Theme .selfServiceUserProfileMenu a.trigger-link {text-decoration:none;}
+.cOegen_Theme .selfServiceUserProfileMenu a.trigger-link img {display:none;}
+.cOegen_Theme .selfServiceUserProfileMenu a.trigger-link:before {
+	font-family: FontAwesome;
+	content: "\f2be";
+	font-style:normal;
+	color:#63686b;
+	vertical-align:middle;
+	font-size:20px;
+	text-shadow:none;
+}
+
+.cOegen_Theme .uiMenuList--default.uiMenuList {margin-top:14px;max-width:unset;/*width:100%;*/} /* width removed - caused issue when emmulating mob in chrome */
+
+/* nav */
+
+.cOegen_Theme .headerPnl .navPnl {display:flex;align-items:center;}
+
+/* header text */
+
+.cOegen_Theme .headerTxt {flex-basis:100%;}
+.cOegen_Theme .headerTxt .wrapper {padding: 117px 70px 30px;}
+
+.cOegen_Theme .headerTxt .wrapper .inner {padding: 0 .75rem;width:600px;box-sizing:content-box;}
+
+.cOegen_Theme .headerTxt .wrapper span.H1 {
+	display:block;
+    font-size: 56px;
+    font-weight: bold;
+    color:#fff;
+    line-height:1;
+}
+
+.cOegen_Theme .headerTxt .wrapper span.intro-txt {
+    display:block;
+    color:#fff;
+    font-size: 26px;
+    line-height:38px;
+    padding: 20px 0 0 0;
+}
+
+/*** header desktop breakpoints ***/
+
+@media screen and (min-width:1025px) {
+    .cOegen_Theme .headerPnl .branding {flex-basis:30%;}
+    .cOegen_Theme .headerPnl .searchPnl {flex-basis: 42.4%;}
+    .cOegen_Theme .headerPnl .profilePnl {flex-basis:16.1%;}
+    .cOegen_Theme .headerPnl .navPnl {flex-basis:11.5%;}
+}
+
+@media screen and (min-width:876px) and (max-width:1024px) {
+    .cOegen_Theme .headerPnl .branding {flex-basis:35%;}
+	.cOegen_Theme .headerPnl .searchPnl {flex-basis: 42.5%;}
+    .cOegen_Theme .headerPnl .profilePnl {flex-basis:15%;}
+    .cOegen_Theme .headerPnl .navPnl {flex-basis:7.5%;}
+}
+
+@media screen and (max-width:780px) {
+    .cOegen_Theme .headerTxt .wrapper .inner {width:100%;box-sizing:border-box;}
+}
+
+@media screen and (min-width:769px) and (max-width:875px) {
+    .cOegen_Theme .headerPnl .branding {flex-basis:38.5%;}
+	.cOegen_Theme .headerPnl .searchPnl {flex-basis: 41.5%;}
+    .cOegen_Theme .headerPnl .profilePnl {flex-basis:12.5%;}
+    .cOegen_Theme .headerPnl .navPnl {flex-basis:7.5%;}
+}
+
+/*** header tab/mob breakpoints ***/
+
+@media screen and (max-width:768px) {
+    
+    .cOegen_Theme .headerTxt .wrapper {padding: 117px .75rem 30px;}
+    
+    .cOegen_Theme .headerPnl .navPnl {padding: 0 25px;}
+    
+    .cOegen_Theme .headerPnl .branding:before {top:-126px;left:-70px;z-index: 5001;}
+    .cOegen_Theme .headerPnl .logo {top:7px;left:26px;z-index: 5001;}
+    
+    .cOegen_Theme .headerPnl .searchPnl {margin: 0 0 0 auto;}
+    .cOegen_Theme .headerPnl .searchPnl .search-container {overflow:hidden;}
+    .cOegen_Theme .headerPnl .searchPnl .mobile-search-icon {
+        border-radius:0;
+        width:70px;
+        background-color:transparent!important;
+    }
+    
+    .cOegen_Theme .headerPnl .searchPnl .mobile-search-icon svg {fill:#63686b;}
+    .cOegen_Theme .headerPnl .searchPnl .mobile-search-icon:hover svg {fill:#e5005a;}
+    
+	.cOegen_Theme .selfServiceUserProfileMenu a.trigger-link:hover:before {color:#e5005a;}
+	
+}
+
+@media screen and (min-width:461px) and (max-width:660px) {
+    .cOegen_Theme .headerTxt .wrapper span.H1 {font-size: 50px;}
+    .cOegen_Theme .headerTxt .wrapper span.intro-txt {font-size: 23px;line-height:33px;}
+}
+
+@media screen and (max-width:460px) {
+    .cOegen_Theme .headerPnl .searchPnl .uiButton {width:55px;}
+    .cOegen_Theme .headerTxt .wrapper {padding: 104px .75rem 30px;}
+    .cOegen_Theme .headerTxt .wrapper span.H1 {font-size: 42px;}
+    .cOegen_Theme .headerTxt .wrapper span.intro-txt {font-size: 18px;line-height:26px;}
+}
+
+
+@media screen and (max-width:375px) {
+    .cOegen_Theme .headerPnl .navPnl {padding: 0 15px;}
+    .cOegen_Theme .headerPnl .searchPnl .mobile-search-icon {width:45px;}
+    .cOegen_Theme .headerPnl .branding:before {left:-80px;}    
+}
+
+/**********************/
+/*** CONTENT LAYOUT ***/
+/**********************/
+
+.cOegen_Theme .contentPnl {padding: 0 70px;background:#fff;}
+@media screen and (max-width:768px) {.cOegen_Theme .contentPnl {padding:0 .75rem;}}
+
+/*******************/
+/*** SF HEADINGS ***/
+/*******************/
+
+.cOegen_Theme .forceCommunityHeadline {padding:25px 0 0;}
+
+@media screen and (max-width:768px) {
+    .cOegen_Theme .forceCommunityHeadline {padding:25px 0 0!important;}
+}
+
+.cOegen_Theme .forceCommunityHeadline .headlineTitle {
+    text-align:left!important;
+    text-transform:lowercase!important;
+    color:#e5005a!important;
+    font-size: 36px!important;
+    line-height:1!important;
+    padding: 0;
+}
+
+.cOegen_Theme .forceCommunityHeadline .headlineTitle .forceIcon {display:none;}
+
+
+.cOegen_Theme .topicListHeader .leftLabelNoHeader {
+    font-size:20px;
+	color:#626669;
+	position:relative;
+	text-transform:capitalize;
+    font-weight:bold;
+}
+
+/***********************/
+/*** SECTION HEADERS ***/
+/***********************/
+
+.cOegen_Theme .sec-head {
+	flex:none;
+	width:100%;
+	display:block;
+	line-height:1;
+	color:#e5005a;
+	padding-top:25px;
+	font-size:36px;
+	font-weight:600;
+}
+
+/***********/
+/*** CTA ***/
+/***********/
+
+.cOegen_Theme .cta {
+  display:block;
+  max-width:200px;
+  overflow:hidden;
+  text-decoration:none;
+  font-size:16px;
+  margin: 20px auto 0;
+  text-decoration:none!important;
+}
+
+.cOegen_Theme .cta:before,
+.cOegen_Theme .cta:after {
+  display:block;
+  content:"";
+  width:50px;
+  height:50px;
+  box-sizing:border-box;
+  transition: 0.4s;
+}
+.cOegen_Theme .cta:before {
+  float:right;
+  border-top:12px solid #e5005a;
+  border-right:12px solid #e5005a;
+  border-top-right-radius:100%;
+}
+
+.cOegen_Theme .cta:after{
+  border-bottom:12px solid #e5005a;
+  border-left:12px solid #e5005a;
+  border-bottom-left-radius:100%;
+}
+.cOegen_Theme .cta span {
+  display:block;
+  text-align:center;
+  clear:both;
+  color:#e5005a;
+  text-transform:uppercase;
+  font-weight:bold;
+}
+
+.cOegen_Theme .cta:hover:before {margin-top:6px;width:44px;height:44px;margin-right:6px;}
+.cOegen_Theme .cta:hover:after {margin-bottom:6px;width:44px;height:44px;margin-left:6px;}
+
+/****************/
+/*** ARTICLES ***/
+/****************/
+
+.cOegen_Theme .article-head {
+    display:block;
+	font-weight:bold!important;
+	color:#e5005a !important;
+	padding: 0 0 10px !important;
+    margin:0 !important;
+	font-size:17px!important;
+	line-height:20px!important;
+}
+
+.cOegen_Theme .article-summary {
+	display:block;
+	padding: 0 0 10px;
+	font-size:15px!important;
+	line-height:20px!important;
+	color:#63676a;
+}
+
+.cOegen_Theme .col-articles .article-head {padding: 30px 0 10px!important;}
+.cOegen_Theme .news .article-head {color:#63676a!important;padding-top:0;}
+
+/* SF article */
+
+.cOegen_Theme .article-column {padding:0!important;}
+
+/**************/
+/*** TABLES ***/
+/**************/
+
+.cOegen_Theme table.slds-table th,
+.cOegen_Theme table.slds-table td {font-size: 14px;}
+.cOegen_Theme table.slds-table th span.slds-truncate {color:#828282;}
+.cOegen_Theme table.slds-table thead .slds-cell-fixed {background-color: #f5f5f5;}
+
+/******************************/
+/*** TABS (NOT USED AS TABS ***/
+/******************************/
+
+.cOegen_Theme li.tabs__item:not(.active) {display:none;}
+
+.cOegen_Theme a.tabHeader { border-width:3px;border-color:#e2005b!important;padding:0 0 12px!important;}
+.cOegen_Theme a.tabHeader span.title {
+	font-size:20px;
+	color:#626669;
+	position:relative;
+	text-transform:capitalize;
+    font-weight:bold;
+}
+
+.cOegen_Theme article div.footer span {color:#979797;}
+.cOegen_Theme ul.article-list li {margin:0;}
+.cOegen_Theme ul.article-list li:last-of-type {border-bottom:none!important;}
+
+/********************/
+/*** TOPIC WIDGET ***/
+/********************/
+
+.cOegen_Theme .topicList .topicItem a {text-decoration:none;}
+.cOegen_Theme .topicList .topicItem a > span span,
+.cOegen_Theme .topicStats div {color:#979797;}

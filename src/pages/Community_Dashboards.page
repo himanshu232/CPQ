@@ -1,0 +1,349 @@
+<!-- oe:gen 23-12-2015 -->
+<apex:page controller="community_DashboardsController" showHeader="true" >
+    <div class="bPageTitle">
+        <div class="ptBody secondaryPalette brandSecondaryBrd">
+            <div class="content">
+                <h1 class="pageType">
+                    Dashboard
+                </h1>
+                <h2 class="pageDescription">
+                    Support Statistics
+                </h2>
+            </div>
+        </div>
+    </div>
+     
+    
+    <script type="text/javascript" src="https://www.google.com/jsapi"/>
+    
+    <script type="text/javascript">
+        
+    // Load the Visualization API and the corechart package
+    google.load("visualization", "1", {packages:["corechart"]});
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawCharts);
+    
+    function drawCharts() {
+        community_DashboardsController.getLoggedCaseStatusData( 
+            function(result, event){  
+                // Create a new data table with two columns: the label and the value
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'State');
+                data.addColumn('number', 'Count');
+                for(var i =0; i<result.length;i++){
+                    var r = result[i];
+                    data.addRow(['Open', r.count1]);
+                    data.addRow(['Closed', r.count2]);
+                }
+                
+                // Get the total number of rows
+                var total = google.visualization.data.group(data, [{
+                    type: 'boolean',
+                    column: 0,
+                    modifier: function () {return true;}
+                }], [{
+                    type: 'number',
+                    column: 1,
+                    aggregation: google.visualization.data.sum
+                }]);
+                
+                var options = {
+                    title: 'CASES LOGGED IN THE LAST 3 MONTHS',
+                    pieHole: 0.45,
+                    width:380,
+                    height:300,
+                    colors: ['#b4112e', '#58585A'],
+                    titleTextStyle: {color: '#58585A',fontSize: 11},
+                    legend: {textStyle: {color: '#58585A'}},
+                    chartArea: {left:25,top:25,width:"85%",height:"85%"},
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('donutChart1'));
+                chart.draw(data, options);
+                var div = document.getElementById('centre1');
+                var totalText = 'Total: ';
+                div.innerHTML = div.innerHTML + totalText + total.getValue(0, 1);
+            },
+            {escape:true}
+        );
+
+        community_DashboardsController.getOpenCaseAgeData( 
+            function(result, event){  
+                // load bar chart
+                var visualization = new google.visualization.ColumnChart(document.getElementById('barChart1'));
+                // Prepare data table for chart with columns
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'AGE (DAYS)');
+                data.addColumn('number', 'Case Count');
+                // add rows from the remoting results
+                for(var i =0; i<result.length;i++){
+                    var r = result[i];
+                    data.addRow([r.xAxisLabel, r.Count]);
+                }
+                
+                var options = {
+                    title: 'CURRENT OPEN CASES BY AGE',
+                    /*
+                    animation: {
+                        startup: true,              
+                        duration: 2000,
+                        easing: 'out',
+                    },
+                    */
+                    legend: {position: 'none'},
+                    colors: ['#b4112e'],
+                    height: 300,
+                    width: 590,
+                    chartArea: {left:25,top:40,width:"85%",height:"65%"},
+                    titleTextStyle: {color: '#58585A',fontSize: 11},
+                    hAxis: {title: 'AGE (DAYS)',  titleTextStyle: {color: '#58585A'}, textStyle: {color: '#58585A'}},
+                    vAxis: {textStyle: {color: '#58585A'}, minValue: 6, viewWindow:{min:0}, format: '0', baselineColor: 'silver'},
+                };
+                // all finished, so lets draw the chart with our options set above
+                visualization.draw(data, options);
+            },
+            {escape:true}
+        );
+
+        community_DashboardsController.getAllDefectsLogged( 
+            function(result, event){  
+                // Create a new data table with two columns: the label and the value
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Status');
+                data.addColumn('number', 'Count');
+                
+                for(var i =0; i<result.length;i++){
+                    var r = result[i];
+                    data.addRow(['Outstanding', r.count1]);
+                    data.addRow(['Complete', r.count2]);                    
+                } 
+                
+                // Get the total number of rows
+                var total = google.visualization.data.group(data, [{
+                    type: 'boolean',
+                    column: 0,
+                    modifier: function () {return true;}
+                }], [{
+                    type: 'number',
+                    column: 1,
+                    aggregation: google.visualization.data.sum
+                }]);
+                
+                var options = {
+                    title: 'ALL DEFECTS LOGGED',
+                    pieHole: 0.45,
+                    width:380,
+                    height:300,
+                    colors: ['#b4112e', '#58585A'],
+                    titleTextStyle: {color: '#58585A',fontSize: 11},
+                    legend: {textStyle: {color: '#58585A'}},
+                    chartArea: {left:25,top:25,width:"85%",height:"85%"},
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('donutChart2'));
+                chart.draw(data, options);
+                var div = document.getElementById('centre2');
+                var totalText = 'Total: ';
+                div.innerHTML = div.innerHTML + totalText + total.getValue(0, 1);
+            },
+            {escape:true}
+        );
+
+        community_DashboardsController.getClosedCaseAgeData( 
+            function(result, event){  
+                // load bar chart
+                var visualization = new google.visualization.ColumnChart(document.getElementById('barChart2'));
+                // Prepare data table for chart with columns
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'AGE (DAYS)');
+                data.addColumn('number', 'Case Count');
+                // add rows from the remoting results
+                for(var i =0; i<result.length;i++){
+                    var r = result[i];
+                    data.addRow([r.xAxisLabel, r.Count]); 
+                }
+                
+                var options = {
+                    title: 'CASES CLOSED IN THE LAST 12 MONTHS',
+                    /*
+                    animation: {
+                        startup: true,              
+                        duration: 2000,
+                        easing: 'out',
+                    },
+                    */
+                    legend: {position: 'none'},
+                    colors: ['#b4112e'],
+                    height: 300,
+                    width: 590,
+                    chartArea: {left:25,top:40,width:"85%",height:"65%"},
+                    titleTextStyle: {color: '#58585A',fontSize: 11},
+                    hAxis: {title: 'AGE (DAYS)',  titleTextStyle: {color: '#58585A'}, textStyle: {color: '#58585A'}},
+                    vAxis: {textStyle: {color: '#58585A'}, minValue: 6, viewWindow:{min:0}, format: '0', baselineColor: 'silver'},
+                };
+                visualization.draw(data, options);
+            },
+            {escape:true}
+        );
+        
+        community_DashboardsController.getEscalations( 
+            function(result, event){  
+                // Create a new data table with two columns: the label and the value
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Status');
+                data.addColumn('number', 'Count');
+                
+                for(var i =0; i<result.length;i++){
+                    var r = result[i];
+                    data.addRow([r.Status, r.Count]);
+                }
+                if (data.getNumberOfRows() == 0) {
+                    data.addRow(['', 0]);
+                }
+                
+                // Get the total number of rows
+                var total = google.visualization.data.group(data, [{
+                    type: 'boolean',
+                    column: 0,
+                    modifier: function () {return true;}
+                }], [{
+                    type: 'number',
+                    column: 1,
+                    aggregation: google.visualization.data.sum
+                }]);
+                
+                var options = {
+                    title: 'ESCALATIONS',
+                    pieHole: 0.45,
+                    width:380,
+                    height:300,
+                    colors: ['#b4112e', '#58585A'],
+                    titleTextStyle: {color: '#58585A',fontSize: 11},
+                    legend: {textStyle: {color: '#58585A'}},
+                    chartArea: {left:25,top:25,width:"85%",height:"85%"},
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('donutChart3'));
+                chart.draw(data, options);
+                
+                var div = document.getElementById('centre3');
+                var totalText = 'Total: ';
+                div.innerHTML = div.innerHTML + totalText + total.getValue(0, 1);
+            },
+            {escape:true}
+        );
+        
+        community_DashboardsController.getFeedback( 
+            function(result, event){  
+                // load bar chart
+                var visualization = new google.visualization.ColumnChart(document.getElementById('barChart3'));
+                // Prepare data table for chart with columns
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Rating');
+                data.addColumn('number', 'Count');
+                // add rows from the remoting results
+                for(var i =0; i<result.length;i++){
+                    var r = result[i];
+                    data.addRow([r.xAxisLabel, r.Count]); 
+                }
+                
+                var options = {
+                    title: 'YOUR FEEDBACK IN THE LAST 12 MONTHS',
+                    /*
+                    animation: {
+                        startup: true,              
+                        duration: 2000,
+                        easing: 'out',
+                    },
+                    */
+                    legend: {position: 'none'},
+                    colors: ['#b4112e'],
+                    height: 300,
+                    width: 590,
+                    chartArea: {left:25,top:40,width:"85%",height:"65%"},
+                    titleTextStyle: {color: '#58585A',fontSize: 11},
+                    vAxis: {textStyle: {color: '#58585A'}, baselineColor: 'silver', minValue: 6, viewWindow:{min:0}, format: '0',},
+                    hAxis: {title: 'RATING', maxAlternation: 1, maxTextLines: 2, minTextSpacing: 5,  titleTextStyle: {color: '#58585A'}, textStyle: {color: '#58585A'}},
+                };
+                visualization.draw(data, options);
+            },
+            {escape:true}
+        );
+    };
+    
+    </script>
+    
+    <!-- Temporary styles/formatting -->
+    <table class="dashTable">
+        <tr class="border-btm">
+            <td class="leftCol">
+                <div class="donutContainer">
+                    <div id="centre1" class="centre"/>
+                    <div id="donutChart1">
+                        <div class="spinner-donut">
+                            <div class="double-bounce1"></div>
+                            <div class="double-bounce2"></div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="rightCol">
+                <div id="barChart1">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr class="border-btm">
+            <td class="leftCol">
+                <div class="donutContainer">
+                    <div id="centre2" class="centre"/>
+                    <div id="donutChart2">
+                        <div class="spinner-donut">
+                            <div class="double-bounce1"></div>
+                            <div class="double-bounce2"></div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="rightCol">
+                <div id="barChart2">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="leftCol">
+                <div class="donutContainer">
+                    <div id="centre3" class="centre"/>
+                    <div id="donutChart3">
+                        <div class="spinner-donut">
+                            <div class="double-bounce1"></div>
+                            <div class="double-bounce2"></div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="rightCol">
+                <div id="barChart3">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</apex:page>

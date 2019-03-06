@@ -1,0 +1,22 @@
+<aura:component >
+	<!-- DATA VARS-->
+    
+    <!-- COMPONENT STATE VARS -->
+
+    <!-- CONFIG VARS -->
+    <aura:attribute name="visible"	type="Boolean"	default="false" />
+    
+    <!-- LABELS -->
+    
+    <!-- HANDLERS -->
+    
+    <!-- MARKUP -->
+    <aura:if isTrue="{!v.visible}">
+        <div class="loadingCon global siteforceLoadingBalls">
+            <span class="loadingBall first" />
+            <span class="loadingBall second" />
+            <span class="loadingBall third" />
+            <span class="assistiveText">Loading</span>
+        </div>
+    </aura:if>
+</aura:component>

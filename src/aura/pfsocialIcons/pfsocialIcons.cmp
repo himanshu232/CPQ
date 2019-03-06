@@ -1,0 +1,38 @@
+<!--
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by Hj 🌵 2017.11 -
+	// Social Icons component to display social media and contact us
+    // syle icons to community users.
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	/* >>- Changelog -<<
+	 * 
+	
+	 */
+-->
+
+<aura:component >
+    <ltng:require styles="{! $Resource.fontawesome + '/css/font-awesome.css' }" />
+    
+    <!-- DATA VARS-->
+
+    <!-- COMPONENT STATE VARS -->
+    
+    <!-- CONFIG VARS -->
+    <aura:attribute name="styleClass" type="String" description="Class applied to the rendered div for CSS selectors."/>
+
+    <!-- LABELS -->
+    
+    <!-- HANDLERS -->
+
+    <!-- MARKUP -->
+    <div class="cSocailIcons">
+        <div class="{!  v.styleClass  }">
+            <a href="" onclick="{! c.clicker }" data-src="li"		data-labeltext="{! $Label.c.pfc_SocialIcon_LinkedIn }">		<i class="fa fa-linkedin" 	aria-hidden="true"></i>	</a>
+            <a href="" onclick="{! c.clicker }" data-src="twit"		data-labeltext="{! $Label.c.pfc_SocialIcon_Twitter }">		<i class="fa fa-twitter" 	aria-hidden="true"></i>	</a>
+            <a href="" onclick="{! c.clicker }" data-src="fb"		data-labeltext="{! $Label.c.pfc_SocialIcon_Facebook }">		<i class="fa fa-facebook" 	aria-hidden="true"></i>	</a>
+            <a href="" onclick="{! c.clicker }" data-src="inst"		data-labeltext="{! $Label.c.pfc_SocialIcon_Instagram }">	<i class="fa fa-instagram" 	aria-hidden="true"></i>	</a>
+            <a href="" onclick="{! c.clicker }" data-src="blog"		data-labeltext="{! $Label.c.pfc_SocialIcon_Blogger }" class="blogger">	<i class="fa fa-instagram" 	aria-hidden="true"></i>	</a>
+        </div>
+	</div>
+    
+</aura:component>

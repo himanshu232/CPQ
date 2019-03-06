@@ -1,0 +1,29 @@
+<apex:component access="global" controller="PS_BudgetsListController">
+    <apex:attribute name="CustomerIDValue" type="String" description="This is the Id of the account" assignTo="{!CustomerID}" access="global" />
+    <table class="table">
+        <thead>    
+            <tr>
+                <th>Job Code Description</th> 
+                <th>OA Number</th>
+                <th>Day Rate</th>
+                <th>Total Days</th>
+                <th>Days Scheduled</th>
+                <th>Days Remaining</th>
+            </tr>
+        </thead>        
+        <tbody>
+            
+            <apex:repeat value="{!ExistingBudgets}" var="bud">
+                <tr>
+                    <td>{!bud.Name}</td>
+                    <td>{!bud.OA_Number__c}</td>
+                    <td align="right">{!bud.Sales_Price__c}</td>                                               
+                    <td align="right">{!bud.Total_Days__c}</td> 
+                    <td align="right">{!bud.Days_Planned_in_Schedule_2__c}</td> 
+                    <td align="right">{!bud.Days_Remaining_to_be_Used__c }</td> 
+                </tr>
+            </apex:repeat>            
+            
+        </tbody>   
+    </table>
+</apex:component>

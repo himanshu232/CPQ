@@ -1,0 +1,392 @@
+<!-- recordSetVar is required so that we have access to the standardSetController in APEX -->
+<apex:page showHeader="true" sidebar="false" recordSetVar="null" standardcontroller="Activity_Checklist__c" extensions="HRO_Checklist_MultiEdit_Controller" standardStylesheets="FALSE" action="{!StartCardForAlreadyOwnedCard}">
+	
+	<!-- Load SLDS -->
+	<apex:slds />
+	
+	<!-- Support for SVGs -->
+	<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+		<style>
+			textarea {
+				height: 44px;
+				width: 248px;
+			}
+
+			/* Increase size of Checkboxes */
+			input[type='checkbox']{
+			    -ms-transform: scale(1.2); /* IE */
+		        -moz-transform: scale(1.2); /* FF */
+			    -webkit-transform: scale(1.2); /* Safari and Chrome */
+		 	    -o-transform: scale(1.2); /* Opera */
+			}
+
+			/*Override this to make it align left */
+			.slds-notify_container {
+				text-align: left !important;
+			    width: auto !important;
+			}
+			
+            .bodyDiv {width: 100%;}
+
+            .outerNoSidebar,
+            .outerNoSidebar > tbody,
+            .outerNoSidebar > tbody > tr,
+            .outerNoSidebar > tbody > tr > td.slds-scope.noSidebarCell {display: block;}
+            
+            .outerNoSidebar > tbody > tr > td.slds-scope.noSidebarCell .slds-size_1-of-1.slds-p-bottom_large {
+                display:block;
+                overflow:auto;
+                margin-bottom: 20px;
+            	max-height:700px;
+            }
+            
+            /* This isn't satisfactory as-is because the table columns are dynamic (i.e. can be changed by the client) so we can't use count */
+            /*.outerNoSidebar > tbody > tr > td.slds-scope.noSidebarCell .slds-size_1-of-1.slds-p-bottom_large table tr td:nth-of-type(7) {
+                display: block;
+                width:400px;
+                white-space: normal;
+            }*/
+            
+            .outerNoSidebar > tbody > tr > td.slds-scope.noSidebarCell .slds-size_1-of-1.slds-p-bottom_large table tr td {white-space: normal;}
+
+            .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            margin-left: -250px;
+            top:50px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+            
+		</style>
+        <apex:includeScript value="/support/console/43.0/integration.js"/>
+        <script type="text/javascript">
+            function testCloseTab() {
+               
+                window.close();
+            }
+            
+        </script>
+
+        <!-- ----------------------------------<POPUP>---------------------------------- --> 
+        <!-- Used to challange a User to take ownership of a given checklist --->
+      	 <apex:form id="popUp">
+             <apex:outputPanel id="tstpopup">
+                    
+                 <!-- AHA - Added to accomodate MHR request for user being challanged to take ownership of an Activity Checklist -->
+                 <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopupTakeOwnership}"/>
+                 <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopupTakeOwnership}">
+                     Activity currently owned by: {!currentActivityOwnerName}<br/>
+                     Would you like to take ownership of this Checklist?.<br/><br/><br/>
+                     <apex:commandButton value="Yes" action="{!popupOneDecisionYes}" rerender="popUp" styleClass="slds-button slds-button_brand "/>
+                     <span/>
+                     <span/>
+                     <apex:commandButton value="No" action="{!closePopup}" rerender="popUp, btns2, btnStatus2, btns, selected" styleClass="slds-button slds-button_neutral"/>
+                 </apex:outputPanel>
+             </apex:outputPanel>
+        </apex:form>
+       <!-- ----------------------------------<POPUP ENDS>---------------------------------- --> 
+		<!-- sldsoe Scoped SLDS CSS -->
+		<div class="slds-scope">
+            <apex:sectionHeader title="Account: {!AccountField}" subtitle="Checklist for Activity: {!ActivityName} due by {!EndField} in Stage {!StageField} for {!ScheduleField}">
+                <!--<apex:sectionHeader Title="Checklist Item Editor" subtitle="{!IF(selectedCheckIds.size == 0, 'Edit Checklist items for ' + activityName + ' : ' + activity + ' for ' + activityCustomer+ ' which is due to complete ' + activityEndDate, 'Edit selected Checklist items')}">-->
+				<apex:outputPanel id="allMsgs" styleClass="slds-size--1-of-1 slds-p-horizontal--small slds-p-left_medium">					<!-- Re-render on all actions -->
+
+					<apex:outputPanel layout="block" id="feedbackMsgs" rendered="{! feedbackBool && hasApexMessages == FALSE }">
+
+						<!--HJ feedback -->
+						<apex:repeat value="{!feedbackNeg}" var="code">
+	                        <div class="slds-notify_container slds-is-relative">
+	                            <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+	                                <span class="slds-assistive-text">Info</span>
+	                                <!--span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top">
+	                                </span-->
+	                                <div class="slds-notify__content">
+	                                    <h2 class="slds-text-heading_small "> <apex:outputText value="{!feedbackNeg[code]}" /> </h2>
+	                                </div>
+	                            </div>
+	                        </div>
+
+		                </apex:repeat>
+
+		                <apex:repeat value="{!feedbackPos}" var="code">
+	                        <div class="slds-notify_container slds-is-relative">
+	                            <div class="slds-notify slds-notify_toast slds-theme_success" role="alert">
+	                                <span class="slds-assistive-text">Info</span>
+	                                <!--span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top">
+	                                </span-->
+	                                <div class="slds-notify__content">
+	                                    <h2 class="slds-text-heading_small "> <apex:outputText value="{!feedbackPos[code]}" /> </h2>
+	                                </div>
+	                            </div>
+	                        </div>
+
+		                </apex:repeat>
+					</apex:outputPanel>
+
+					<!-- sf built in error Messages styled. --
+					<apex:messages styleClass="slds-notify_container slds-is-relative slds-notify slds-notify_toast slds-theme_info slds-notify__content slds-text-heading_small" /-->
+					<apex:messages style="display: inline-block !important;" styleClass="slds-notify_container slds-is-relative slds-notify slds-notify_toast slds-theme_error slds-notify__content slds-text-heading_small" />
+
+				</apex:outputPanel>
+			</apex:sectionHeader>
+
+			<apex:form >
+                
+                
+               
+                <div class="slds-size_1-of-1  slds-p-bottom_large" style="padding-left: 10px;">
+                <apex:outputPanel layout="block" id="btns2" styleclass="slds-grid_align-start">
+							<apex:actionStatus id="btnStatus2">
+
+								<apex:facet name="stop">
+
+									<apex:outputPanel styleClass="" >
+                                        <div class="slds-form-element" style="width: 250px">
+                                            <label class="slds-form-element__label">Selected Activity</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <apex:selectList size="1" value="{!selectedname}" styleClass="slds-select" > 
+                                                        <apex:selectOptions value="{!lstnamesel}" />
+                                                        <apex:actionSupport event="onchange" action="{!changeActivity}">
+                                                            
+                                                        </apex:actionSupport>
+                                                    </apex:selectList>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <br/>
+                                        
+										
+                                        <!-- Save Button -->
+                                        <apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_brand " status="btnStatus2, btnStatus" action="{!onSaveAndContinue}" reRender="allMsgs, selected, nav, btns2, btns" value="Save Updates" disabled="{!invalidOrig}"/>
+										
+                                        <!--<apex:commandButton rendered="{!recordsUpdated}"  styleClass="slds-button slds-button_brand " status="btnStatus2, btnStatus" action="{!onCancel}" reRender="allMsgs, selected, nav, btns2, btns" value="Return" disabled="{!invalidOrig}"/>-->
+										<!-- <apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_brand " status="btnStatus2, btnStatus" action="{!onSave}" reRender="allMsgs, selected, nav, btns2, btns" value="Save Updates" disabled="{!invalidOrig}"/> -->
+                                        
+                                        <!-- Cancel Button -->
+                                        <apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_neutral " action="{!onCancel}" reRender="nav, allMsgs" value="Cancel" immediate="TRUE" disabled="{!NOT(hideReturn)}"/>
+										
+                                        <!-- RETURN Buttons -->
+                                        <!-- Two seperate return buttons based on if the User is looking at the Read only or editable version of the page -->
+                                        <apex:commandButton rendered="{! !saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+                                        <apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+										<!--<apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturnProcessing}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" /> -->
+										
+                                        
+                                        <apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_neutral" action="{!UncheckAllChecklist}" reRender="nav, allMsgs, pb" value="Untick All" immediate="TRUE" disabled="{!hideReturn}" />
+										
+                                        
+                                            <apex:outputLink rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_brand" value="/apex/Ogn_Time_Card_Console?Id={!activityId}" target="_blank" style="position: absolute; Right: 20px" >Time Cards</apex:outputLink>
+                                        
+
+									</apex:outputPanel>
+
+									
+								</apex:facet>
+
+
+								<apex:facet name="start">
+									<apex:outputPanel styleClass="">
+										<!--<apex:commandButton styleClass="slds-button slds-button_brand" status="btnStatus2, btnStatus" action="{!onSave}" reRender="allMsgs, selected, nav" value="Save Updates" disabled="TRUE" />-->
+                                        
+                                        <!-- Save Button -->
+                                        <apex:commandButton styleClass="slds-button slds-button_brand" status="btnStatus2, btnStatus" action="{!onSaveAndContinue}" reRender="allMsgs, selected, nav" value="Save Updates" disabled="TRUE" />
+										
+                                        <!-- Cancel Button -->
+                                        <apex:commandButton styleClass="slds-button slds-button_neutral" action="{!onCancel}" reRender="nav, allMsgs" value="Cancel" immediate="TRUE" disabled="{!NOT(hideReturn)}"/>
+										
+                                        <!-- RETURN -->
+                                        <!-- Two seperate return buttons based on if the User is looking at the Read only or editable version of the page -->
+                                        <apex:commandButton rendered="{! !saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+										<apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+										<!--<apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturnProcessing}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" /> -->
+
+										
+                                        
+                                       
+										<div class="slds-spinner_container">
+											<div class="slds-spinner slds-spinner_medium" role="alert">
+												<span class="slds-assistive-text">Working</span>
+												<div class="slds-spinner__dot-a"></div>
+												<div class="slds-spinner__dot-b"></div>
+											</div>
+										</div>
+										
+									</apex:outputPanel>
+								</apex:facet>
+								
+							</apex:actionStatus>
+
+						</apex:outputPanel>
+            </div>
+				<!-- ----------------------------------<OUTER LAYOUT STYLING>---------------------------------- --> 
+				<apex:outputPanel layout="block" styleClass="slds-grid slds-wrap slds-p-left_large slds-p-right_large slds-grid_pull-padded  
+															section-header-wrap slds-grid_align-left" >
+
+					<div class="slds-form-element" style="max-width:100%;">
+						
+						<!-- ----------------------------------<DIV FOR SPACING BETWEEN TABLE AND BUTTONS>---------------------------------- -->
+						<div class="slds-size_1-of-1  slds-p-bottom_large ">
+
+							<apex:outputPanel layout="block" styleclass="slds-size-1-of-1" id="selected" rendered="{!!invalidOrig}">
+
+						        <!-- INPUT -->
+						        <apex:outputPanel rendered="{!!recordsUpdated}" id="pb"> 
+                                    <apex:outputPanel rendered="{!extraData}">
+                                    	<apex:dataTable var="item" value="{!activityChecklist}" styleClass="slds-table slds-table--bordered slds-table--cell-buffer slds-truncate  slds-scrollable slds-scrollable--x" >   
+                                            <apex:column headerValue="Name" value="{!item.Name}" />
+                                            <apex:repeat var="f" value="{!$ObjectType.Activity_Checklist__c.FieldSets.MultiEditFS}">
+                                                <apex:column headerValue="{!f.label}">
+                                                    <apex:inputField value="{!item[f]}" />
+                                                </apex:column>
+                                            </apex:repeat>
+                                            <apex:column headerValue="Payroll Activity" >
+                                                <apex:outputField value="{!item.Payroll_Activity__c}" />
+                                            </apex:column>
+                                            <apex:column headerValue="Stage">
+                                                <apex:outputField value="{!item.Stage__c}" />
+                                            </apex:column>
+                                        </apex:dataTable>
+                                    </apex:outputPanel>
+                                    
+                                    <apex:outputPanel rendered="{! !extraData}">
+                                        <apex:dataTable var="item" value="{!activityChecklist}" styleClass="slds-table slds-table--bordered slds-table--cell-buffer slds-truncate  slds-scrollable slds-scrollable--x">   
+                                            <apex:column headerValue="Name" value="{!item.Name}" />
+                                            <apex:repeat var="f" value="{!$ObjectType.Activity_Checklist__c.FieldSets.MultiEditFS}">
+                                                <apex:column headerValue="{!f.label}">
+                                                    <apex:inputField value="{!item[f]}" />
+                                                </apex:column>
+                                            </apex:repeat>
+                                        </apex:dataTable>
+                                	</apex:outputPanel>
+						        </apex:outputPanel>
+
+						        <!-- OUTPUT ONLY -->
+						        <apex:outputPanel rendered="{!recordsUpdated}">
+								    <apex:dataTable var="item" value="{!activityChecklist}" styleClass="slds-table slds-table--bordered slds-table--cell-buffer slds-truncate  slds-scrollable slds-scrollable--x">
+								        <apex:column headerValue="Name" value="{!item.Name}" />
+								        <apex:repeat var="f" value="{!$ObjectType.Activity_Checklist__c.FieldSets.MultiEditFS}">
+								            <apex:column headerValue="{!f.label}">
+								                <apex:outputField value="{!item[f]}" />
+								            </apex:column>
+								        </apex:repeat>
+								    </apex:dataTable>
+						        </apex:outputPanel>
+							</apex:outputPanel>
+						</div>
+						<!-- ----------------------------------</DIV FOR SPACING BETWEEN TABLE AND BUTTONS>---------------------------------- -->
+
+						
+						<!-- ----------------------------------<UPDATE CANCEL BUTTONS>---------------------------------- -->
+						<apex:outputPanel layout="block" id="btns" styleclass="slds-grid_align-start">
+							<apex:actionStatus id="btnStatus">
+
+								<apex:facet name="stop">
+
+									<apex:outputPanel styleClass="" >
+									
+										<!--<apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_brand" status="btnStatus, btnStatus2" action="{!onSave}" reRender="allMsgs, selected, nav, btns, btns2" value="Save Updates" disabled="{!invalidOrig}"/>-->
+										<!--<apex:commandButton rendered="{!recordsUpdated}"  styleClass="slds-button slds-button_brand" status="btnStatus, btnStatus2" action="{!onCancel}" reRender="allMsgs, selected, nav, btns, btns2" value="Return" disabled="{!invalidOrig}"/>-->
+                                        
+                                        <!-- Save Button -->
+                                        <apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_brand " status="btnStatus2, btnStatus" action="{!onSaveAndContinue}" reRender="allMsgs, selected, nav, btns2, btns" value="Save Updates" disabled="{!invalidOrig}"/>
+										
+                                        <!-- Cancel Button -->
+                                        <apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_neutral" action="{!onCancel}" reRender="nav, allMsgs" value="Cancel" immediate="TRUE"  disabled="{!NOT(hideReturn)}"/>
+										
+                                        <!-- RETURN -->
+                                        <!-- Two seperate return buttons based on if the User is looking at the Read only or editable version of the page -->                                     
+                                        <apex:commandButton rendered="{! !saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}"  reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+										<apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+										<!--<apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturnProcessing}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" /> -->
+										
+                                        
+                                        
+                                    </apex:outputPanel>
+
+									
+								</apex:facet>
+
+
+								<apex:facet name="start">
+									<apex:outputPanel styleClass="">
+
+										<!--<apex:commandButton styleClass="slds-button slds-button_brand" status="btnStatus, btnStatus2" action="{!onSave}" reRender="allMsgs, selected, nav" value="Save Updates" disabled="TRUE" />-->
+                                        
+                                        <!-- Save Button -->
+                                        <apex:commandButton rendered="{! !recordsUpdated}" styleClass="slds-button slds-button_brand " status="btnStatus2, btnStatus" action="{!onSaveAndContinue}" reRender="allMsgs, selected, nav, btns2, btns" value="Save Updates" disabled="{!invalidOrig}"/>
+										
+                                        <!-- Cancel Button -->
+                                        <apex:commandButton styleClass="slds-button slds-button_neutral" action="{!onCancel}" reRender="nav, allMsgs" value="Cancel" immediate="TRUE"  disabled="{!NOT(hideReturn)}"/>
+										
+                                        <!-- RETURN -->
+                                        <!-- Two seperate return buttons based on if the User is looking at the Read only or editable version of the page --> 
+                                        <apex:commandButton rendered="{! !saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+										<apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturn}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" />
+										<!--<apex:commandButton rendered="{!saveHasBeenPerformed}" styleClass="slds-button slds-button_neutral" action="{!onReturnProcessing}" reRender="nav, allMsgs" value="Close" immediate="TRUE" disabled="{!hideReturn}" /> -->
+
+                                        <div class="slds-spinner_container">
+											<div class="slds-spinner slds-spinner_medium" role="alert">
+												<span class="slds-assistive-text">Working</span>
+												<div class="slds-spinner__dot-a"></div>
+												<div class="slds-spinner__dot-b"></div>
+											</div>
+										</div>
+										
+									</apex:outputPanel>
+								</apex:facet>
+								
+							</apex:actionStatus>
+
+						</apex:outputPanel>
+						<!-- ----------------------------------</UPDATE CANCEL BUTTONS>---------------------------------- -->
+							
+					</div>
+
+				</apex:outputPanel>
+
+				<apex:outputPanel id="nav">
+					<script>
+	                    // Script to navigate user to previous page if no errors
+						// dest is ActivityId if one exists, or the Activity Check list view if not
+	                    var dest = '{!activityId}' != '' ? '{!activityId}' : 'aBW';
+	                    var doNavigate = {!doNavigate};
+	                    if(doNavigate === true) {
+	                        if( (typeof sforce != 'undefined') && sforce && (!!sforce.one) ) {
+	                            //LEX/SF1 navigation
+	                            sforce.one.navigateToSObject(dest);
+	                        }
+	                        else {
+	                            window.top.location.href = '/' + dest;
+	                        }
+	                    }
+	                </script>
+                </apex:outputPanel>
+			</apex:form>
+
+		</div>
+        
+	</html>
+</apex:page>

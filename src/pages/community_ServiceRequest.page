@@ -1,0 +1,331 @@
+<apex:page controller="community_ServiceRequestController" showHeader="true" tabStyle="Report">
+   
+    <div class="bPageTitle">
+        <div class="ptBody secondaryPalette brandSecondaryBrd">
+            <div class="content">
+                <h2 class="pageDescription">
+                    Hosted Service Request
+                </h2>
+                <h1 class="pageType">
+                    Use this page to request your database copies, patch installations and upgrades.
+                </h1>
+            </div>
+            <apex:outputLink styleClass="dashCTALink" value="{!$Page.community_ServiceRequestListing}">Existing HRO IT Service Requests <i class="fa fa-arrow-right"></i></apex:outputLink>
+        </div>
+    </div>   
+    
+  
+    <apex:form >
+         <apex:actionFunction name="matchCheck" action="{!matchCheck}" immediate="true" reRender="RerenderMe, RerenderLabel">
+             <apex:param name="myParam" value=""/>
+        </apex:actionFunction>
+        <apex:actionFunction name="pointInTimeCheck" action="{!pointInTimeCheck}" immediate="true" reRender="rerenderPIT">
+            <apex:param name="pitParam" value=""/>
+        </apex:actionFunction>
+        <apex:pageBlock >
+            <apex:pageBlockButtons id="saveButton" location="bottom">
+                <apex:commandButton value="Save" action="{!Save}" rendered="{!FATAL_DISPLAY}">
+                     <apex:actionSupport reRender="errorMsgTop" />
+                </apex:commandButton>
+            </apex:pageBlockButtons>
+            <apex:actionRegion >
+                <apex:outputPanel id="errorMsgTop">
+                <style type='text/css'>
+                    .message {
+                        background-color: #eee !important;
+                    }
+                    
+                    .messageTable {
+                        border: none !important;
+                    }
+                    
+                    .pbSubheader {
+                        margin-top: 0 !important;
+                    }
+                    
+                    .availTime {
+                        margin-top: -10px;
+                        float: left;
+                    }
+                </style>
+        <apex:outputPanel rendered="{!displayValidationMessage}">
+                <apex:pageMessages />
+                <apex:pageMessage summary="Please correct the following validation errors" severity="error" strength="3" escape="false" detail="{!validationMessage}" /> 
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!displayFatalError}">
+                <apex:pageMessages />
+                <apex:pageMessage summary="<strong>There was an error</strong>" severity="error" strength="3" escape="false" detail="{!validationMessage}" /> 
+        </apex:outputPanel>
+    </apex:outputPanel>
+        <apex:outputPanel rendered="{!FATAL_DISPLAY}">                
+            <apex:pageBlockSection columns="2">
+                <apex:pageBlockSectionItem >
+                   
+                    <apex:outputLabel value="Please select type of service required"></apex:outputLabel>
+                    <apex:outputPanel layout="none">   
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:selectList value="{!serviceRequestType}" size="1" onchange="typeCheck(this.value)">
+                                <apex:selectOptions value="{!TypeItems}"></apex:selectOptions>
+                                 <apex:actionFunction name="typeCheck" action="{!serviceTypeCheck}" immediate="false" reRender="saveButton,Fixes,DBService,Upgrades,sourceDDL,source,PatchPnl,TandCs,TandCFix,TandCUpgrade">
+                                     <apex:param name="typeParam" id="typeParam" value="" assignTo="{!serviceRequestType}"/>
+                                 </apex:actionFunction>
+                            </apex:selectList>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Customer"></apex:outputLabel>
+                    <apex:outputText value="{!customer}"></apex:outputText>
+                </apex:pageBlockSectionItem>
+               
+                </apex:pageBlockSection>
+                
+              
+     
+               <apex:pageBlockSection collapsible="false" showHeader="{!showFixesService}" title="{!fixHeaderTitle}" id="Fixes" >
+                    <apex:pageBlockSectionItem rendered="{!showFixesService}">
+                        <apex:outputLabel value="Patch Environment"></apex:outputLabel>
+                        <apex:outputPanel layout="none">
+                         <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:selectList value="{!patchEnvironment}" id="sourceDDL" size="1">
+                                <apex:selectOptions value="{!sourceEnvironmentOptions}"></apex:selectOptions>
+                                
+                            </apex:selectList>
+                            </div>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+            
+                    <apex:pageBlockSectionItem rendered="{!showFixesService}">
+                       
+                         <apex:outputLabel value="Patch to match" ></apex:outputLabel>
+                        <apex:inputCheckbox onchange="matchCheck(this.value)"/>                     
+                  
+                   </apex:pageBlockSectionItem>
+                  
+                   <apex:pageBlockSectionItem rendered="{!showFixesService}">
+                        <apex:outputLabel value="Available Date"></apex:outputLabel>
+                         <apex:outputPanel layout="none"  >
+                         <div class="requiredInput"  >
+                            <div class="requiredBlock"  style="height: 16px;"></div>
+                            
+                            
+                            <div style="float:left;">
+                            <apex:selectList value="{!patchDate}" size="1" onchange="serviceCheckTime(this.options[this.selectedIndex].text);">
+                                <apex:selectOptions value="{!availabilityOptions}" />
+           
+                                <apex:actionFunction name="serviceCheckTime" action="{!serviceCheckTime}" immediate="false" reRender="timeRender">
+                                    <apex:param name="serviceCheckAMPM" value="{!patchDate}" />
+                                </apex:actionFunction>
+                             </apex:selectList>
+                            </div>
+                            
+                            <div class="availTime"><apex:outputPanel layout="none" id="timeRender">
+                                    <apex:selectRadio value="{!patchTime}" id="Time" style="background-color: white !important; height: 16px;">
+                                        <apex:selectOptions value="{!availabilityOptionsTime}" />
+                                    </apex:selectRadio>                                
+                            </apex:outputPanel></div>
+                             </div>
+                             
+                             
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!showFixesService}">
+                        <apex:outputpanel id="RerenderLabel">
+                        <apex:outputPanel rendered="{!showMatchEnvironment}" >
+                                <apex:outputLabel value="Match Environment"></apex:outputLabel>
+                            </apex:outputPanel>
+                        </apex:outputpanel>
+                        <apex:outputpanel id="RerenderMe">
+                        <apex:outputPanel rendered="{!showMatchEnvironment}" >
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:selectList value="{!matchEnvironment}" size="1" id="matchEnvDDL" >
+                                    <apex:selectOptions value="{!targetEnvironmentOptions}"></apex:selectOptions>
+                                </apex:selectList>
+                            </div>
+                         </apex:outputPanel>
+                        </apex:outputpanel>
+                    </apex:pageBlockSectionItem>
+                    
+
+                </apex:pageBlockSection>
+       
+                <apex:pageBlockSection collapsible="false" columns="1" id="TandCFix">
+                    <apex:pageBlockSectionItem rendered="{!showFixesService}">
+                        <apex:outputLabel value="Terms & Conditions"></apex:outputLabel>
+                        <apex:outputText escape="false" value="{!Terms_and_Conditions}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!showFixesService}">
+                        <apex:outputLabel value="I agree to the terms and conditions"></apex:outputLabel>
+                        <apex:outputPanel layout="none">
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputField value="{!serviceRequest.Confirmation__c}"/>
+                            </div>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+          
+                
+                <apex:pageBlockSection collapsible="false" showHeader="{!showDBService}" title="{!dbHeaderTitle}" id="DBService" columns="2">
+            
+                    <apex:pageBlockSectionItem rendered="{!showDBService}">
+                        
+                         <apex:outputLabel value="Source Environment"></apex:outputLabel>
+                         <apex:outputPanel layout="none">
+                         <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                                <apex:selectList value="{!sourceEnvironment}" size="1">
+                                    <apex:selectOptions value="{!sourceEnvironmentOptions}"></apex:selectOptions>
+                                </apex:selectList>
+                        </div>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!showDBService}">
+                        <apex:outputLabel value="Target Environment"></apex:outputLabel>
+                        <apex:outputPanel layout="none">
+                         <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:selectList value="{!targetEnvironment}" size="1">
+                                <apex:selectOptions value="{!targetEnvironmentOptions}"></apex:selectOptions>
+                            </apex:selectList>
+                          </div>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+         
+                    <apex:pageBlockSectionItem rendered="{!showDBService}">
+                        <apex:outputLabel value="Available Date"></apex:outputLabel>
+                         <apex:outputPanel layout="none">
+                         <div class="requiredInput">
+                            <div class="requiredBlock" style="height: 16px;"></div>
+                            <div style="float:left;">
+                                <apex:selectList value="{!databaseDate}" size="1" onchange="serviceCheckTime(this.options[this.selectedIndex].text);">                            
+                                    <apex:selectOptions value="{!availabilityOptions}" />
+               
+                                    <apex:actionFunction name="serviceCheckTime" action="{!serviceCheckTime}" immediate="false" reRender="timeDBRender">
+                                        <apex:param name="serviceCheckAMPM" value="{!databaseDate}" />
+                                    </apex:actionFunction>
+                                </apex:selectList>         
+                             </div>
+                             
+                             <div class="availTime">
+                                 <apex:outputPanel layout="none" id="timeDBRender"> 
+                                    <apex:selectRadio value="{!databaseTime}" id="Time" style="background-color: white !important; height: 16px;">
+                                        <apex:selectOptions value="{!availabilityOptionsTime}" />
+                                    </apex:selectRadio>
+                                
+                                </apex:outputPanel>
+                            </div>
+                            
+                            </div>
+                        </apex:outputPanel>
+                        
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!showDBService}"></apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!showDBService}">
+                        <apex:outputLabel value="If you would like the data snapshot to be taken from an earlier point in time, check the box"></apex:outputLabel>
+                        <apex:inputCheckbox value="{!pointInTimeCheck}" onclick="pointInTimeCheck(this.value)"></apex:inputCheckbox>                       
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!showDBService}">
+                        <apex:outputPanel id="rerenderPIT">
+                            <apex:outputPanel rendered="{!showPointInTime}" >
+                                <b><apex:outputLabel value="Point in Time"></apex:outputLabel></b>
+                                <apex:inputField value="{!serviceRequest.DB_PIT__c}" />
+                                <apex:selectList value="{!databasePIT_Hour}" id="DB_Time_Hour" size="1">
+                                    <apex:selectOptions value="{!database_PIT_Options_Hour}" />
+                                </apex:selectList>
+                                 : 
+                                <apex:selectList value="{!databasePIT_Mins}" id="DB_Time_Mins" size="1">
+                                    <apex:selectOptions value="{!database_PIT_Options_Mins}" />
+                                </apex:selectList><br />
+                                <em>DD/MM/YYYY HH:MM in 24 hour format</em>
+                            </apex:outputPanel>
+                        </apex:outputPanel>     
+                    </apex:pageBlockSectionItem>
+                    
+                   
+                </apex:pageBlockSection>
+                <apex:pageBlockSection collapsible="false" columns="1" id="TandCs">
+                    <apex:pageBlockSectionItem rendered="{!showDBService}">
+                        <apex:outputLabel value="Terms & Conditions"></apex:outputLabel>
+                        <apex:outputText escape="false" value="{!Terms_and_Conditions}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!showDBService}">
+                        <apex:outputLabel value="I agree to the terms and conditions"></apex:outputLabel>
+                        <apex:outputPanel layout="none">
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputField value="{!serviceRequest.Confirmation__c}"/>
+                            </div>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection collapsible="false" showHeader="{!showUpgradeService}" title="{!upgradeHeaderTitle}" id="Upgrades">
+                     <apex:pageBlockSectionItem rendered="{!showUpgradeService}">
+                        <apex:outputLabel value="Target Environment"></apex:outputLabel>
+                        <apex:outputPanel layout="none">
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:selectList value="{!upgradeEnvironment}" size="1">
+                                    <apex:selectOptions value="{!targetEnvironmentOptions}"></apex:selectOptions>
+                                </apex:selectList>
+                            </div>
+                            
+                        </apex:outputPanel>
+                         
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!showUpgradeService}">
+                        <apex:outputLabel value="Available Date"></apex:outputLabel>
+                        <apex:outputPanel layout="none">
+                         <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:selectList value="{!upgradeDate}" size="1" onchange="serviceCheckTime(this.options[this.selectedIndex].text);">                            
+                                <apex:selectOptions value="{!availabilityOptions}"/>
+                                
+                                <apex:actionFunction name="serviceCheckTime" action="{!serviceCheckTime}" immediate="true" reRender="vers,trentVersionPane">
+                                    <apex:param name="serviceCheckAMPM" value="{!upgradeDate}" />
+                                </apex:actionFunction>
+                            </apex:selectList> 
+                         </div>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!showUpgradeService}">
+                        <apex:outputLabel value=""></apex:outputLabel>
+                        <apex:outputPanel id="vers">
+                            <strong>{!trentVersion}</strong>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection collapsible="false" columns="1" id="TandCUpgrade">
+                    <apex:pageBlockSectionItem rendered="{!showUpgradeService}">
+                        <apex:outputLabel value="Terms & Conditions"></apex:outputLabel>
+                        <apex:outputText escape="false" value="{!Terms_and_Conditions}"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem rendered="{!showUpgradeService}">
+                        <apex:outputLabel value="I agree to the terms and conditions"></apex:outputLabel>
+                        <apex:outputPanel layout="none">
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <apex:inputField value="{!serviceRequest.Confirmation__c}" />
+                            </div>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+            </apex:outputPanel>
+            </apex:actionRegion>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

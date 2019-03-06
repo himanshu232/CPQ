@@ -1,0 +1,73 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" controller="com_articleController"> 
+<!--
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by Hj 🌵 2017.11.15 -
+	//
+	// Intended to display articles in a multiple modes.
+    //	article news :	1/3rd column layout with an article date.
+    //	article :		2/3rds wide columnular view with thumbnail 
+    //					view and flex wrapping.
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	/* >>- Changelog -<<
+	 * _REPLACE_WITH_DATE_
+	
+	 */
+-->
+	<!-- DATA VARS -->
+    <aura:attribute name="articles" 		type="com_articleController.KnowledgeWrapper[]" description="List of articles selected for display"/>
+    
+	<!-- COMPONENT STATE VARS -->
+    
+    <!-- CONFIG VARS -->
+    <aura:attribute name="variant"			type="String"	required="true"		default="article"/>
+    <aura:attribute name="labelNameHeader"	type="String"	required="false"	default="" />
+    <aura:attribute name="articleType"		type="String"	required="true" />
+    <aura:attribute name="maxNumber"		type="String"	required="true" />
+    <aura:attribute name="sortOrder"		type="String"	required="true"		default="LastPublishedDate DESC"/>
+    <aura:attribute name="evenSpread"		type="Boolean"	required="true"		default="false"/>
+    <aura:attribute name="dateFormat"		type="String"	required="false"	description="Date format defined by: (java.text.SimpleDateFormat)" default="EEE d/MMM/yyyy"/>
+    <aura:attribute name="contentFieldName"	type="String"	required="true"		description="Allow for field text field displayed to be switched for another fieldname"	default="summary"/>
+    
+	<!-- LABELS -->
+    
+	<!-- HANDLERS -->
+	<aura:handler name="init" value="{! this }" action="{! c.init }" />
+    
+	<!-- MARKUP -->
+    <div>
+    
+    
+    <aura:if isTrue="{# v.variant == 'article' }">
+        <!-- Outer container for clever wrapping on content-->
+        <div class="col-articles">
+            <aura:if isTrue="{! v.labelNameHeader != ''}">
+                <div class="sec-head">
+                    <c:customLabel labelName="{# v.labelNameHeader }"/>
+                </div>
+            </aura:if>
+            
+            <!-- Iterate over an array of articles -->
+            <aura:iteration items="{! v.articles }" var="article">
+                <c:articleBase article="{# article }" variant="{# v.variant }" contentFieldName="{# v.contentFieldName }"/>
+            </aura:iteration>
+            
+        </div>
+        
+        
+        <aura:set attribute="else">
+            <aura:if isTrue="{# v.labelNameHeader != ''}">
+                <div class="sec-head">
+                    <c:customLabel labelName="{# v.labelNameHeader }"/>
+                </div>
+            </aura:if>
+            <!-- No outer container -->
+            <!-- Iterate over an array of articles -->
+            <aura:iteration items="{! v.articles }" var="article">
+                <c:articleBase article="{# article }" variant="{# v.variant }" dateFormat="{# v.dateFormat }" contentFieldName="{# v.contentFieldName }"/>
+            </aura:iteration>
+            
+        </aura:set>
+    </aura:if>
+    
+</div>
+</aura:component>

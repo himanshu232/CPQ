@@ -1,0 +1,73 @@
+<apex:page showHeader="true" controller="community_ServiceRequestListController">
+        <div style="width: 90%; margin-left: auto; margin-right: auto;">
+       <div class="bPageTitle">
+            <div class="ptBody secondaryPalette brandSecondaryBrd">
+                <div class="content">
+                    <h2 class="pageDescription">
+                        Existing Hosted Service Requests
+                    </h2>
+                    <h1 class="pageType">
+                        View your existing hosted service requests and their status here.
+                    </h1>
+                </div>
+                <apex:outputLink styleClass="dashCTALink" value="/ServiceDesk/community_ServiceRequestCreate">Create a new HRO IT Service Request <i class="fa fa-arrow-right"></i></apex:outputLink>
+            </div>
+        </div>   
+        <apex:pageBlock >
+        
+        <div>
+            <apex:outputPanel rendered="{!additionalPrompt=='Approved'}">
+                    <apex:pageMessages />
+                    <apex:pageMessage summary="<strong>A service request has been approved</strong>" severity="confirm" strength="3" escape="false" detail="The {!referrerSR.srType__c} with Service Request ID {!referrerSR.srRealName__c} on the {!referrerSR.srDate__c} has been approved." /> 
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!additionalPrompt=='Rejected'}">
+                    <apex:pageMessages />
+                    <apex:pageMessage summary="<strong>A service request has been rejected</strong>" severity="info" strength="3" escape="false" detail="The {!referrerSR.srType__c} with Service Request ID {!referrerSR.srRealName__c} on the {!referrerSR.srDate__c} has been rejected and will not go ahead." /> 
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!additionalPrompt=='Cancelled'}">
+                    <apex:pageMessages />
+                    <apex:pageMessage summary="<strong>A service request has been cancelled</strong>" severity="info" strength="3" escape="false" detail="The {!referrerSR.srType__c} with Service Request ID {!referrerSR.srRealName__c} on the {!referrerSR.srDate__c} has been cancelled." /> 
+            </apex:outputPanel>
+            <br />
+            <apex:form >
+                <apex:actionFunction name="updateList" action="{!updateList}" immediate="false" reRender="list">
+                    <apex:param id="inputSort" name="inputSort" value="" assignTo="{!sortOpt}" />
+                </apex:actionFunction>
+                Choose a View: &nbsp;
+                <apex:selectList value="{!sortOpt}" size="1" onchange="updateList(this.value);">
+                    <apex:selectOptions value="{!sortOptions}"></apex:selectOptions>
+                </apex:selectList>    
+            </apex:form>
+            <br />
+            <apex:outputPanel id="list">
+                <table cellpadding="4" width="800px">
+                    <tr>
+                        <th>Service Request Name</th>
+                        <th>Type</th>
+                        <th>Date of Service</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    <apex:repeat var="sr" value="{!existingSR}">
+                        <tr>
+                            <td>{!sr.srRealName__c}</td>
+                            <td>{!sr.srType__c}</td>
+                            <td>
+                                <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                    <apex:param value="{!sr.srDate__c}"></apex:param>
+                                </apex:outputText>
+                                <apex:outputPanel rendered="{!sr.srTime__c!=''}"> {!sr.srTime__c}</apex:outputPanel>
+                            </td>
+                            <td>{!sr.srStatus__c}</td>
+                            <td>
+                                <apex:outputPanel rendered="{!sr.srStatus__c!='Pending Approval'}">[<apex:outputLink value="/ServiceDesk/apex/community_ServiceRequestView?sr={!sr.Id}">View</apex:outputLink>]</apex:outputPanel>
+                                <apex:outputPanel rendered="{!sr.srStatus__c=='Pending Approval'}">[<apex:outputLink value="/ServiceDesk/apex/community_ServiceRequestAuth?sr={!sr.Id}">View</apex:outputLink>]</apex:outputPanel>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                </table>    
+            </apex:outputPanel>    
+        </div>
+        </apex:pageBlock>
+    </div>
+</apex:page>

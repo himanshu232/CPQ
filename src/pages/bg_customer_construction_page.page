@@ -1,0 +1,105 @@
+<apex:page controller="CommunityLandingController" >
+
+
+<!-- Important Owl stylesheet -->
+<apex:stylesheet value="{!URLFOR($Resource.owl_resources, 'owl.carousel.css')}"/>
+
+<!-- Default Theme -->
+<apex:stylesheet value="{!URLFOR($Resource.owl_resources, 'owl.theme.css')}"/>
+
+<!--  jQuery 1.7+  -->
+<apex:includeScript value="{!$Resource.JQuery191}"/>
+
+<!-- Include js plugin -->
+<apex:includeScript value="{!$Resource.OwlCarouselJS}"/>
+
+
+<script>
+$(document).ready(function() {
+ 
+  $("#owl-demo").owlCarousel({
+ 
+      navigation : true, // Show next and prev buttons
+      slideSpeed : 300,
+      paginationSpeed : 400,
+      singleItem:true
+
+ 
+  });
+ 
+});
+</script>
+
+    <!-- oe:gen 23-12-2015 -->
+
+
+<div class="hr-home-wraps  intro-wrap">
+
+    <div class="grid-one-half   grid-marg--left">
+        <apex:outputText styleClass="customer" title="Customer" value="{!customer}" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputText styleClass="topTitle" title="Reference Points" value="Reference Points" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputText styleClass="topTitle" title="Your Dashboard" value="Your Dashboard" />
+    </div>
+</div>
+<div class="hr-home-wraps  intro-wrap  intro--seperator ">
+    <div class="grid-one-whole   grid-marg--left">
+        <hr/>
+    </div>
+</div>
+    
+<div class="hr-home-wraps  intro-wrap  intro-wrap--top">
+
+    <div class="grid-one-half    grid-marg--left">
+        <apex:outputText styleClass="introText" value="{!$Label.Service_Desk_Home_Page_Intro_Text}" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputText styleClass="pointsNumber" title="Reference Points" value="{!ReferencePoint}" />
+    </div>
+    <div class="grid-two-quarters   grid-marg--left">
+        <apex:outputLink styleClass="dashCTA" value="{!$Page.Community_Dashboards}">SUPPORT STATISTICS <i class="fa fa-arrow-right"></i></apex:outputLink>
+    </div>
+
+</div>
+    
+<div class="hr-home-wraps  intro-wrap  intro-wrap--bottom">
+<apex:outputPanel rendered="{!showServiceRequest}">
+    <div class="grid-one-whole   grid-marg--left">
+        <hr/>
+        <div class="float-right  dashCTALink-wrap">
+            <span class="dashCTALink-txt">Hosted Customers </span><apex:outputLink styleClass="dashCTALink" value="{!$Page.community_ServiceRequestList}">Service Requests <i class="fa fa-arrow-right"></i></apex:outputLink>
+        </div>
+    </div>
+</apex:outputPanel>
+
+</div>
+    
+
+<div class="">
+    <div class="grid-one-whole grid-marg--left" style="padding-top: 1em;">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold; font-size: 12pt;">
+                            Under Construction
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="">
+                            This page is currently under construction. Please try again later.
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+  
+    
+</apex:page>

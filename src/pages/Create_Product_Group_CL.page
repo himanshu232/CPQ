@@ -1,0 +1,3 @@
+<apex:page standardController="product2" extensions="ffirule.IntegrationRuleEngine" action="{!convert}">
+<ffirule:IntegrationRule engine="{!engine}"/>
+</apex:page>

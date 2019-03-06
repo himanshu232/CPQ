@@ -1,0 +1,17 @@
+.cPffooter {
+	border-top: 1px solid #e8e8e8;
+	padding: 40px 75px;
+	margin: 0 auto;
+	overflow:hidden;
+	background-color:#fff;
+}
+
+.cPffooter p.copyright {color:#87888d;float:left;font-size:14px;}
+.cPffooter .cPfsocialIcons {float:right;}
+.cPffooter .cPfsocialIcons a i {color:#85858d;}
+
+
+@media screen and (max-width:767px) {
+	.cPffooter p.copyright {float:none;display:block;text-align:center;}
+	.cPffooter .cPfsocialIcons {float:none;display:block;text-align:center;padding-top:30px;}
+}

@@ -1,0 +1,47 @@
+<apex:page showHeader="true" controller="community_RequestListingController" tabStyle="Report">
+   <div class="bPageTitle">
+        <div class="ptBody secondaryPalette brandSecondaryBrd">
+            <div class="content service-request">
+                <h1 class="pageType">
+                    Hosted Service Requests
+                </h1>
+                <h2 class="pageDescription">
+                    View your existing service requests
+                </h2>        
+                <div class="float-right">
+                    <apex:outputLink styleClass="dashCTALink" value="{!$Page.community_ServiceRequest}">New Service Request <i class="fa fa-arrow-right"></i></apex:outputLink>
+                </div>
+            </div>
+        </div>
+    </div>
+    <apex:pageBlock >
+    <div>
+        <table cellpadding="4" width="800px">
+            <tr>
+                <th>Service Request Name</th>
+                <th>Type</th>
+                <th>Date of Service</th>
+                <th>Status</th>
+                <th>Created Date</th>
+            </tr>
+            <apex:repeat value="{!serviceRequest}" var="sr">
+            <tr>
+                <td><apex:outputLink value="/ServiceDesk/apex/community_ServiceRequestDetails?SRId={!sr.Id}">{!sr.Name}</apex:outputLink></td>
+                <td>{!sr.RecordType.Name}</td>
+                <td>
+                    <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                        <apex:param value="{!sr.Service_Request_Availablity__r.Date__c}"></apex:param>
+                    </apex:outputText>
+                </td>
+                <td>{!sr.Status__c}</td>
+                <td>
+                    <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                        <apex:param value="{!sr.Created__c}" /> 
+                    </apex:outputText>
+                </td>
+            </tr>
+            </apex:repeat>
+        </table>        
+    </div>
+    </apex:pageBlock>
+</apex:page>

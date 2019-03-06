@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Page changed to another path" >
+    <aura:attribute name="pageName" type="String" description="Current page of the community"/>
+    <aura:attribute name="urlParts" type="String[]" description="the URL components in the path. Maybe useful to interpret for other functions."/>
+</aura:event>

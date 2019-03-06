@@ -1,0 +1,57 @@
+<aura:component >
+    <!--
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by Hj 🌵 2017.11.15 -
+	//
+	// Description
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	/* >>- Changelog -<<
+	 * _REPLACE_WITH_DATE_
+	
+	 */
+-->
+	<!-- DATA VARS -->
+    
+	
+	<!-- CONFIG VARS -->
+    <aura:attribute name="article" 			type="SObject[]"	description="[Passed in] A single article for display" />
+	<aura:attribute name="variant"	 		type="String"		description="[Passed in] Style variant to display" />
+    <aura:attribute name="dateFormat"		type="String"		description="[Passed in] Date format defined by: (java.text.SimpleDateFormat)" default="EEE d/MMM/yyyy"/>
+	<aura:attribute name="contentFieldName"	type="String"		description="[Passed in] Allow for field text field displayed to be switched for another fieldname" default="summary"/>
+    
+    <!-- COMPONENT STATE VARS -->
+    <aura:attribute name="contentFieldText"		type="String"		description="The value of the text field to display" />
+    <aura:attribute name="styleClass" 			type="String"		description="The calculated string value for the single article div class" default=""/>
+    
+	<!-- LABELS -->
+    
+    
+    <!-- HANDLERS -->
+    <aura:handler name="init" value="{! this }" action="{! c.init }" />
+    
+    <!-- MARKUP -->
+    <div class="{! v.styleClass }">
+        <aura:if isTrue="{# v.variant == 'article' }">
+            
+            <!-- One Article-->
+            <div class="art-img" height="42" width="42">
+                <aura:unescapedHtml value="{# v.article.thumbnail }"/>
+            </div>
+            
+            <a class="article-head" onclick="{! c.ctaClick }"><aura:unescapedHtml value="{# v.article.title }"/></a>
+            <span class="article-summary"><aura:unescapedHtml value="{! v.contentFieldText }"/></span>
+            <a class="cta" onclick="{! c.ctaClick }"><span>{! v.article.ctatext }</span></a>
+            
+            
+            
+            <aura:set attribute="else">
+                
+                <ui:outputDate value="{! v.article.lastPublishedDate }" format="{# v.dateFormat }" class="date"/>
+                <a class="article-head" onclick="{! c.ctaClick }"><aura:unescapedHtml value="{# v.article.title }"/></a>
+                <span class="article-summary"><aura:unescapedHtml value="{! v.contentFieldText }"/></span>
+                <a class="link" onclick="{! c.ctaClick }"><c:customLabel labelName="pfc_ctatext_default"/></a>
+                
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

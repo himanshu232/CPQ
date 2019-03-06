@@ -1,0 +1,13 @@
+<apex:component access="global"  controller="CustomSINLineSorter3" >
+    <apex:attribute access="global" name="salesInvoice" type="c2g__codaInvoice__c" required="true" description="the invoice" assignTo="{!InvoiceLinesAttr}"/>
+    <apex:attribute access="global" name="var" type="string" required="true" description="name of line variable"/>
+    <apex:attribute access="global" name="styleClass" type="string" required="false" description="css style applied"/>
+
+    <table class="{!styleClass}">
+        <apex:repeat value="{!SortedLines}" var="lineInt">
+            <apex:componentBody >
+                <apex:variable var="{!var}" value="{!lineInt}"/>
+            </apex:componentBody>
+        </apex:repeat>
+    </table>
+</apex:component>

@@ -1,0 +1,41 @@
+<apex:page controller="CustomLogin_ServiceDesk_Controller" id="vf" standardStylesheets="false" showHeader="false" sidebar="false" title="Service Cloud">
+
+    <apex:stylesheet value="{!URLFOR($Resource.CustomLogin_ServiceDesk, 'CustomLogin_ServiceDesk_CSS.css')}"/>
+    <script type='text/javascript'>
+    function noenter(ev)  {
+        if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+            javascriptLogin();
+            return false;
+         } else {
+              return true;
+         }
+     }
+    </script>
+    
+    <apex:form id="frm" style="align:center">
+            <apex:actionFunction name="javascriptLogin" action="{!Login}" />
+            <apex:outputText id="debug" value="{!debugInfo}"/>
+            <apex:panelGrid id="pnlBox" columns="1" styleClass="box">
+           
+                <apex:panelGrid columns="1" id="pnlContainer" columnClasses="col"  border="0" cellpadding="0" cellspacing="0">
+                    <apex:image url="{!$Resource.midlandsd}" styleClass="logo"/> 
+                    
+                    <apex:inputtext id="un" value="{!userName}"  styleClass="input input--username" html-placeholder="Username" alt="Username"/>
+        
+                    <apex:inputSecret id="pd" value="{!password}"  styleClass="input input--password" html-placeholder="Password" alt="Password" onkeypress="return noenter(event);"/>
+           
+                    <apex:commandButton id="b2" value="Log in" action="{!Login}" style="align:center" styleClass="myButton" rerender="debug,msgLogin"/>
+                    
+                    
+                    <apex:outputPanel >
+                    <br/>
+                    <apex:outputText ><apex:outputLink value="{!$Page.ForgotPassword}"><b> Forgot your password?</b></apex:outputLink></apex:outputText>
+                     </apex:outputPanel>
+                    <apex:outputText id="msgLogin" styleClass="msgfont"  value="{!errorMsg}" />
+              </apex:panelGrid>
+       
+              <apex:outputText styleClass="copyright" value="Copyright © 2016 midlandhr.com. All rights reserved."/>
+              </apex:panelGrid>
+                 
+    </apex:form>
+</apex:page>

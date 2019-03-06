@@ -1,0 +1,7 @@
+<design:component label="Header - Page Header Panel">
+	<design:attribute name="titleLabelName"	label="Title Label Name" 		description="Label API name to display"/>
+    <design:attribute name="titlePassedIn"	label="Title Text Over-ride"	description="Leave blank if using a label name" />
+    
+    <design:attribute name="summaryLabelName" label="Summary Label Name"		description="Label API name to display"/>	
+    <design:attribute name="summaryLabelText" label="Summary Text Over-ride"	description="Leave blank if using a label name" />
+</design:component>
