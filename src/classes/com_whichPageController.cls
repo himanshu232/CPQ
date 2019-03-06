@@ -1,8 +1,8 @@
 public class com_whichPageController {
 	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	// TestClass: com_whichPageController_Test.cls
-	// - Written by Hj 🌵 2017.11.29 -
-	// Used to query SF metadata to determine a pages header 
+    // - Written by Hj 🌵 2017.11.29 - TEST
+    // Used to query SF metadata to determine a pages header
 	// configuration. Used in a community using custom Oegen Theme
 	// and dynamic, per-page header.
 	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -30,13 +30,9 @@ public class com_whichPageController {
             return null;
         }
     }
-    
-    
-    
-    
-    
-    
-	public static List<SObject> getCustomMetadata(String objName, List<String> devNames) {
+
+
+    public static List<SObject> getCustomMetadata(String objName, List<String> devNames) {
         //////////////////////////////////////////////////
         //  Return a list of all the records for a 
         //  a particular metadata type 
